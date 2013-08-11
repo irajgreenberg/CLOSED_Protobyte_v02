@@ -14,9 +14,9 @@ Mountain View, California, 94041, USA.
  
 This notice must be retained any source distribution.
  
-***************************************************************
-*  VERY, VERY, VERY MUCH! UNDER DEEP DEVELOPMENT (8/10/2013)  *
-***************************************************************
+***********************************************************
+*VERY, VERY, VERY MUCH! UNDER DEEP DEVELOPMENT (8/10/2013)*
+***********************************************************
 Idiosyncratic Graphics Library for aesthetic and whimsical 
 exploration of highly evocative and engaging forms, creatures 
 and other virtually living/sentient entities.
