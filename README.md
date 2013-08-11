@@ -12,7 +12,7 @@ or send a letter to Creative Commons,
 444 Castro Street, Suite 900,
 Mountain View, California, 94041, USA.
  
-This notice must be retained any source distribution.
+This notice must be retained in any source distribution.
  
 ***********************************************************
 *VERY, VERY, VERY MUCH! UNDER DEEP DEVELOPMENT (8/10/2013)*
@@ -39,7 +39,7 @@ all thanks to Robin, Ian and Sophie.
 If "any" of this seems at all interesting, please feel free to 
 drop me a line at irajgreenberg at gmail dot com
 
-Also, thanks for reading this! </ br>
+Also, thanks for reading this!
 Ira
 
 
