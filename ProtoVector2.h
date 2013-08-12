@@ -14,7 +14,7 @@
  444 Castro Street, Suite 900,
  Mountain View, California, 94041, USA.
  
- This notice must be retained any source distribution.
+ This notice must be retained in any source distribution.
  
  \ingroup common
  This class is part of the group common (update)
@@ -97,7 +97,7 @@ namespace ijg {
         template <typename U>
         friend std::ostream& operator<<(std::ostream& output, const ProtoVector2<U>& vec);
         
-        // fields
+        // fields (public for major convenience)
         T x, y;
         
         /*****************************************************/
@@ -110,19 +110,19 @@ namespace ijg {
         /*****************************************************/
         /*              Member Overloaded Ops                */
         /*****************************************************/
-        const ProtoVector2& operator+=(const ProtoVector2& v);
-        const ProtoVector2& operator+=(T s);
-        const ProtoVector2& operator-=(const ProtoVector2& v);
-        const ProtoVector2& operator-=(T s);
-        const ProtoVector2& operator*=(const ProtoVector2& v);
-        const ProtoVector2& operator*=(T s);
-        const ProtoVector2& operator/=(const ProtoVector2& v);
-        const ProtoVector2& operator/=(T s);
-        const ProtoVector2& operator-();
-        const ProtoVector2& operator++();
-        const ProtoVector2& operator++(int);
-        const ProtoVector2& operator--();
-        const ProtoVector2& operator--(int);
+        ProtoVector2& operator+=(const ProtoVector2& v);
+        ProtoVector2& operator+=(T s);
+        ProtoVector2& operator-=(const ProtoVector2& v);
+        ProtoVector2& operator-=(T s);
+        ProtoVector2& operator*=(const ProtoVector2& v);
+        ProtoVector2& operator*=(T s);
+        ProtoVector2& operator/=(const ProtoVector2& v);
+        ProtoVector2& operator/=(T s);
+        ProtoVector2& operator-();
+        ProtoVector2& operator++();
+        ProtoVector2& operator++(int);
+        ProtoVector2& operator--();
+        ProtoVector2& operator--(int);
         
         T operator[](unsigned index);
         const T operator[](unsigned index) const;
@@ -143,309 +143,315 @@ namespace ijg {
         
         
     private:
-        // nada for now
+        // nada here for now
         
-    };
+    }; // END ProtoVector2 class declaration
+        
+        
+    /*****************************************************/
+    /*                    Constructors                   */
+    /*****************************************************/
+    template <class T>
+    inline ProtoVector2<T>::ProtoVector2():x(0), y(0){
+    }
+    
+    template <class T>
+    inline ProtoVector2<T>::ProtoVector2(T x, T y):
+    x(x), y(y){
+    }
+    
+    template <class T>
+    inline ProtoVector2<T>::ProtoVector2(T xy[2]):
+    x(xy[0]), y(xy[1]){
+    }
+    
     
     /*****************************************************/
-    /*          Non-Member Function definitions          */
+    /*              Member Overloaded Ops                */
+    /*****************************************************/
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator+=(const ProtoVector2<T>& v){
+        x+=v.x;
+        y+=v.y;
+        return *this;
+    }
+    
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator+=(T s){
+        x+=s;
+        y+=s;
+        return *this;
+    }
+    
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator-=(const ProtoVector2<T>& v){
+        x-=v.x;
+        y-=v.y;
+        return *this;
+    }
+    
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator-=(T s){
+        x-=s;
+        y-=s;
+        return *this;
+    }
+    
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator*=(const ProtoVector2<T>& v){
+        x*=v.x;
+        y*=v.y;
+        return *this;
+    }
+    
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator*=(T s){
+        x*=s;
+        y*=s;
+        return *this;
+    }
+    
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator/=(const ProtoVector2<T>& v){
+        x/=v.x;
+        y/=v.y;
+        return *this;
+    }
+    
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator/=(T s){
+        x/=s;
+        y/=s;
+        return *this;
+    }
+    
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator-(){
+        x*=-1;
+        y*=-1;
+        return *this;
+        
+    }
+    
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator++(){
+        x++;
+        y++;
+        return *this;
+    }
+    
+    
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator++(int){
+        ++x;
+        ++y;
+        return *this;
+    }
+    
+    
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator--(){
+        x--;
+        y--;
+        return *this;
+    }
+    
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator--(int){
+        --x;
+        --y;
+        return *this;
+    }
+    
+    
+    template <class T>
+    inline T ProtoVector2<T>::operator[](unsigned index){
+        assert( index >= 0 && index <= 1 );
+        return *(&x+index);
+    }
+    
+    template <class T>
+    inline const T ProtoVector2<T>::operator[](unsigned index) const{
+        assert( index >= 0 && index <= 1 );
+        return *(&x+index);
+    }
+    
+    
+    template <class T>
+    inline bool ProtoVector2<T>::operator==(const ProtoVector2<T>& v) const{
+        return (x==v.x && y==v.y);
+    }
+    
+    template <class T>
+    inline bool ProtoVector2<T>::operator!=(const ProtoVector2<T>& v) const{
+        return (x!=v.x || y!=v.y);
+    }
+    
+    /*****************************************************/
+    /*                 Member Functions                  */
+    /*****************************************************/
+    template <class T>
+    inline T ProtoVector2<T>::mag() const{
+        return sqrt(x*x + y*y);
+    }
+    
+    template <class T>
+    inline T ProtoVector2<T>::magSqr() const{
+        return x*x + y*y;
+    }
+    
+    template <class T>
+    inline void ProtoVector2<T>::normalize(){
+        T m = mag();
+        x/=m;
+        y/=m;
+    }
+    
+    template <class T>
+    inline bool ProtoVector2<T>::isNormalized() const{
+        return (mag() > .99 && mag() < 1.1);
+    }
+    
+    template <class T>
+    inline T ProtoVector2<T>::angle() const{
+        return atan2(y,x);
+    }
+    
+    
+    template <class T>
+    inline T ProtoVector2<T>::angleBetween(const ProtoVector2<T>& v) const{
+        return atan2(v.y,v.x) - atan2(y,x);
+    }
+    
+    template <class T>
+    inline T ProtoVector2<T>::dot(const ProtoVector2<T>& v) const{
+        return x*v.x + y*v.y;
+    }
+    
+    template <class T>
+    inline const ProtoVector2<T>& ProtoVector2<T>::rotate(T theta){
+        T tempX = cos(theta)*x - sin(theta)*y;
+        T tempY = sin(theta)*x + cos(theta)*y;
+        return *this(ProtoVector2<T>(tempX, tempY));
+    }
+    
+    
+    /*****************************************************/
+    /*         Non-Member Function implementation        */
     /*****************************************************/
     
     // add vecs
     template <typename T>
-    ProtoVector2<T> operator+(const ProtoVector2<T>& lhs, const ProtoVector2<T>& rhs){
+    inline ProtoVector2<T> operator+(const ProtoVector2<T>& lhs, const ProtoVector2<T>& rhs){
         return ProtoVector2<T>(lhs)+=rhs;
     }
     
     // subtract vecs
     template <typename T>
-    ProtoVector2<T> operator-(const ProtoVector2<T>& lhs, const ProtoVector2<T>& rhs){
+    inline ProtoVector2<T> operator-(const ProtoVector2<T>& lhs, const ProtoVector2<T>& rhs){
         return ProtoVector2<T>(lhs)-=rhs;
     }
     
     // mult vecs
     template <typename T>
-    ProtoVector2<T> operator*(const ProtoVector2<T>& lhs, const ProtoVector2<T>& rhs) {
+    inline ProtoVector2<T> operator*(const ProtoVector2<T>& lhs, const ProtoVector2<T>& rhs) {
         return ProtoVector2<T>(lhs)*=rhs;
     }
     
     // div vecs
     template <typename T>
-    ProtoVector2<T> operator/(const ProtoVector2<T>& lhs, const ProtoVector2<T>& rhs){
+    inline ProtoVector2<T> operator/(const ProtoVector2<T>& lhs, const ProtoVector2<T>& rhs){
         return ProtoVector2<T>(lhs)/=rhs;
     }
     
     // add lhs by sclr
     template <typename T>
-    ProtoVector2<T> operator+(const ProtoVector2<T>& lhs, T s){
+    inline ProtoVector2<T> operator+(const ProtoVector2<T>& lhs, T s){
         return ProtoVector2<T>(lhs)+=s;
     }
     
     // add rhs by sclr
     template <typename T>
-    ProtoVector2<T> operator+(T s, const ProtoVector2<T>& rhs) {
+    inline ProtoVector2<T> operator+(T s, const ProtoVector2<T>& rhs) {
         return ProtoVector2<T>(rhs)+=s;
     }
     
     // sub lhs by sclr
     template <typename T>
-    ProtoVector2<T> operator-(const ProtoVector2<T>& lhs, T s){
+    inline ProtoVector2<T> operator-(const ProtoVector2<T>& lhs, T s){
         return ProtoVector2<T>(lhs)-=s;    }
     
     // sub rhs by sclr
     template <typename T>
-    ProtoVector2<T> operator-(T s, const ProtoVector2<T>& rhs) {
+    inline ProtoVector2<T> operator-(T s, const ProtoVector2<T>& rhs) {
         return ProtoVector2<T>(rhs)-=s;
     }
     
     // mult lhs by sclr
     template <typename T>
-    ProtoVector2<T> operator*(const ProtoVector2<T>& lhs, T s){
+    inline ProtoVector2<T> operator*(const ProtoVector2<T>& lhs, T s){
         return ProtoVector2<T>(lhs)*=s;    }
     
     // mult rhs by sclr
     template <typename T>
-    ProtoVector2<T> operator*(T s, const ProtoVector2<T>& rhs) {
+    inline ProtoVector2<T> operator*(T s, const ProtoVector2<T>& rhs) {
         return ProtoVector2<T>(rhs)*=s;
     }
     
     // div lhs by sclr
     template <typename T>
-    ProtoVector2<T> operator/(const ProtoVector2<T>& lhs, T s){
+    inline ProtoVector2<T> operator/(const ProtoVector2<T>& lhs, T s){
         return ProtoVector2<T>(lhs)/=s;
     }
     
     // div rhs by sclr
     template <typename T>
-    ProtoVector2<T> operator/(T s, const ProtoVector2<T>& rhs) {
+    inline ProtoVector2<T> operator/(T s, const ProtoVector2<T>& rhs) {
         return ProtoVector2<T>(rhs)/=s;
     }
     
     // invert signs
     template <typename T>
-    ProtoVector2<T> operator-(const ProtoVector2<T>& rhs){
+    inline ProtoVector2<T> operator-(const ProtoVector2<T>& rhs){
         return ProtoVector2<T>(rhs)*=-1;
     }
     
     // vec magnitude
     template <typename T>
-    T mag(const ProtoVector2<T>& v){
+    inline T mag(const ProtoVector2<T>& v){
         return sqrt(v.x*v.x + v.y*v.y);
     }
     
     // angle between vecs
     template <typename T>
-    T angleBetween(const ProtoVector2<T>& lhs, const ProtoVector2<T>& rhs){
+    inline T angleBetween(const ProtoVector2<T>& lhs, const ProtoVector2<T>& rhs){
         return atan2(rhs.y-lhs.y, rhs.x-lhs.x);
     }
     
-            
+    
     // vec dot product
     template <typename T>
-    T dot(const ProtoVector2<T>& lhs, const ProtoVector2<T>& rhs){
+    inline T dot(const ProtoVector2<T>& lhs, const ProtoVector2<T>& rhs){
         return lhs.x*rhs.x + lhs.y*rhs.y;
     }
     
     // outstream opp
     template <class T>
-    std::ostream& operator<<(std::ostream& out, const ProtoVector2<T>& v){
+    inline std::ostream& operator<<(std::ostream& out, const ProtoVector2<T>& v){
         out << v.x << ", " << v.y;
         return out;
     }
 
-        
-        
-        /*****************************************************/
-        /*                    Constructors                   */
-        /*****************************************************/
-        template <class T>
-        inline ProtoVector2<T>::ProtoVector2():x(0), y(0){
-        }
-        
-        template <class T>
-        inline ProtoVector2<T>::ProtoVector2(T x, T y):
-        x(x), y(y){
-        }
-        
-        template <class T>
-        inline ProtoVector2<T>::ProtoVector2(T xy[2]):
-        x(xy[0]), y(xy[1]){
-        }
-        
-        
-        /*****************************************************/
-        /*              Member Overloaded Ops                */
-        /*****************************************************/
-        template <class T>
-        inline const ProtoVector2<T>& ProtoVector2<T>::operator+=(const ProtoVector2<T>& v){
-            x+=v.x;
-            y+=v.y;
-            return *this;
-        }
-        
-        template <class T>
-        inline const ProtoVector2<T>& ProtoVector2<T>::operator+=(T s){
-            x+=s;
-            y+=s;
-            return *this;
-        }
-        
-        template <class T>
-        inline const ProtoVector2<T>& ProtoVector2<T>::operator-=(const ProtoVector2<T>& v){
-            x-=v.x;
-            y-=v.y;
-            return *this;
-        }
-        
-        template <class T>
-        inline const ProtoVector2<T>& ProtoVector2<T>::operator-=(T s){
-            x-=s;
-            y-=s;
-            return *this;
-        }
-        
-        template <class T>
-        inline const ProtoVector2<T>& ProtoVector2<T>::operator*=(const ProtoVector2<T>& v){
-            x*=v.x;
-            y*=v.y;
-            return *this;
-        }
-        
-        template <class T>
-        inline const ProtoVector2<T>& ProtoVector2<T>::operator*=(T s){
-            x*=s;
-            y*=s;
-            return *this;
-        }
-        
-        template <class T>
-        inline const ProtoVector2<T>& ProtoVector2<T>::operator/=(const ProtoVector2<T>& v){
-            x/=v.x;
-            y/=v.y;
-            return *this;
-        }
-        
-        template <class T>
-        inline const ProtoVector2<T>& ProtoVector2<T>::operator/=(T s){
-            x/=s;
-            y/=s;
-            return *this;
-        }
-        
-        template <class T>
-        inline const ProtoVector2<T>& ProtoVector2<T>::operator-(){
-            x*=-1;
-            y*=-1;
-            return *this;
-            
-        }
-        
-        template <class T>
-        inline const ProtoVector2<T>& ProtoVector2<T>::operator++(){
-            x++;
-            y++;
-            return *this;
-        }
-        
-        
-        template <class T>
-        inline const ProtoVector2<T>& ProtoVector2<T>::operator++(int){
-            ++x;
-            ++y;
-            return *this;
-        }
-        
-        
-        template <class T>
-        inline const ProtoVector2<T>& ProtoVector2<T>::operator--(){
-            x--;
-            y--;
-            return *this;
-        }
-        
-        template <class T>
-        inline const ProtoVector2<T>& ProtoVector2<T>::operator--(int){
-            --x;
-            --y;
-            return *this;
-        }
-        
-        
-        template <class T>
-        inline T ProtoVector2<T>::operator[](unsigned index){
-            assert( index >= 0 && index <= 1 );
-            return *(&x+index);
-        }
-        
-        template <class T>
-        inline const T ProtoVector2<T>::operator[](unsigned index) const{
-            assert( index >= 0 && index <= 1 );
-            return *(&x+index);
-        }
-        
-        
-        template <class T>
-        inline bool ProtoVector2<T>::operator==(const ProtoVector2<T>& v) const{
-            return (x==v.x && y==v.y);
-        }
-        
-        template <class T>
-        inline bool ProtoVector2<T>::operator!=(const ProtoVector2<T>& v) const{
-            return (x!=v.x || y!=v.y);
-        }
-        
-        /*****************************************************/
-        /*                 Member Functions                  */
-        /*****************************************************/
-        template <class T>
-        inline T ProtoVector2<T>::mag() const{
-            return sqrt(x*x + y*y);
-        }
-        
-        template <class T>
-        inline T ProtoVector2<T>::magSqr() const{
-            return x*x + y*y;
-        }
-        
-        template <class T>
-        inline void ProtoVector2<T>::normalize(){
-            T m = mag();
-            x/=m;
-            y/=m;
-        }
-        
-        template <class T>
-        inline bool ProtoVector2<T>::isNormalized() const{
-            return (mag() > .99 && mag() < 1.1);
-        }
-        
-        template <class T>
-        inline T ProtoVector2<T>::angle() const{
-            return atan2(y,x);
-        }
-        
-        
-        template <class T>
-        inline T ProtoVector2<T>::angleBetween(const ProtoVector2<T>& v) const{
-            return atan2(v.y,v.x) - atan2(y,x);
-        }
-        
-        template <class T>
-        inline T ProtoVector2<T>::dot(const ProtoVector2<T>& v) const{
-            return x*v.x + y*v.y;
-        }
-        
-        template <class T>
-        inline const ProtoVector2<T>& ProtoVector2<T>::rotate(T theta){
-            float tempX = cos(theta)*x - sin(theta)*y;
-            float tempY = sin(theta)*x + cos(theta)*y;
-            return *this(ProtoVector2<T>(tempX, tempY));
-        }
-        
-#define ProtoVector2f ProtoVector2<float>
-#define ProtoVector2d ProtoVector2<double>
-        
-        
-        }
+    
+    // Type name convenience macros
+    #define ProtoVector2f ProtoVector2<float>
+    #define ProtoVector2d ProtoVector2<double>
+    #define ProtoVec2f ProtoVector2<float>
+    #define ProtoVec2d ProtoVector2<double>
+	#define Vec2 ProtoVector2<float> // common use
+    #define Vec2f ProtoVector2<float>
+    #define Vec2d ProtoVector2<double>
+    
+}  // END ijg namespace
         
 #endif // PROTO_VECTOR2_H
