@@ -26,8 +26,11 @@
 
 #include <string.h>
 #include <iostream>
+#include <vector>
+#include "ProtoMath.h"
 #include <cmath>
 #include <cassert>
+#include "ProtoPoint2.h"
 
 
 namespace ijg {
@@ -93,9 +96,16 @@ namespace ijg {
         
     public:
         
+        // randomization
+        enum {
+            EXPLICIT, // use arg as explicit value
+            RANDOMIZED // use arg as random max value
+        };
+    
+        
         // overloaded << operator declared as friend function for access to private data
         template <typename U>
-        friend std::ostream& operator<<(std::ostream& output, const ProtoVector2<U>& vec);
+        friend std::ostream& operator<<(std::ostream& output, const ProtoVector2<U>& v);
         
         // fields (public for major convenience)
         T x, y;
@@ -103,9 +113,9 @@ namespace ijg {
         /*****************************************************/
         /*                    Constructors                   */
         /*****************************************************/
-        ProtoVector2();
-        ProtoVector2(T x, T y);
-        explicit ProtoVector2(T xy[2]);
+        ProtoVector2(unsigned value=EXPLICIT);
+        ProtoVector2(T xMax, T yMax, unsigned value=EXPLICIT);
+        ProtoVector2(T xMin, T xMax, T yMin, T yMax);
         
         /*****************************************************/
         /*              Member Overloaded Ops                */
@@ -123,6 +133,8 @@ namespace ijg {
         ProtoVector2& operator++(int);
         ProtoVector2& operator--();
         ProtoVector2& operator--(int);
+        ProtoVector2& operator()(T xMax, T yMax, unsigned value=EXPLICIT);
+        ProtoVector2& operator()(T xMin, T xMax, T yMin, T yMax);
         
         T operator[](unsigned index);
         const T operator[](unsigned index) const;
@@ -139,30 +151,51 @@ namespace ijg {
         T angle() const;
         T angleBetween(const ProtoVector2& v) const;
         T dot(const ProtoVector2& v) const;
-        const ProtoVector2& rotate(T theta);
+        ProtoVector2& rotate(T theta);
+        ProtoVector2& reflect(const ProtoVector2& axis);
+        // containers passed in below
+        void lerp (const ProtoVector2& v, unsigned steps,  const std::vector<ProtoPoint2<T>>& ptsContainer) const;
+        void lerpVecs (const ProtoVector2& v, unsigned steps,  const std::vector<ProtoVector2<T>>& vecsContainer) const;
         
         
     private:
         // nada here for now
         
     }; // END ProtoVector2 class declaration
-        
-        
+    
+    
     /*****************************************************/
     /*                    Constructors                   */
     /*****************************************************/
+    // optional randomization
     template <class T>
-    inline ProtoVector2<T>::ProtoVector2():x(0), y(0){
+    inline ProtoVector2<T>::ProtoVector2(unsigned value) {
+        if(value == RANDOMIZED){
+            x = ProtoMath::random();
+            y = ProtoMath::random();
+        } else {
+            x = 0;
+            y = 0;
+        }
     }
     
+    // optional randomization
     template <class T>
-    inline ProtoVector2<T>::ProtoVector2(T x, T y):
-    x(x), y(y){
+    inline ProtoVector2<T>::ProtoVector2(T xMax, T yMax, unsigned value){
+        if(value == RANDOMIZED){
+            x = ProtoMath::random(xMax);
+            y = ProtoMath::random(yMax);
+        } else {
+            x = xMax;
+            y = yMax;
+        }
     }
     
+    // randomized
     template <class T>
-    inline ProtoVector2<T>::ProtoVector2(T xy[2]):
-    x(xy[0]), y(xy[1]){
+    inline ProtoVector2<T>::ProtoVector2(T xMin, T xMax, T yMin, T yMax){
+        x = ProtoMath::random(xMin, xMax);
+        y = ProtoMath::random(yMin, yMax);
     }
     
     
@@ -263,6 +296,24 @@ namespace ijg {
         return *this;
     }
     
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator()(T xMax, T yMax, unsigned value) {
+        if(value == RANDOMIZED){
+            x = ProtoMath::random(xMax);
+            y = ProtoMath::random(yMax);
+        } else {
+            x = xMax;
+            y = yMax;
+        }
+        return *this;
+    }
+    
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::operator()(T xMin, T xMax, T yMin, T yMax) {
+        x = ProtoMath::random(xMin, xMax);
+        y = ProtoMath::random(yMin, yMax);
+        return *this;
+    }
     
     template <class T>
     inline T ProtoVector2<T>::operator[](unsigned index){
@@ -317,10 +368,10 @@ namespace ijg {
         return atan2(y,x);
     }
     
-    
-    template <class T>
+ template <class T>
     inline T ProtoVector2<T>::angleBetween(const ProtoVector2<T>& v) const{
-        return atan2(v.y,v.x) - atan2(y,x);
+        //return atan2(v.y,v.x) - atan2(y,x);
+        return acos( (*this).dot(v) / (mag()*v.mag()) );
     }
     
     template <class T>
@@ -329,10 +380,38 @@ namespace ijg {
     }
     
     template <class T>
-    inline const ProtoVector2<T>& ProtoVector2<T>::rotate(T theta){
+    inline ProtoVector2<T>& ProtoVector2<T>::rotate(T theta){
         T tempX = cos(theta)*x - sin(theta)*y;
         T tempY = sin(theta)*x + cos(theta)*y;
         return *this(ProtoVector2<T>(tempX, tempY));
+    }
+    
+    template <class T>
+    inline ProtoVector2<T>& ProtoVector2<T>::reflect(const ProtoVector2& axis){
+        axis.normalize();
+        return -(*this) + 2*axis * ((*this).dot(axis));
+    }
+    
+    // fills passed in container
+    template <class T>
+    inline void ProtoVector2<T>::lerp(const ProtoVector2& v, unsigned steps, const std::vector<ProtoPoint2<T>>& ptsContainer) const{
+        T stepVal = 1.0/steps;
+        for (int i=1; i<steps; ++i) {
+            T x = x*(1-stepVal*i)+v.x.x*stepVal*i;
+            T y = y*(1-stepVal*i)+v.y.y*stepVal*i;
+            ptsContainer.push_back(ProtoPoint2<T>(x, y)); // record only new (non-terminal) points
+        }
+    }
+    
+     // fills passed in container
+    template <class T>
+    inline void ProtoVector2<T>::lerpVecs(const ProtoVector2& v, unsigned steps, const std::vector<ProtoVector2<T>>& vecsContainer) const{
+        T stepVal = 1.0/steps;
+        for (int i=1; i<steps; ++i) {
+            T x = x*(1-stepVal*i)+v.x.x*stepVal*i;
+            T y = y*(1-stepVal*i)+v.y.y*stepVal*i;
+            vecsContainer.push_back(ProtoVector2<T>(x, y)); // record only new (non-terminal) vecs
+        }
     }
     
     
@@ -441,17 +520,17 @@ namespace ijg {
         out << v.x << ", " << v.y;
         return out;
     }
-
+    
     
     // Type name convenience macros
-    #define ProtoVector2f ProtoVector2<float>
-    #define ProtoVector2d ProtoVector2<double>
-    #define ProtoVec2f ProtoVector2<float>
-    #define ProtoVec2d ProtoVector2<double>
-	#define Vec2 ProtoVector2<float> // common use
-    #define Vec2f ProtoVector2<float>
-    #define Vec2d ProtoVector2<double>
+#define ProtoVector2f ProtoVector2<float>
+#define ProtoVector2d ProtoVector2<double>
+#define ProtoVec2f ProtoVector2<float>
+#define ProtoVec2d ProtoVector2<double>
+#define Vec2 ProtoVector2<float> // common use
+#define Vec2f ProtoVector2<float>
+#define Vec2d ProtoVector2<double>
     
-}  // END ijg namespace
-        
+    }  // END ijg namespace
+    
 #endif // PROTO_VECTOR2_H

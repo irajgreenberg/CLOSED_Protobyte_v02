@@ -33,7 +33,6 @@ namespace ijg {
     class ProtoMath {
     private:
         // disallow instantiation/assignment
-        
         ProtoMath() {
         }
         
@@ -43,6 +42,7 @@ namespace ijg {
         
         // from http://stackoverflow.com/a/686373
         
+        // eventually replace these with Mersenne twister algorithm
         static float random(float max = 1.0) {
             return (float) rand() / ((float) RAND_MAX / max);
         }
@@ -55,15 +55,15 @@ namespace ijg {
         }
         
         // static fields
-        static const double PI = 3.14159265358979;
-        static const double HALF_PI = 1.5707963267949;
-        static const double H_PI = 1.5707963267949; // alt name to HALF_PI
-        static const double QUARTER_PI = 0.785398163397448;
-        static const double Q_PI = 0.785398163397448; // alt name to QUARTER_PI
-        static const double TWO_PI = 6.28318530717958;
-        static const double DOUBLE_PI = 6.28318530717958; // alt name to TWO_PI
-        static const double THREE_PI = 9.42477796077;
-        static const double TRI_PI = 9.42477796077; // alt name to THREE_PI
+        static constexpr double PI = 3.14159265358979;
+        static constexpr double HALF_PI = 1.5707963267949;
+        static constexpr double H_PI = 1.5707963267949; // alt name to HALF_PI
+        static constexpr double QUARTER_PI = 0.785398163397448;
+        static constexpr double Q_PI = 0.785398163397448; // alt name to QUARTER_PI
+        static constexpr double TWO_PI = 6.28318530717958;
+        static constexpr double DOUBLE_PI = 6.28318530717958; // alt name to TWO_PI
+        static constexpr double THREE_PI = 9.42477796077;
+        static constexpr double TRI_PI = 9.42477796077; // alt name to THREE_PI
     };
 }
 
