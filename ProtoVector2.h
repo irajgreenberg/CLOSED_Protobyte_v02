@@ -154,8 +154,8 @@ namespace ijg {
         ProtoVector2& rotate(T theta);
         ProtoVector2& reflect(const ProtoVector2& axis);
         // containers passed in below
-        void lerp (const ProtoVector2& v, unsigned steps,  const std::vector<ProtoPoint2<T>>& ptsContainer) const;
-        void lerpVecs (const ProtoVector2& v, unsigned steps,  const std::vector<ProtoVector2<T>>& vecsContainer) const;
+        void lerp (const ProtoVector2& v, unsigned steps,  std::vector<ProtoPoint2<T>>& ptsContainer) const;
+        void lerpVecs (const ProtoVector2& v, unsigned steps,  std::vector<ProtoVector2<T>>& vecsContainer) const;
         
         
     private:
@@ -394,7 +394,7 @@ namespace ijg {
     
     // fills passed in container
     template <class T>
-    inline void ProtoVector2<T>::lerp(const ProtoVector2& v, unsigned steps, const std::vector<ProtoPoint2<T>>& ptsContainer) const{
+    inline void ProtoVector2<T>::lerp(const ProtoVector2& v, unsigned steps, std::vector<ProtoPoint2<T>>& ptsContainer) const{
         T stepVal = 1.0/steps;
         for (int i=1; i<steps; ++i) {
             T x = x*(1-stepVal*i)+v.x.x*stepVal*i;
@@ -405,7 +405,7 @@ namespace ijg {
     
      // fills passed in container
     template <class T>
-    inline void ProtoVector2<T>::lerpVecs(const ProtoVector2& v, unsigned steps, const std::vector<ProtoVector2<T>>& vecsContainer) const{
+    inline void ProtoVector2<T>::lerpVecs(const ProtoVector2& v, unsigned steps, std::vector<ProtoVector2<T>>& vecsContainer) const{
         T stepVal = 1.0/steps;
         for (int i=1; i<steps; ++i) {
             T x = x*(1-stepVal*i)+v.x.x*stepVal*i;
