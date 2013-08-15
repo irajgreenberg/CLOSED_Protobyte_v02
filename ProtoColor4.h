@@ -123,6 +123,10 @@ namespace ijg {
 #define ProtoColor4f ProtoColor4<float>
 #define ProtoColor4b ProtoColor4<unsigned char>
 #define ProtoColor4i ProtoColor4<int>
+        
+#define Col4f ProtoColor4<float>
+#define Col4b ProtoColor4<unsigned char>
+#define Col4i ProtoColor4<int>
 }
 #endif /* defined(PROTO_COLOR4_h) */
 

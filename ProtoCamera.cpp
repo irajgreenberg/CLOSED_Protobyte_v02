@@ -46,3 +46,4 @@ fovAngle(fovAngle), aspectRatio(aspectRatio), nearClipPlane(nearClipPlane), farC
 ProtoCamera::~ProtoCamera() {
     
 }
+

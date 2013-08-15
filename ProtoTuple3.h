@@ -47,18 +47,27 @@ namespace ijg {
 
 
 
-#define ProtoTuple3f ProtoTuple3<float>
-#define ProtoTuple3i ProtoTuple3<int>
-#define ProtoTuple3b ProtoTuple3<unsigned char>
-#define ProtoTuple3v Tuple2<ProtoVector3>
-#define ProtoTuple3ffi ProtoTuple3<float, float, int>
-#define ProtoTuple3iif ProtoTuple3<int, int, float>
+
 
     template<typename T>
     std::ostream& operator<<(std::ostream& out, const ProtoTuple3<T>& tuple3) {
         out << tuple3.elem0 << ", " << tuple3.elem1 << ", " << tuple3.elem2;
         return out;
     }
+        
+    // Type name convenience macros
+    #define ProtoTuple3i ProtoTuple3<int>
+    #define ProtoTuple3f ProtoTuple3<float>
+    #define ProtoTuple3d ProtoTuple3<double>
+    #define ProtoTuple3v3f ProtoTuple3<ProtoVector3f>
+    #define ProtoTuple3b ProtoTuple3<unsigned char>
+            
+    #define Tup3i ProtoTuple3<int>
+    #define Tup3f ProtoTuple3<float>
+    #define Tup3d ProtoTuple3<double>
+            
+    #define Tup3v2f ProtoTuple3<Vec2f>
+    #define Tup3v3f ProtoTuple3<Vec3f>
 
 
 }

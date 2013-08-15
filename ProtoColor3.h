@@ -107,9 +107,13 @@ namespace ijg {
 
 
     // most common usages
-#define ProtoColor3f ProtoColor3<float>
-#define ProtoColor3b ProtoColor3<unsigned char>
-#define ProtoColor3i ProtoColor3<int>
+    #define ProtoColor3f ProtoColor3<float>
+    #define ProtoColor3b ProtoColor3<unsigned char>
+    #define ProtoColor3i ProtoColor3<int>
+            
+    #define Col3f ProtoColor3<float>
+    #define Col3b ProtoColor3<unsigned char>
+    #define Col3i ProtoColor3<int>
 }
 
 #endif /* defined(PROTO_COLOR3_H) */

@@ -63,10 +63,19 @@ namespace ijg {
     }
 
 
-#define ProtoTuple2f ProtoTuple2<float>
-#define ProtoTuple2i ProtoTuple2<int>
-#define ProtoTuple2v3 ProtoTuple2<ProtoVector3>
-#define ProtoTuple2b ProtoTuple2<unsigned char>
+    // Type name convenience macros
+    #define ProtoTuple2i ProtoTuple2<int>
+    #define ProtoTuple2f ProtoTuple2<float>
+    #define ProtoTuple2d ProtoTuple2<double>
+    #define ProtoTuple2v3f ProtoTuple2<ProtoVector3f>
+    #define ProtoTuple2b ProtoTuple2<unsigned char>
+
+    #define Tup2i ProtoTuple2<int>
+    #define Tup2f ProtoTuple2<float>
+    #define Tup2d ProtoTuple2<double>
+
+    #define Tup2v2f ProtoTuple2<Vec2f>
+    #define Tup2v3f ProtoTuple2<Vec3f>
 
 }
 #endif // PROTO_TUPLE2_H

@@ -246,7 +246,12 @@ namespace ijg {
 
     // most common usages
 #define ProtoDimension3f ProtoDimension3<float>
+#define ProtoDimension3d ProtoDimension3<double>
 #define ProtoDimension3i ProtoDimension3<int>
+    
+#define Dim3f ProtoDimension3<float>
+#define Dim3d ProtoDimension3<double>
+#define Dim3i ProtoDimension3<int>
 
 }
 #endif /* defined(PROTO_DIMENSION3) */
