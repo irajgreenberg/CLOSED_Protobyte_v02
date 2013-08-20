@@ -27,6 +27,10 @@
 #include <iostream>
 #include <SFML/OpenGL.hpp>
 #include <stdio.h>
+#include "ProtoMath.h"
+#include "ProtoBoundsRect.h"
+#include "ProtoVector3.h"
+#include <string>
 
 //#ifdef  __APPLE__
 //#include <GLUT/glut.h>
@@ -42,37 +46,70 @@
 namespace ijg {
     
     class ProtoCamera {
-    
-    public:
-        ProtoCamera();
         
+    public:
+        // cstrs
+        ProtoCamera();
+        ProtoCamera(const Vec3f& pos, const Vec3f& rot);
+        ProtoCamera(const Vec3f& pos, const Vec3f& rot, float fovAngle, float aspectRatio, float nearClipPlane, float farClipPlane);
+        ProtoCamera(const Vec3f& pos, const Vec3f& rot, float frustumVals[4]);
         ProtoCamera(float fovAngle, float aspectRatio, float nearClipPlane, float farClipPlane);
+        ProtoCamera(float frustumVals[4]);
         
         // include in case of derived ProtoCamera class
-        virtual ~ProtoCamera(); 
+        virtual ~ProtoCamera();
         
         // accessors/mutators
         unsigned char getUniqueID() const;
-
+        
+        void setName(std::string name);
+        std::string getName() const;
+        
+        void project();
+        
+        void setProjection(float fovAngle, float aspectRatio, float nearClipPlane = .1f, float farClipPlane = 1000.0f);
+        void setPosition(const Vec3f& pos);
+        void setRotation(const Vec3f& rot);
+        void setViewPort(float x, float y, float w, float h);
         
     private:
+        Vec3f pos, rot;
         float fovAngle;
         float aspectRatio;
         float nearClipPlane, farClipPlane;
+        std::string name;
+        ProtoBoundsRect<float> viewPort;
         
         
         static unsigned char static_camera_count;
         
-        // ProtoUniverse manages multiple camers through their unique_id
+        // ProtoWorld manages multiple cameras through their unique_id
         unsigned char uniqueID;
         
-                
-    };
-    
-    inline unsigned char ProtoCamera::getUniqueID() const{
-        return uniqueID;
+        };
+        
+        inline void ProtoCamera::setPosition(const Vec3f& pos) {
+            this->pos = pos;
+        }
+        
+        inline void ProtoCamera::setRotation(const Vec3f& rot){
+            this->rot = rot;
+        }
+        
+        inline unsigned char ProtoCamera::getUniqueID() const{
+            return uniqueID;
+        }
+        
+        inline void ProtoCamera::setName(std::string name){
+            this->name = name;
+            
+        }
+        
+        inline std::string ProtoCamera::getName() const {
+            return name;
+        }
+        
     }
-}
-
-
+    
+    
 #endif // Protobyte_v02_ProtoCamera_cpp

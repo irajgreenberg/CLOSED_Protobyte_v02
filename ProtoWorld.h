@@ -27,6 +27,7 @@
 
 #include <iostream>
 #include <vector>
+#include "ProtoBoundsRect.h"
 #include "ProtoCamera.h"
 //#include "ProtoAnimator.h"
 //#include "ProtoRenderer.h"
@@ -36,6 +37,9 @@
 #include <memory>
 #include <mutex>
 
+//#define NDEBUG //uncomment for production code
+#include <cassert>
+
 namespace ijg {
     
     class ProtoWorld {
@@ -44,22 +48,25 @@ namespace ijg {
         
         // field for singleton instance
         static std::unique_ptr<ProtoWorld> singletonWorld;
-        static std::once_flag protoOnceFlag; // for thread saftety
+        static std::once_flag protoOnceFlag; // for thread safety
         
         // private default cstr to enforce singleton pattern
         ProtoWorld();
         
-        // disallow overriding copy cstr
+        // private copy cstr
         ProtoWorld(const ProtoWorld& world);
         
-        // disallow overriding operator=
-        ProtoWorld& operator=(const ProtoWorld& world);
+        // private operator=
+        //ProtoWorld& operator=(const ProtoWorld& world);
         
         
         // Camera stuff
-        std::vector< std::unique_ptr<ProtoCamera> > cameras;
-        static unsigned char cameraCount;
-        static const unsigned char CAMERA_COUNT_MAX;
+        static ProtoBoundsRect<float> canvasBounds; // for aspect ratio
+        std::vector< std::unique_ptr<ProtoCamera> > cameras; // holds up to 4 cameras
+        static unsigned char cameraCount; // 1-4
+        static const unsigned char CAMERA_COUNT_MAX; // 4
+        
+        Vec3f worldRotSpeed;
         
         //iterator
         //std::vector<ProtoCamera&>::iterator cameraObjsIter;
@@ -78,22 +85,42 @@ namespace ijg {
         //        // iterator
         //        std::vector<ProtoGeomBase*>::iterator geomObjsIter;
         //
+        
+       
+        // need to implement this function
+        
+        int activeCamera;
+        
 
         
     public:
         
+        static float canvasWidth, canvasHeight;
+        
+        // for multiple views
+        enum WorldView {
+            SINGLE_VIEW,
+            DOUBLE_VIEW_LANDSCAPE,
+            DOUBLE_VIEW_PORTRAIT,
+            QUAD_VIEW
+        };
+        
+        float fovAngle;
+        float nearClipPlane;
+        float farClipPlane;
+        WorldView worldView;
+        
+        
         friend std::ostream& operator<<(std::ostream& out, const ProtoWorld& protoWorld);
         
-        // only returns a single instance
-        static ProtoWorld& getInstance();
+        // singleton pattern
+        //static ProtoWorld& getInstance();
+        static ProtoWorld& getInstance(float canvasWidth = 100.0, float canvasHeight = 100.0);
         
-        // dstr
-//        ~ProtoWorld();
         
-        // overloaded assignment op
-        //ProtoWorld& operator=(const ProtoWorld& world);
-        
-        /****** add/remove stuff to the ProtoWorld ******/
+        /****** add/remove stuff to the ProtoWorld *******
+        * using overloaded add functions
+        *************************************************/
         // adds ProtoGeomBase/ProtoGeomComposite pointers
         //        void add(ProtoGeomBase* baseObj); // single geometric obj
         //        void add(ProtoGeomComposite* compositeObj); // composite geometric obj
@@ -115,9 +142,21 @@ namespace ijg {
         // stop world
         void stop();
         
+        void draw();
+        
+        void rotate(const Vec3f& worldRot);
+        
         
         // state changes
         //        void setRenderState(ProtoRenderer::RenderModeEnum renderMode = ProtoRenderer::SURFACE, float pointSize = 3.5f);
+        
+        void setWorldRotSpeed(const Vec3f& worldRotSpeed);
+        //void setWorldFrustum(float fovAngle=60, float nearClipPlane = 0.1f, float farClipPlane = 1000.0f);
+        void setWorldView(WorldView worldView = QUAD_VIEW);
+        void setCurrentCamera(int cameraID1, int cameraID2);
+        void setCurrentCameras();
+        void setActiveCamera(int activeCamera);
+        void setDefaultProjection(float fovAngle=60, float nearClipPlane = 0.1f, float farClipPlane = 1000.0f);
         
         
     };
