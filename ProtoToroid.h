@@ -24,16 +24,16 @@
 #ifndef PROTO_TOROID_H
 #define	PROTO_TOROID_H
 
-#include "ProtoGeomBase.h"
+#include "ProtoGeom3.h"
 
 namespace ijg {
 
-    class ProtoToroid : public ProtoGeomBase {
+    class ProtoToroid : public ProtoGeom3 {
     public:
 
         ProtoToroid();
 
-        ProtoToroid(const ProtoVector3& pos, const ProtoVector3& rot, const ProtoDimension3<float>& size, const ProtoColor4<float>& col4,
+        ProtoToroid(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3<float>& size, const ProtoColor4<float>& col4,
                 int ringCount, int ringDetail, float ringRadius, float ringThickness);
 
 

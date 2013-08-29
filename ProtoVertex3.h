@@ -1,5 +1,5 @@
-/*!  \brief  ProtoVertex.h: Base vertex implementation (xyz,rgba,uv)
- ProtoVertex.h
+/*!  \brief  ProtoVertex3.h: Base vertex implementation (xyz,rgba,uv)
+ ProtoVertex3.h
  Protobyte Library v02
  
  Created by Ira on 7/23/13.
@@ -21,8 +21,8 @@
  \sa NO LINK
  */
 
-#ifndef PROTO_VERTEX_H
-#define	PROTO_VERTEX_H
+#ifndef PROTO_VERTEX3_H
+#define	PROTO_VERTEX3_H
 
 #include "ProtoVector3.h"
 #include "ProtoColor4.h"
@@ -30,28 +30,28 @@
 
 namespace ijg {
 
-    class ProtoVertex {
+    class ProtoVertex3 {
     public:
-        friend std::ostream& operator<<(std::ostream& output, const ProtoVertex& vertex);
+        friend std::ostream& operator<<(std::ostream& output, const ProtoVertex3& vertex);
 
-        ProtoVertex();
-        ProtoVertex(const ProtoVector3& pos);
-        ProtoVertex(const ProtoVector3& pos, const ProtoColor4<float>& col4);
-        ProtoVertex(const ProtoVector3& pos, const ProtoColor4<float>& col4, const ProtoTuple2<float>& uv);
+        ProtoVertex3();
+        ProtoVertex3(const Vec3f& pos);
+        ProtoVertex3(const Vec3f& pos, const ProtoColor4<float>& col4);
+        ProtoVertex3(const Vec3f& pos, const ProtoColor4<float>& col4, const ProtoTuple2<float>& uv);
 
-        ProtoVector3 pos;
+        Vec3f pos;
 
-        const ProtoVector3& getNormal() const;
+        const Vec3f& getNormal() const;
         ProtoColor4<float> getColor() const;
         ProtoTuple2<float> getUV() const;
 
-        void setNormal(const ProtoVector3& norm);
+        void setNormal(const Vec3f& norm);
         void setColor(const ProtoColor4<float>& col4);
         void setUV(const ProtoTuple2<float>& uv);
 
     private:
         ProtoColor4<float> col4;
-        ProtoVector3 norm;
+        Vec3f norm;
         ProtoTuple2<float> uv;
 
         void init();
@@ -59,31 +59,31 @@ namespace ijg {
     
     // inline getters/setters
 
-    inline const ProtoVector3& ProtoVertex::getNormal() const {
+    inline const Vec3f& ProtoVertex3::getNormal() const {
         return norm;
     }
 
-    inline void ProtoVertex::setNormal(const ProtoVector3& norm) {
+    inline void ProtoVertex3::setNormal(const Vec3f& norm) {
         this->norm = norm;
     }
 
-    inline ProtoColor4<float> ProtoVertex::getColor() const {
+    inline ProtoColor4<float> ProtoVertex3::getColor() const {
         return col4;
     }
 
-    inline void ProtoVertex::setColor(const ProtoColor4<float>& col4) {
+    inline void ProtoVertex3::setColor(const ProtoColor4<float>& col4) {
         this->col4 = col4;
     }
     
-    inline ProtoTuple2<float> ProtoVertex::getUV() const {
+    inline ProtoTuple2<float> ProtoVertex3::getUV() const {
         return uv;
     }
     
-    inline void ProtoVertex::setUV(const ProtoTuple2<float>& uv){
+    inline void ProtoVertex3::setUV(const ProtoTuple2<float>& uv){
         this->uv = uv;
     }
 
 
 }
-#endif	// PROTO_VERTEX_H
+#endif	// PROTO_VERTEX3_H
 

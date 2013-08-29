@@ -396,7 +396,9 @@ namespace ijg {
     inline ProtoVector2<T>& ProtoVector2<T>::rotate(T theta){
         T tempX = cos(theta)*x - sin(theta)*y;
         T tempY = sin(theta)*x + cos(theta)*y;
-        return *this(ProtoVector2<T>(tempX, tempY));
+        x = tempX;
+        y = tempY;
+        return *this;
     }
     
     template <class T>

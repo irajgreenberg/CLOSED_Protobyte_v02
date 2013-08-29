@@ -40,6 +40,10 @@
 //#define NDEBUG //uncomment for production code
 #include <cassert>
 
+
+// testing only
+#include "ProtoGeom3.h"
+
 namespace ijg {
     
     class ProtoWorld {
@@ -65,6 +69,11 @@ namespace ijg {
         std::vector< std::unique_ptr<ProtoCamera> > cameras; // holds up to 4 cameras
         static unsigned char cameraCount; // 1-4
         static const unsigned char CAMERA_COUNT_MAX; // 4
+        
+        // Objs
+        std::vector< std::unique_ptr<ProtoShape3> > shapes; // composite geom forms
+        std::vector< std::unique_ptr<ProtoGeom3> > geoms; // indiviudal geom forms
+        
         
         Vec3f worldRotSpeed;
         
@@ -97,6 +106,12 @@ namespace ijg {
         
         static float canvasWidth, canvasHeight;
         
+        enum RenderingMode {
+            POINTS,
+            WIREFRAME,
+            SURFACE
+        };
+        
         // for multiple views
         enum WorldView {
             SINGLE_VIEW,
@@ -122,7 +137,7 @@ namespace ijg {
         * using overloaded add functions
         *************************************************/
         // adds ProtoGeomBase/ProtoGeomComposite pointers
-        //        void add(ProtoGeomBase* baseObj); // single geometric obj
+        void add(std::unique_ptr<ProtoGeom3> geomObj); // single geometric obj
         //        void add(ProtoGeomComposite* compositeObj); // composite geometric obj
         //
         
@@ -157,7 +172,9 @@ namespace ijg {
         void setCurrentCameras();
         void setActiveCamera(int activeCamera);
         void setDefaultProjection(float fovAngle=60, float nearClipPlane = 0.1f, float farClipPlane = 1000.0f);
+        void setLights();
         
+        void setRenderingMode(RenderingMode=SURFACE);
         
     };
 }

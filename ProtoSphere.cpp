@@ -26,18 +26,18 @@
 using namespace ijg;
 
 ProtoSphere::ProtoSphere() {
-
+    
 }
 
-ProtoSphere::ProtoSphere(const ProtoVector3& pos, const ProtoVector3& rot, const ProtoDimension3f size,
-        const ProtoColor4f col4, float textureScale, int spines, int spineNodes) :
-ProtoGeomBase(pos, rot, size, col4, textureScale), spines(spines), spineNodes(spineNodes) {
+ProtoSphere::ProtoSphere(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3f size,
+                         const ProtoColor4f col4, float textureScale, int spines, int spineNodes) :
+ProtoGeom3(pos, rot, size, col4, textureScale), spines(spines), spineNodes(spineNodes) {
     init();
 }
 
-ProtoSphere::ProtoSphere(const ProtoVector3& pos, const ProtoVector3& rot, const ProtoDimension3f size,
-        const ProtoColor4f col4, int spines, int spineNodes) :
-ProtoGeomBase(pos, rot, size, col4), spines(spines), spineNodes(spineNodes) {
+ProtoSphere::ProtoSphere(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3f size,
+                         const ProtoColor4f col4, int spines, int spineNodes) :
+ProtoGeom3(pos, rot, size, col4), spines(spines), spineNodes(spineNodes) {
     init();
 }
 
@@ -51,7 +51,7 @@ ProtoGeomBase(pos, rot, size, col4), spines(spines), spineNodes(spineNodes) {
 //}
 
 void ProtoSphere::calcVerts2() {
-
+    
     verts.resize((spineNodes - 2) * spines + 2);
     float x = 0, y = 0, z = 0, u = 0.0, v = 0.0;
     float tempX = 0, tempZ = 0;
@@ -59,7 +59,7 @@ void ProtoSphere::calcVerts2() {
     int counter = 0;
     int radiusX = size.w / 2.0;
     int radiusY = size.w / 2.0;
-
+    
     // always 1 more segment than points along spline
     for (int i = 0; i < spineNodes; i++) {
         // z rotation
@@ -68,57 +68,57 @@ void ProtoSphere::calcVerts2() {
         z = 0.0;
         phi = 0.0;
         for (int j = 0; j < spines; j++) {
-
+            
             // y rotation
             tempZ = cos(phi) * z - sin(phi) * x;
             tempX = sin(phi) * z + cos(phi) * x;
-
+            
             // UV mapping expressions form:
             //http://en.wikipedia.org/wiki/UV_mapping
-            ProtoVector3 tmp(tempX, y, tempZ);
+            Vec3f tmp(tempX, y, tempZ);
             tmp.normalize();
             u = .5 + atan2(tmp.z, tmp.x) / (2 * M_PI);
             v = .5 - 2.0 * asin(tmp.y) / (2 *M_PI);
-
+            
             // top vertex
             if (i == 0 && j == 0) {
-                verts.at(counter++) = ProtoVertex(ProtoVector3(tempX, y, tempZ),
-                        ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()),
-                        ProtoTuple2f(u, v));
+                verts.at(counter++) = ProtoVertex3(Vec3f(tempX, y, tempZ),
+                                                   ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()),
+                                                   ProtoTuple2f(u, v));
                 // body vertices
             } else if (i > 0 && i < spineNodes - 1) {
-                verts.at(counter++) = ProtoVertex(ProtoVector3(tempX, y, tempZ),
-                        ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()),
-                        ProtoTuple2f(u, v));
+                verts.at(counter++) = ProtoVertex3(Vec3f(tempX, y, tempZ),
+                                                   ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()),
+                                                   ProtoTuple2f(u, v));
                 // bottom vertex
             } else if (i == spineNodes - 1 && j == 0) {
-                verts.at(counter++) = ProtoVertex(ProtoVector3(tempX, y, tempZ),
-                        ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()),
-                        ProtoTuple2f(u, v));
+                verts.at(counter++) = ProtoVertex3(Vec3f(tempX, y, tempZ),
+                                                   ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()),
+                                                   ProtoTuple2f(u, v));
             }
             phi -= M_PI * 2.0 / spines;
         }
         theta -= M_PI / (spineNodes - 1);
     }
-    std::cout << "verts.size() = " << counter << std::endl;
+    // std::cout << "verts.size() = " << counter << std::endl;
 }
 
 /*Note: p = Pi
-q as the angle  on X axis (0 <= q <= 2p)
-f as the angle from the Z axis (0.0 <= f <= p).
-
-X = R sin (f) * cos (q) = R sin (pv) * cos (2pu) where f/p = v (0.0 <= v <= 1.0)
-Y = R sin (f) * sin (q) = R sin (pv) * sin (2pu) where q/2p = u (0.0 <= u <= 1.0))
-Z = R cos (f) = R cos (pv)
-
-u = [arccos ( X/R sin (pv) ) ] / 2p
-v = f/p = arccos (Z/R) / p
+ q as the angle  on X axis (0 <= q <= 2p)
+ f as the angle from the Z axis (0.0 <= f <= p).
+ 
+ X = R sin (f) * cos (q) = R sin (pv) * cos (2pu) where f/p = v (0.0 <= v <= 1.0)
+ Y = R sin (f) * sin (q) = R sin (pv) * sin (2pu) where q/2p = u (0.0 <= u <= 1.0))
+ Z = R cos (f) = R cos (pv)
+ 
+ u = [arccos ( X/R sin (pv) ) ] / 2p
+ v = f/p = arccos (Z/R) / p
  */
 
-/*! 
+/*!
  * Implementation Notes:
  * Verts packed 1 dimensionally as top PT = 0, body, bottom PT = size()-1
- * 
+ *
  * Created on April 25, 2013, 1:47 PM
  */
 //  FIX NEED MORE FACES
@@ -126,7 +126,7 @@ v = f/p = arccos (Z/R) / p
 void ProtoSphere::calcInds2() {
     int ctr = 0;
     ProtoTuple3i t0;
-
+    
     // body faces
     for (int i = 0; i < spineNodes; ++i) {
         for (int j = 0; j < spines; ++j) {
@@ -145,7 +145,7 @@ void ProtoSphere::calcInds2() {
                 t0 = ProtoTuple3i((i - 1) * spines + j + 1, i * spines + j + 1, (i - 1) * spines + j + 2);
                 inds.push_back(t0);
                 //std::cout << "middle 1 = " << t0 << std::endl;
-
+                
                 t0 = ProtoTuple3i((i - 1) * spines + j + 2, i * spines + j + 1, i * spines + j + 2);
                 inds.push_back(t0);
                 //std::cout << "middle 2 = " << t0 << std::endl;
@@ -154,7 +154,7 @@ void ProtoSphere::calcInds2() {
                 t0 = ProtoTuple3i((i - 1) * spines + j + 1, i * spines + j + 1, (i - 1) * spines + 1);
                 inds.push_back(t0);
                 //std::cout << "middle 1 = " << t0 << std::endl;
-
+                
                 t0 = ProtoTuple3i((i - 1) * spines + 1, i * spines + j + 1, i * spines + 1);
                 inds.push_back(t0);
                 //std::cout << "middle 2 = " << t0 << std::endl;
@@ -169,8 +169,8 @@ void ProtoSphere::calcInds2() {
                 inds.push_back(t0);
                 //std::cout << "bottom close = " << t0 << std::endl;
             }
-
-
+            
+            
         }
     }
     //std::cout << "inds.size() = " << inds.size() << std::endl;
@@ -180,17 +180,17 @@ void ProtoSphere::calcInds2() {
 
 void ProtoSphere::calcVerts() {
     spines+=1;
-
+    
     verts.resize(spineNodes * spines);
     float x = 0, y = 0, z = 0, u = 0.0, v = 0.0;
     float tempX = 0, tempZ = 0;
     float theta = -M_PI / 2.0, phi = 0.0;
-   // int counter = 0;
+    // int counter = 0;
     
     // untransformed UNit sphere
-    int radiusX = .5;
-    int radiusY = .5;
-
+    float radiusX = .5;
+    float radiusY = .5;
+    
     // always 1 more segment than points along spline
     for (int i = 0; i < spineNodes; i++) {
         // z rotation
@@ -199,25 +199,33 @@ void ProtoSphere::calcVerts() {
         z = 0.0;
         phi = 0.0;
         for (int j = 0; j < spines; j++) {
-
+            
             // y rotation
             tempZ = cos(phi) * z - sin(phi) * x;
             tempX = sin(phi) * z + cos(phi) * x;
-
+            
+            // test
+            //std::cout << "radiusX = " << radiusX << std::endl;
+            //std::cout << "radiusY = " << radiusY << std::endl;
+//             std::cout << "z = " << z << std::endl;
+//             std::cout << "tempX = " << tempX << std::endl;
+//             std::cout << "tempZ = " << tempZ << std::endl;
+            
+            
             // UV mapping expressions form:
             //http://en.wikipedia.org/wiki/UV_mapping
-            ProtoVector3 tmp(tempX, y, tempZ);
+            Vec3f tmp(tempX, y, tempZ);
             tmp.normalize();
             u = .5 + atan2(tmp.z, tmp.x) / (2 * M_PI);
             v = .5 - 2.0 * asin(tmp.y) / (2 * M_PI);
-
-            verts.at(spines*i + j) = ProtoVertex(ProtoVector3(tempX, y, tempZ),
-                    ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()),
-                    ProtoTuple2f(u, v));
+            
+            verts.at(spines*i + j) = ProtoVertex3(Vec3f(tempX, y, tempZ),
+                                                  ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()),
+                                                  ProtoTuple2f(u, v));
             //std::cout << "ProtoTuple2f(u, v) = " << ProtoTuple2f(u, v) << std::endl;
             
             phi += M_PI * 2.0 / (spines-1);
-             //std::cout << "phi = " << (phi*180.0/M_PI)  << std::endl;
+            //std::cout << "phi = " << (phi*180.0/M_PI)  << std::endl;
         }
         theta -= M_PI / (spineNodes - 1);
     }
@@ -225,22 +233,22 @@ void ProtoSphere::calcVerts() {
 
 void ProtoSphere::calcInds() {
     ProtoTuple3i t0;
-
+    
     // body faces
     for (int i = 0; i < spineNodes - 1; ++i) {
         for (int j = 0; j < spines - 1; ++j) {
-                t0 = ProtoTuple3i(i * spines + j, (i + 1) * spines + j + 1, (i + 1) * spines + j);
-                inds.push_back(t0);
-                //std::cout << "inds open1 = " << t0 << std::endl;
-
-                t0 = ProtoTuple3i(i * spines + j, i * spines + j + 1, (i + 1) * spines + j + 1);
-                inds.push_back(t0);
-                //std::cout << "inds open2 = " << t0 << std::endl;
+            t0 = ProtoTuple3i(i * spines + j, (i + 1) * spines + j + 1, (i + 1) * spines + j);
+            inds.push_back(t0);
+            //std::cout << "inds open1 = " << t0 << std::endl;
             
-
+            t0 = ProtoTuple3i(i * spines + j, i * spines + j + 1, (i + 1) * spines + j + 1);
+            inds.push_back(t0);
+            //std::cout << "inds open2 = " << t0 << std::endl;
+            
+            
         }
     }
-   // std::cout << "inds.size() = " << inds.size() << std::endl;
+    // std::cout << "inds.size() = " << inds.size() << std::endl;
 }
 
 

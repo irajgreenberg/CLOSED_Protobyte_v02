@@ -33,8 +33,8 @@
 #endif
 
 #include <vector>
-#include "ProtoVertex.h"
 #include "ProtoVector3.h"
+#include "ProtoVertex3.h"
 #include <cmath>
 #include <iostream>
 
@@ -43,11 +43,11 @@ namespace ijg {
     class ProtoFace3 {
     private:
         //ProtoVector3 vecs[3];
-        // ProtoVector3 v0, v1, v2;
-        ProtoVertex vecs[3];
-        //ProtoVertex v0, v1, v2;
-        //ProtoVertex *v0_p, *v1_p, *v2_p;
-        ProtoVector3 norm, centroid;
+        //Vec3f v0, v1, v2;
+         ProtoVertex3 vecs[3];
+        //ProtoVertex3 v0, v1, v2;
+        //ProtoVertex3 *v0_p, *v1_p, *v2_p;
+       Vec3f norm, centroid;
 
         void init();
 
@@ -58,18 +58,18 @@ namespace ijg {
     public:
         friend std::ostream& operator<<(std::ostream& output, const ProtoFace3& face3);
 
-        //ProtoFace3(ProtoVertex& v0, ProtoVertex& v1, ProtoVertex& v2);
-        ProtoFace3(ProtoVertex* v0_p, ProtoVertex* v1_p, ProtoVertex* v2_p);
+        //ProtoFace3(ProtoVertex3& v0, ProtoVertex3& v1, ProtoVertex3& v2);
+        ProtoFace3(ProtoVertex3* v0_p, ProtoVertex3* v1_p, ProtoVertex3* v2_p);
         void display();
 
-        const ProtoVector3& getNorm() const;
-        const ProtoVector3& getCentroid() const;
+        const Vec3f& getNorm() const;
+        const Vec3f& getCentroid() const;
 
 
-        //const ProtoVertex& operator[](int index);
-        const ProtoVertex* operator[](int index);
+        //const ProtoVertex3& operator[](int index);
+        const ProtoVertex3* operator[](int index);
         
-        ProtoVertex *v0_p, *v1_p, *v2_p;
+        ProtoVertex3 *v0_p, *v1_p, *v2_p;
 
     };
 }

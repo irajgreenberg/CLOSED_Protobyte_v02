@@ -117,24 +117,25 @@ ProtoWorld& ProtoWorld::getInstance(float canvasWidth, float canvasHeight) {
 void ProtoWorld::init(){
     
     
-    
+    setLights();
     glFrontFace(GL_CCW); // default
-    //glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     //glCullFace(GL_BACK);
     //glDisable(GL_CULL_FACE);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     //glShadeModel(GL_SMOOTH); // smooth by default
     //glShadeModel(GL_FLAT);
-    //glEnable(GL_COLOR_MATERIAL); // incorporates per vertex color with lights
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //glEnable(GL_BLEND);
-    //glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_NORMALIZE); //  good for uniform scaling
+    glEnable(GL_COLOR_MATERIAL); // incorporates per vertex color with lights
+    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_NORMALIZE); //  good for uniform scaling
     
     
-    //glClearStencil(0); // clear stencil buffer
-    //glClearDepth(1.0f); // 0 is near, 1 is far
-    //glDepthFunc(GL_LEQUAL);
+    glClearStencil(0); // clear stencil buffer
+    glClearDepth(1.0f); // 0 is near, 1 is far
+    glDepthFunc(GL_LEQUAL);
     
     
     // CREATE DEFAULT CAMERA
@@ -150,10 +151,7 @@ void ProtoWorld::init(){
     //    animator = ProtoAnimator::getInstance();
 }
 
-//void ProtoWorld::add(ProtoGeomBase* geomObj){
-//   // geomObjs.push_back(geomObj);
-//}
-//
+
 //void ProtoWorld::add(ProtoGeomComposite* geomObj){
 //    // TO DO
 //}
@@ -175,8 +173,9 @@ void ProtoWorld::add(std::unique_ptr<ProtoCamera> camera){
 }
 
 
-//void ProtoWorld::remove(ProtoGeomBase* geomObj) {
-//}
+void ProtoWorld::add(std::unique_ptr<ProtoGeom3> geomObj) {
+    geoms.push_back(std::move(geomObj)); // change ownership
+}
 
 
 //void ProtoWorld::remove(ProtoCamera* camera){
@@ -354,7 +353,7 @@ void ProtoWorld::run() {
             break;
             
             
-
+            
         case QUAD_VIEW:
             for(int i=0; i<4; ++i){
                 //std::cout << "cameras.at("<<i<<")->getName() = " << cameras.at(i)->getName() << std::endl;
@@ -406,15 +405,9 @@ void ProtoWorld::stop(){
 }
 
 void ProtoWorld::draw() {
-    glScalef(1,1,1);
-    glColor3f(.65, .9, .9);
-    glBegin(GL_QUADS);
-    glVertex3f(-.5, .5, 0);
-    glVertex3f(-.5, -.5, 0);
-    glVertex3f(.5, -.5, 0);
-    glVertex3f(.5, .5, 0);
-    glEnd();
-    
+    for(int i=0; i<geoms.size(); ++i){
+        geoms.at(i)->display(ProtoGeom3::VERTEX_BUFFER_OBJECT, ProtoGeom3::SURFACE);
+    }
 }
 
 void ProtoWorld::rotate(const Vec3f& worldRot) {
@@ -444,6 +437,36 @@ void ProtoWorld::setActiveCamera(int activeCamera){
 //void setRenderState(ProtoRenderer::RenderModeEnum renderMode, float pointSize) {
 //   // this->renderMode = renderMode;
 //}
+
+void ProtoWorld::setLights() {
+    
+    /**********************************
+     *           LIGHTING             *
+     *********************************/
+    // Light01
+    GLfloat light01_ambient[] = {0.3, 0.1, 0.1, 1.0};
+    GLfloat light01_diffuse[] = {.85, .85, .85, 1.0};
+    GLfloat light01_specular[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat light01_position[] = {-20, 10, 5.0, 0.0};
+    
+    //materials
+    GLfloat light01_mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat light01_mat_shininess[] = {15}; // max 128
+
+    
+    // light 01
+    glMaterialfv(GL_FRONT, GL_SPECULAR, light01_mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, light01_mat_shininess);
+    
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light01_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light01_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light01_specular);
+    glLightfv(GL_LIGHT0, GL_POSITION, light01_position);
+    
+    
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+}
 
 
 

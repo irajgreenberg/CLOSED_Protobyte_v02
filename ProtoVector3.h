@@ -157,13 +157,13 @@ namespace ijg {
         T angleZAxis() const;
         T angleBetween(const ProtoVector3<T>& v) const;
         T dot(const ProtoVector3<T>& v) const;
-        ProtoVector3<T>& cross(const ProtoVector3<T>& v) const;
+        ProtoVector3<T>& cross(const ProtoVector3<T>& v);
         ProtoVector3<T>& rotateX(T theta);
         ProtoVector3<T>& rotateY(T theta);
         ProtoVector3<T>& rotateZ(T theta);
         ProtoVector3<T>& rotateAxis(const ProtoVector3<T>& axis, T theta);
         ProtoVector3<T>& reflect(const ProtoVector3<T>& axis);
-        // containers passed in below
+        // require containers passed in
         void lerp (const ProtoVector3<T>& v, unsigned steps,  std::vector<ProtoPoint3<T>>& ptsContainer) const;
         void lerpVecs (const ProtoVector3<T>& v, unsigned steps,  std::vector<ProtoVector3<T>>& vecsContainer) const;
         
@@ -437,13 +437,13 @@ namespace ijg {
         return x*v.x + y*v.y + z*v.z;
     }
     
-    template <typename T>
-    inline ProtoVector3<T>& ProtoVector3<T>::cross(const ProtoVector3<T>& v) const{
-        ProtoVector3<T> cp;
-        cp.x = y * v.z - z * v.y;
-        cp.y = z * v.x - x * v.z;
-        cp.z = x * v.y - y * v.x;
-        return *this(cp);
+    template <class T>
+    inline ProtoVector3<T>& ProtoVector3<T>::cross(const ProtoVector3<T>& v){
+        T cx = y * v.z - z * v.y;
+        T cy = z * v.x - x * v.z;
+        T cz = x * v.y - y * v.x;
+
+        return (*this)(cx, cy, cz);
     }
     
     template <class T>
@@ -452,7 +452,7 @@ namespace ijg {
         T c = cos(theta);
         T tempY = y*c - z*s;
         T tempZ = y*s + z*c;
-        return *this(x, tempY, tempZ);
+        return (*this)(x, tempY, tempZ);
     }
     
     template <class T>
@@ -461,7 +461,7 @@ namespace ijg {
         T c = cos(theta);
         T tempZ = z*c - x*s;
         T tempX = z*s + x*c;
-        return *this(tempX, y, tempZ);
+        return (*this)(tempX, y, tempZ);
     }
     
     template <class T>
@@ -470,7 +470,7 @@ namespace ijg {
         T c = cos(theta);
         T tempX = x*c - y*s;
         T tempY = x*s + y*c;
-        return *this(tempX, tempY, z);
+        return (*this)(tempX, tempY, z);
     }
     
     template <class T>
@@ -489,7 +489,7 @@ namespace ijg {
         + z * (k * axis.y * axis.z - s * axis.x);
         tempZ = x * (k * axis.x * axis.z - s * axis.y) + y * (k * axis.y * axis.z + s * axis.x)
         + z * (c + k * axis.z * axis.z);
-        return *this(tempX, tempY, tempZ);
+        return (*this)(tempX, tempY, tempZ);
     }
     
     template <class T>

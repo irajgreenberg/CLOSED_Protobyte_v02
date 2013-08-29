@@ -1,5 +1,5 @@
-/*!  \brief  ProtoGeomBase.h: Abstact Base Geometry class
- ProtoGeomBase.h
+/*!  \brief  ProtoGeom3.h: Abstact Base Geometry class
+ ProtoGeom3.h
  Protobyte Library v02
  
  Created by Ira on 7/23/13.
@@ -21,30 +21,30 @@
  \sa NO LINK
  */
 
-#ifndef PROTO_GEOMBASE_H
-#define PROTO_GEOMBASE_H
+#ifndef PROTO_GEOM3_H
+#define PROTO_GEOM3_H
 
 
-#ifdef  __APPLE__
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#elif __linux
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#define GL_GLEXT_PROTOTYPES
-#include <GL/glext.h>
-#elif _WIN32
-#include <GL/gl.h>
-#include <GL/glu.h>
-#define GL_GLEXT_PROTOTYPES
-#include <GL/glext.h>
-#elif _WIN64
-#include <GL/gl.h>
-#include <GL/glu.h>
-#define GL_GLEXT_PROTOTYPES
-#include <GL/glext.h>
-#endif
+//#ifdef  __APPLE__
+//#include <OpenGL/gl.h>
+//#include <OpenGL/glu.h>
+//#elif __linux
+//#include <GL/glew.h>
+//#include <GL/gl.h>
+//#include <GL/glu.h>
+//#define GL_GLEXT_PROTOTYPES
+//#include <GL/glext.h>
+//#elif _WIN32
+//#include <GL/gl.h>
+//#include <GL/glu.h>
+//#define GL_GLEXT_PROTOTYPES
+//#include <GL/glext.h>
+//#elif _WIN64
+//#include <GL/gl.h>
+//#include <GL/glu.h>
+//#define GL_GLEXT_PROTOTYPES
+//#include <GL/glext.h>
+//#endif
 
 
 #include <iostream>
@@ -59,7 +59,7 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "ProtoGraphicsCore.h"
+#include "ProtoShape3.h"
 
 
 namespace ijg {
@@ -68,11 +68,13 @@ namespace ijg {
     // for offset into the FBO interleaved buffer (ugly I know!)
 #define BUFFER_OFFSET(i) ((void*)(i)) 
 
-    class ProtoGeomBase: public ProtoGraphicsCore{
+    class ProtoGeom3: public ProtoShape3{
     protected:
+       
         ProtoTexture2 bumpMap;
         float textureScale;
 
+       
         virtual void init();
         virtual void calcVerts() = 0;
         virtual void calcInds() = 0;
@@ -83,7 +85,7 @@ namespace ijg {
         void fillDisplayLists();
 
         // composite guts
-        std::vector<ProtoVertex> verts;
+        std::vector<ProtoVertex3> verts;
         std::vector<ProtoFace3> faces;
         std::vector< ProtoTuple3<int> > inds;
 
@@ -106,6 +108,7 @@ namespace ijg {
 
         // Utility for extension support
         ProtoGLInfo glInfo;
+        
 
 
     public:
@@ -113,7 +116,7 @@ namespace ijg {
         /**********************************
          *    Display Modes for testing   *
          *********************************/
-        enum displayMode {
+      enum displayMode {
             IMMEDIATE, // begin at 0
             VERTEX_ARRAY,
             VERTEX_ARRAY_INTERLEAVED,
@@ -127,37 +130,37 @@ namespace ijg {
             SURFACE
         };
 
-        ProtoGeomBase();
+        ProtoGeom3();
 
-        ProtoGeomBase(const ProtoVector3& pos, const ProtoVector3& rot, const ProtoDimension3f size,
+        ProtoGeom3(const Vec3f& pos, const Vec3f& rot, const Dim3f size,
                 const ProtoColor4f col4);
 
-        ProtoGeomBase(const ProtoVector3& pos, const ProtoVector3& rot, const ProtoDimension3f size,
+        ProtoGeom3(const Vec3f& pos, const Vec3f& rot, const Dim3f size,
                 const std::vector< ProtoColor4f > col4s);
 
-        ProtoGeomBase(const ProtoVector3& pos, const ProtoVector3& rot, const ProtoDimension3f size,
+        ProtoGeom3(const Vec3f& pos, const Vec3f& rot, const Dim3f size,
                 const ProtoColor4f col4, float textureScale);
 
-        ProtoGeomBase(const ProtoVector3& pos, const ProtoVector3& rot, const ProtoDimension3f size,
+        ProtoGeom3(const Vec3f& pos, const Vec3f& rot, const Dim3f size,
                 const std::vector< ProtoColor4f > col4s, float textureScale);
 
-        virtual ~ProtoGeomBase();
+       virtual ~ProtoGeom3();
 
-        virtual void move(const ProtoVector3& v);
-        virtual void rotate(const ProtoVector3& r);
+        virtual void move(const Vec3f& v);
+        virtual void rotate(const Vec3f& r);
         virtual void scale(const ProtoDimension3f& s);
 
         // vertex arrays are implemented by default
         virtual void display(displayMode mode = VERTEX_BUFFER_OBJECT, renderMode render = SURFACE, float pointSize = 3.5f);
 
         // setters/getters
-        virtual void setPosition(const ProtoVector3& pos);
-        virtual void setRotation(const ProtoVector3& rot);
+        virtual void setPosition(const Vec3f& pos);
+        virtual void setRotation(const Vec3f& rot);
         virtual void setSize(const ProtoDimension3f size);
         virtual void setColor(const ProtoColor4f col4);
 
-        virtual ProtoVector3& getPosition();
-        virtual ProtoVector3& getRotation();
+        virtual Vec3f& getPosition();
+        virtual Vec3f& getRotation();
         virtual ProtoDimension3f& getSize();
         virtual ProtoColor4f& getColor();
 
@@ -165,9 +168,9 @@ namespace ijg {
         // justification, you got no 3d if you delete this stuff
 
         std::vector<ProtoFace3>& getFaces();
-        std::vector<ProtoVertex>& getVertices();
+        std::vector<ProtoVertex3>& getVertices();
 
-        virtual void sortFaces();
+        virtual void sortFaces();   
 
         void setTextureScale(float textureScale);
         float getTextureScale() const;
@@ -176,67 +179,70 @@ namespace ijg {
         ProtoTexture2 getBumpMap() const;
         
         // stl exporter
-        void exportSTL();
+//        void exportSTL();
+        
 
 
     };
 
-    // setters/getters
-    inline void ProtoGeomBase::setPosition(const ProtoVector3& pos) {
+    
+     // setters/getters
+    inline void ProtoGeom3::setPosition(const Vec3f& pos) {
         this->pos = pos;
     }
 
-    inline void ProtoGeomBase::setRotation(const ProtoVector3& rot) {
+    inline void ProtoGeom3::setRotation(const Vec3f& rot) {
         this->rot = rot;
     }
 
-    inline void ProtoGeomBase::setSize(const ProtoDimension3f size) {
+    inline void ProtoGeom3::setSize(const ProtoDimension3f size) {
         this->size = size;
     }
 
-    inline void ProtoGeomBase::setColor(const ProtoColor4f col4) {
+    inline void ProtoGeom3::setColor(const ProtoColor4f col4) {
         this->col4 = col4;
     }
 
-    inline ProtoVector3& ProtoGeomBase::getPosition() {
+    inline Vec3f& ProtoGeom3::getPosition() {
         return pos;
     }
 
-    inline ProtoVector3& ProtoGeomBase::getRotation() {
+    inline Vec3f& ProtoGeom3::getRotation() {
         return rot;
     }
 
-    inline ProtoDimension3f& ProtoGeomBase::getSize() {
+    inline ProtoDimension3f& ProtoGeom3::getSize() {
         return size;
     }
 
-    inline ProtoColor4f& ProtoGeomBase::getColor() {
+    inline ProtoColor4f& ProtoGeom3::getColor() {
         return col4;
     }
 
-    inline std::vector<ProtoFace3>& ProtoGeomBase::getFaces() {
+    inline std::vector<ProtoFace3>& ProtoGeom3::getFaces() {
         return faces;
     }
 
-    inline std::vector<ProtoVertex>& ProtoGeomBase::getVertices() {
+    inline std::vector<ProtoVertex3>& ProtoGeom3::getVertices() {
         return verts;
     }
 
-    inline void ProtoGeomBase::setTextureScale(float textureScale) {
+    inline void ProtoGeom3::setTextureScale(float textureScale) {
         this->textureScale = textureScale;
     }
 
-    inline float ProtoGeomBase::getTextureScale() const {
+    inline float ProtoGeom3::getTextureScale() const {
         return textureScale;
     }
 
-    inline void ProtoGeomBase::setBumpMap(ProtoTexture2 bumpMap) {
+    inline void ProtoGeom3::setBumpMap(ProtoTexture2 bumpMap) {
         this->bumpMap = bumpMap;
     }
 
-    inline ProtoTexture2 ProtoGeomBase::getBumpMap() const {
+    inline ProtoTexture2 ProtoGeom3::getBumpMap() const {
         return bumpMap;
     }
+     
 
 }
-#endif /* defined(PROTO_GEOMBASE_H) */
+#endif /* defined(PROTO_GEOM3_H) */

@@ -24,17 +24,17 @@
 #ifndef PROTO_SPHERE_H
 #define	PROTO_SPHERE_H
 
-#include "ProtoGeomBase.h"
+#include "ProtoGeom3.h"
 
 namespace ijg {
 
-    class ProtoSphere : public ProtoGeomBase {
+    class ProtoSphere : public ProtoGeom3 {
     public:
         ProtoSphere();
-        ProtoSphere(const ProtoVector3& pos, const ProtoVector3& rot, const ProtoDimension3f size,
+        ProtoSphere(const Vec3f& pos, const Vec3f& rot, const Dim3f size,
                 const ProtoColor4f col4, int spines, int spineNodes);
 
-        ProtoSphere(const ProtoVector3& pos, const ProtoVector3& rot, const ProtoDimension3f size,
+        ProtoSphere(const Vec3f& pos, const Vec3f& rot, const Dim3f size,
                 const ProtoColor4f col4, float textureScale, int spines, int spineNodes);
 
 //        void init(); // temp override
