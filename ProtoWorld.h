@@ -27,10 +27,10 @@
 
 #include <iostream>
 #include <vector>
-#include "ProtoBoundsRect.h"
+#include "ProtoBounds.h"
 #include "ProtoCamera.h"
 //#include "ProtoAnimator.h"
-//#include "ProtoRenderer.h"
+#include "ProtoRenderer.h"
 
 // from http://www.nuonsoft.com/blog/2012/10/21/implementing-a-thread-safe-singleton-with-c11/
 // to ensure thread safety
@@ -60,18 +60,22 @@ namespace ijg {
         // private copy cstr
         ProtoWorld(const ProtoWorld& world);
         
-        // private operator=
+        // private operator= "still thinking baout this..."
         //ProtoWorld& operator=(const ProtoWorld& world);
         
         
         // Camera stuff
-        static ProtoBoundsRect<float> canvasBounds; // for aspect ratio
+        static ProtoBoundsf canvasBounds; // for aspect ratio
         std::vector< std::unique_ptr<ProtoCamera> > cameras; // holds up to 4 cameras
         static unsigned char cameraCount; // 1-4
         static const unsigned char CAMERA_COUNT_MAX; // 4
         
+        // Renderer
+        ProtoRenderer* renderer;
+        
         // Objs
         std::vector< std::unique_ptr<ProtoShape3> > shapes; // composite geom forms
+        std::vector< std::shared_ptr<ProtoGeom3> > sharedGeoms; // composite geom forms
         std::vector< std::unique_ptr<ProtoGeom3> > geoms; // indiviudal geom forms
         
         
@@ -85,7 +89,7 @@ namespace ijg {
         //        std::unique_ptr<ProtoRenderer> renderer; // singleton
         
         // controls rendering style (point cloud, wireframe or surface)
-        //ProtoRenderer::RenderModeEnum renderMode;
+        //ProtoRenderer::RenderMode renderMode;
         
         void init();
         //
@@ -133,15 +137,28 @@ namespace ijg {
         static ProtoWorld& getInstance(float canvasWidth = 100.0, float canvasHeight = 100.0);
         
         
-        /****** add/remove stuff to the ProtoWorld *******
-        * using overloaded add functions
+        /*************************************************
+        *       ADD/REMOVE stuff to the ProtoWorld       *
+        *         using overloaded ADD functions         *
         *************************************************/
-        // adds ProtoGeomBase/ProtoGeomComposite pointers
-        void add(std::unique_ptr<ProtoGeom3> geomObj); // single geometric obj
-        //        void add(ProtoGeomComposite* compositeObj); // composite geometric obj
-        //
         
-        // adds camera obs
+        //+++++ GEOMETRY +++++
+        // ADD ProtoGeom3 pointers
+        void add(std::unique_ptr<ProtoGeom3> geomObj); // single geometric obj
+        
+        
+        // ADD ProtoGeomComposite pointers
+        //void add(ProtoGeomComposite* compositeObj); // composite geometric obj
+        
+        // ADD shared pointer
+        void add(std::shared_ptr<ProtoGeom3> geomObj);
+        
+        // ADD raw pointer
+        void add(const ProtoGeom3* geomObj);
+        
+        
+        //+++++ CAMERA +++++
+        // ADD camera obs
         void add(std::unique_ptr<ProtoCamera> camera);
       
         
@@ -163,7 +180,7 @@ namespace ijg {
         
         
         // state changes
-        //        void setRenderState(ProtoRenderer::RenderModeEnum renderMode = ProtoRenderer::SURFACE, float pointSize = 3.5f);
+        //void setRenderState(ProtoRenderer::RenderModeEnum renderMode = ProtoRenderer::SURFACE, float pointSize = 3.5f);
         
         void setWorldRotSpeed(const Vec3f& worldRotSpeed);
         //void setWorldFrustum(float fovAngle=60, float nearClipPlane = 0.1f, float farClipPlane = 1000.0f);
@@ -171,8 +188,10 @@ namespace ijg {
         void setCurrentCamera(int cameraID1, int cameraID2);
         void setCurrentCameras();
         void setActiveCamera(int activeCamera);
-        void setDefaultProjection(float fovAngle=60, float nearClipPlane = 0.1f, float farClipPlane = 1000.0f);
+        void setDefaultProjection(float fovAngle=80, float nearClipPlane = 0.1f, float farClipPlane = 1000.0f);
         void setLights();
+        
+        void updateCanvasSize(float, float);
         
         void setRenderingMode(RenderingMode=SURFACE);
         

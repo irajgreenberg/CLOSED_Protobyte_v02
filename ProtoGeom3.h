@@ -55,7 +55,7 @@
 #include "ProtoDimension3.h"
 #include "ProtoColor4.h"
 #include "ProtoTexture2.h"
-#include "ProtoGLInfo.h"
+//#include "ProtoGLInfo.h"
 #include <fstream>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -107,7 +107,7 @@ namespace ijg {
         float* sharedMemPointer;
 
         // Utility for extension support
-        ProtoGLInfo glInfo;
+       // ProtoGLInfo glInfo;
         
 
 

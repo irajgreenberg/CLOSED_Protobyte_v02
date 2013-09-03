@@ -44,14 +44,21 @@ pos(pos), rot(rot)
     uniqueID = static_camera_count;
 }
 
-ProtoCamera::ProtoCamera(const Vec3f& pos, const Vec3f& rot, float fovAngle, float aspectRatio, float nearClipPlane, float farClipPlane):
-pos(pos), rot(rot), fovAngle(fovAngle), aspectRatio(aspectRatio), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane)
+ProtoCamera::ProtoCamera(const Vec3f& pos, const Vec3f& rot, const ProtoBoundsf& bounds):
+pos(pos), rot(rot), bounds(bounds)
 {
     static_camera_count++;
     uniqueID = static_camera_count;
 }
 
-ProtoCamera::ProtoCamera(const Vec3f& pos, const Vec3f& rot, float frustumVals[4]): pos(pos), rot(rot), fovAngle(frustumVals[0]), aspectRatio(frustumVals[1]), nearClipPlane(frustumVals[2]), farClipPlane(frustumVals[3])
+ProtoCamera::ProtoCamera(const Vec3f& pos, const Vec3f& rot, const ProtoBoundsf& bounds, float fovAngle, float aspectRatio, float nearClipPlane, float farClipPlane):
+pos(pos), rot(rot), bounds(bounds), fovAngle(fovAngle), aspectRatio(aspectRatio), nearClipPlane(nearClipPlane), farClipPlane(farClipPlane)
+{
+    static_camera_count++;
+    uniqueID = static_camera_count;
+}
+
+ProtoCamera::ProtoCamera(const Vec3f& pos, const Vec3f& rot, const ProtoBoundsf& bounds, float frustumVals[4]): pos(pos), rot(rot), bounds(bounds), fovAngle(frustumVals[0]), aspectRatio(frustumVals[1]), nearClipPlane(frustumVals[2]), farClipPlane(frustumVals[3])
 {
     static_camera_count++;
     uniqueID = static_camera_count;

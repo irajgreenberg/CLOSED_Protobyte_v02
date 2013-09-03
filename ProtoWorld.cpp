@@ -34,20 +34,23 @@ namespace ijg {
 
 using namespace ijg;
 
-float counter = 0;
+std::unique_ptr<ProtoWorld> ProtoWorld::singletonWorld = nullptr;
+std::once_flag ProtoWorld::protoOnceFlag;
 
+float counter = 0;
 // initialize static vars
 unsigned char ProtoWorld::cameraCount=0;
 const unsigned char ProtoWorld::CAMERA_COUNT_MAX=4;
-std::unique_ptr<ProtoWorld> ProtoWorld::singletonWorld = nullptr;
-std::once_flag ProtoWorld::protoOnceFlag;
+
 float ProtoWorld::canvasWidth = 0;
 float ProtoWorld::canvasHeight = 0;
-ProtoBoundsRect<float> ProtoWorld::canvasBounds = ProtoBoundsRect<float>(0,0,0,0);
+ProtoBoundsf ProtoWorld::canvasBounds = ProtoBoundsf(0,0,0,0);
 
 
 //private cstr called internally
-ProtoWorld::ProtoWorld() {
+ProtoWorld::ProtoWorld(){
+    
+    
     worldRotSpeed = Vec3f(0,0,0);
     worldView = SINGLE_VIEW;
     activeCamera = 0;
@@ -117,6 +120,7 @@ ProtoWorld& ProtoWorld::getInstance(float canvasWidth, float canvasHeight) {
 void ProtoWorld::init(){
     
     
+    // lighting
     setLights();
     glFrontFace(GL_CCW); // default
     glEnable(GL_CULL_FACE);
@@ -145,7 +149,7 @@ void ProtoWorld::init(){
     
     // CREATE DEFAULT RENDERER
     // enable renderer and animator
-    //    renderer = ProtoRenderer::getInstance();
+    renderer = ProtoRenderer::getInstance();
     
     // CREATE DEFAULT ANIMATOR
     //    animator = ProtoAnimator::getInstance();
@@ -175,6 +179,14 @@ void ProtoWorld::add(std::unique_ptr<ProtoCamera> camera){
 
 void ProtoWorld::add(std::unique_ptr<ProtoGeom3> geomObj) {
     geoms.push_back(std::move(geomObj)); // change ownership
+}
+
+void ProtoWorld::add(std::shared_ptr<ProtoGeom3> geomObj) {
+    sharedGeoms.push_back(geomObj); // change ownership
+}
+
+// not sure this is a good idea
+void ProtoWorld::add(const ProtoGeom3* geomObj) {
 }
 
 
@@ -215,7 +227,7 @@ void ProtoWorld::run() {
                 std::unique_ptr<ProtoCamera> camera1(new ProtoCamera());
                 add(std::move(camera1));
                 cameras.at(0)->setViewPort(0, 0, canvasWidth, canvasHeight);
-                cameras.at(0)->setProjection(fovAngle, canvasWidth/canvasWidth, nearClipPlane, farClipPlane);
+                cameras.at(0)->setProjection(fovAngle, canvasWidth/canvasHeight, nearClipPlane, farClipPlane);
                 cameras.at(0)->project();
                 
             } else {
@@ -241,7 +253,7 @@ void ProtoWorld::run() {
                 
                 // top
                 cameras.at(0)->setViewPort(0, canvasHeight/2, canvasWidth, canvasHeight/2);
-                cameras.at(0)->setProjection(fovAngle, canvasWidth/canvasWidth, nearClipPlane, farClipPlane);
+                cameras.at(0)->setProjection(fovAngle, canvasWidth/canvasHeight, nearClipPlane, farClipPlane);
                 cameras.at(0)->project();
                 // draw geometry
                 draw();
@@ -249,7 +261,7 @@ void ProtoWorld::run() {
                 
                 // bottom
                 cameras.at(1)->setViewPort(0, 0, canvasWidth, canvasHeight/2);
-                cameras.at(1)->setProjection(fovAngle, canvasWidth/canvasWidth, nearClipPlane, farClipPlane);
+                cameras.at(1)->setProjection(fovAngle, canvasWidth/canvasHeight, nearClipPlane, farClipPlane);
                 cameras.at(1)->project();
                 // draw geometry
                 draw();
@@ -261,7 +273,7 @@ void ProtoWorld::run() {
                 
                 // top
                 cameras.at(0)->setViewPort(0, canvasHeight/2, canvasWidth, canvasHeight/2);
-                cameras.at(0)->setProjection(fovAngle, canvasWidth/canvasWidth, nearClipPlane, farClipPlane);
+                cameras.at(0)->setProjection(fovAngle, canvasWidth/canvasHeight, nearClipPlane, farClipPlane);
                 cameras.at(0)->project();
                 // draw geometry
                 draw();
@@ -269,7 +281,7 @@ void ProtoWorld::run() {
                 
                 // bottom
                 cameras.at(1)->setViewPort(0, 0, canvasWidth, canvasHeight/2);
-                cameras.at(1)->setProjection(fovAngle, canvasWidth/canvasWidth, nearClipPlane, farClipPlane);
+                cameras.at(1)->setProjection(fovAngle, canvasWidth/canvasHeight, nearClipPlane, farClipPlane);
                 cameras.at(1)->project();
                 // draw geometry
                 draw();
@@ -302,7 +314,7 @@ void ProtoWorld::run() {
                 
                 // Left
                 cameras.at(0)->setViewPort(0, 0, canvasWidth/2, canvasHeight);
-                cameras.at(0)->setProjection(fovAngle, canvasWidth/canvasWidth, nearClipPlane, farClipPlane);
+                cameras.at(0)->setProjection(fovAngle, canvasWidth/canvasHeight, nearClipPlane, farClipPlane);
                 cameras.at(0)->project();
                 // draw geometry
                 draw();
@@ -310,7 +322,7 @@ void ProtoWorld::run() {
                 
                 // Right
                 cameras.at(1)->setViewPort(canvasWidth/2, 0, canvasWidth/2, canvasHeight);
-                cameras.at(1)->setProjection(fovAngle, canvasWidth/canvasWidth, nearClipPlane, farClipPlane);
+                cameras.at(1)->setProjection(fovAngle, canvasWidth/canvasHeight, nearClipPlane, farClipPlane);
                 cameras.at(1)->project();
                 // draw geometry
                 draw();
@@ -322,7 +334,7 @@ void ProtoWorld::run() {
                 
                 // Left
                 cameras.at(0)->setViewPort(0, 0, canvasWidth/2, canvasHeight);
-                cameras.at(0)->setProjection(fovAngle, canvasWidth/canvasWidth, nearClipPlane, farClipPlane);
+                cameras.at(0)->setProjection(fovAngle, canvasWidth/canvasHeight, nearClipPlane, farClipPlane);
                 cameras.at(0)->project();
                 // draw geometry
                 draw();
@@ -330,7 +342,7 @@ void ProtoWorld::run() {
                 
                 // Right
                 cameras.at(1)->setViewPort(canvasWidth/2, 0, canvasWidth/2, canvasHeight);
-                cameras.at(1)->setProjection(fovAngle, canvasWidth/canvasWidth, nearClipPlane, farClipPlane);
+                cameras.at(1)->setProjection(fovAngle, canvasWidth/canvasHeight, nearClipPlane, farClipPlane);
                 cameras.at(1)->project();
                 // draw geometry
                 draw();
@@ -355,39 +367,61 @@ void ProtoWorld::run() {
             
             
         case QUAD_VIEW:
-            for(int i=0; i<4; ++i){
-                //std::cout << "cameras.at("<<i<<")->getName() = " << cameras.at(i)->getName() << std::endl;
-                glPushMatrix();
-                {
-                    if (cameras.size() == 4){
-                        cameras.at(i)->project();
-                    } else {
-                        if(cameras.size()==0) { // create camera if none exists
-                            std::unique_ptr<ProtoCamera> camera1(new ProtoCamera());
-                            add(std::move(camera1));
-                            cameras.at(activeCamera)->setProjection(fovAngle, canvasWidth/canvasWidth, nearClipPlane, farClipPlane);
-                        }
-                        switch(i){
-                            case 0:
-                                cameras.at(activeCamera)->setViewPort(0, 0, canvasWidth/2, canvasHeight/2); //BL
-                                break;
-                            case 1:
-                                cameras.at(activeCamera)->setViewPort(0, canvasHeight/2, canvasWidth/2, canvasHeight/2); //TL
-                                break;
-                            case 2:
-                                cameras.at(activeCamera)->setViewPort(canvasWidth/2, canvasHeight/2, canvasWidth/2, canvasHeight/2); //TR
-                                break;
-                            case 3:
-                                cameras.at(activeCamera)->setViewPort(canvasWidth/2, 0, canvasWidth/2, canvasHeight/2); //BR
-                                break;
-                        }
-                        
-                        cameras.at(activeCamera)->project();
-                    }
-                    draw();                }
-                glPopMatrix();
+            // right now only handle 0 or 4 cameras
+           // glPushMatrix();
+        {
+            if (cameras.size() == 4){ // cameras are already loaded
+                //std::cout << "IN TOP = " << cameras.size() << std::endl;
+//                cameras.at(0)->setViewPort(cameras.at(0)->getBounds().x, cameras.at(0)->getBounds().y, cameras.at(0)->getBounds().w/2, cameras.at(0)->getBounds().h/2);
+//                cameras.at(1)->setViewPort(cameras.at(1)->getBounds().x, cameras.at(1)->getBounds().h, cameras.at(1)->getBounds().w/2, cameras.at(1)->getBounds().h/2);
+//                cameras.at(2)->setViewPort(cameras.at(2)->getBounds().w/2, cameras.at(2)->getBounds().h/2, cameras.at(2)->getBounds().w/2, cameras.at(2)->getBounds().h/2);
+//                cameras.at(3)->setViewPort(cameras.at(3)->getBounds().w/2, 0, cameras.at(3)->getBounds().w/2, cameras.at(3)->getBounds().h/2);
+                cameras.at(0)->project();
+                draw();
+                cameras.at(1)->project();
+                draw();
+                cameras.at(2)->project();
+                draw();
+                cameras.at(3)->project();
+                draw();
+                
+            } else {
+                while (cameras.size()<4) { // create camera since none exists
+                    std::unique_ptr<ProtoCamera> camera1(new ProtoCamera());
+                    add(std::move(camera1));
+                    std::cout << "camera size = " << cameras.size() << std::endl;
+                }
+                
+                //glPushMatrix();
+                cameras.at(0)->setProjection(fovAngle, canvasWidth/canvasHeight, nearClipPlane, farClipPlane);
+                cameras.at(0)->setViewPort(0, 0, canvasWidth/2, canvasHeight/2); //BL
+                cameras.at(0)->project();
+                draw();
+               // glPopMatrix();
+                
+               // glPushMatrix();
+                cameras.at(1)->setProjection(fovAngle, canvasWidth/canvasHeight, nearClipPlane, farClipPlane);
+                cameras.at(1)->setViewPort(0, canvasHeight/2, canvasWidth/2, canvasHeight/2); //TL
+                cameras.at(1)->project();
+                draw();
+               // glPopMatrix();
+                
+               // glPushMatrix();
+                cameras.at(2)->setProjection(fovAngle, canvasWidth/canvasHeight, nearClipPlane, farClipPlane);
+                cameras.at(2)->setViewPort(canvasWidth/2, canvasHeight/2, canvasWidth/2, canvasHeight/2); //TR
+                cameras.at(2)->project();
+                draw();
+                //glPopMatrix();
+                
+               // glPushMatrix();
+                cameras.at(3)->setProjection(fovAngle, canvasWidth/canvasHeight, nearClipPlane, farClipPlane);
+                cameras.at(3)->setViewPort(canvasWidth/2, 0, canvasWidth/2, canvasHeight/2); //BR
+                cameras.at(3)->project();
+                draw();
+               // glPopMatrix();
             }
-            break;
+            
+        }
     }
     
     
@@ -407,6 +441,11 @@ void ProtoWorld::stop(){
 void ProtoWorld::draw() {
     for(int i=0; i<geoms.size(); ++i){
         geoms.at(i)->display(ProtoGeom3::VERTEX_BUFFER_OBJECT, ProtoGeom3::SURFACE);
+    }
+    
+    
+    for(int i=0; i<sharedGeoms.size(); ++i){
+        //sharedGeoms.at(i)->display(ProtoGeom3::VERTEX_BUFFER_OBJECT, ProtoGeom3::SURFACE);
     }
 }
 
@@ -452,7 +491,7 @@ void ProtoWorld::setLights() {
     //materials
     GLfloat light01_mat_specular[] = {1.0, 1.0, 1.0, 1.0};
     GLfloat light01_mat_shininess[] = {15}; // max 128
-
+    
     
     // light 01
     glMaterialfv(GL_FRONT, GL_SPECULAR, light01_mat_specular);
@@ -466,6 +505,28 @@ void ProtoWorld::setLights() {
     
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
+}
+
+void ProtoWorld::updateCanvasSize(float canvasWidth, float canvasHeight){
+    this->canvasWidth = canvasWidth;
+    this->canvasHeight = canvasHeight;
+    std::cout << "cameras.size() = " << cameras.size() << std::endl;
+    
+    
+    
+    if(ProtoWorld::QUAD_VIEW){
+        if(cameras.size()==4){
+            cameras.at(0)->setAspectRatio(canvasWidth/canvasHeight);
+            cameras.at(1)->setAspectRatio(canvasWidth/canvasHeight);
+            cameras.at(2)->setAspectRatio(canvasWidth/canvasHeight);
+            cameras.at(3)->setAspectRatio(canvasWidth/canvasHeight);
+            
+            cameras.at(0)->setViewPort(0, 0, canvasWidth/2,canvasHeight/2);
+            cameras.at(1)->setViewPort(0, canvasHeight/2, canvasWidth/2, canvasHeight/2);
+            cameras.at(2)->setViewPort(canvasWidth/2, canvasHeight/2, canvasWidth/2, canvasHeight/2);
+            cameras.at(3)->setViewPort(canvasWidth/2, 0, canvasWidth/2, canvasHeight/2);
+        }
+    }
 }
 
 

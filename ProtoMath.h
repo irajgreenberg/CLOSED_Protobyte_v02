@@ -1,5 +1,5 @@
 /*!  \brief  ProtMath.h: Protobyte Library math constants and random functions
- - all static 
+ - all static
  ProtoMath.h
  Protobyte Library v02
  
@@ -26,6 +26,7 @@
 #define	PROTO_MATH_H
 
 #include <ctime>
+#include <cstdlib>
 
 namespace ijg {
     
@@ -43,28 +44,34 @@ namespace ijg {
         // from http://stackoverflow.com/a/686373
         
         // eventually replace these with Mersenne twister algorithm
-        static float random(float max = 1.0) {
-            return (float) rand() / ((float) RAND_MAX / max);
-        }
+        static float random(float max = 1.0);
         
         // from http://stackoverflow.com/a/686373
+        static float random(float min, float max);
         
-        static float random(float min, float max) {
-            return min + (float) rand() / ((float) RAND_MAX / (max - min));
-            
-        }
-        
-        // static fields
-        static constexpr double PI = 3.14159265358979;
-        static constexpr double HALF_PI = 1.5707963267949;
-        static constexpr double H_PI = 1.5707963267949; // alt name to HALF_PI
-        static constexpr double QUARTER_PI = 0.785398163397448;
-        static constexpr double Q_PI = 0.785398163397448; // alt name to QUARTER_PI
-        static constexpr double TWO_PI = 6.28318530717958;
-        static constexpr double DOUBLE_PI = 6.28318530717958; // alt name to TWO_PI
-        static constexpr double THREE_PI = 9.42477796077;
-        static constexpr double TRI_PI = 9.42477796077; // alt name to THREE_PI
+        // static fields - initialized in .cpp
+        static const double PI;
+        static const double HALF_PI;
+        static const double H_PI; // alt name to HALF_PI
+        static const double QUARTER_PI;
+        static const double Q_PI; // alt name to QUARTER_PI
+        static const double TWO_PI;
+        static const double DOUBLE_PI; // alt name to TWO_PI
+        static const double THREE_PI;
+        static const double TRI_PI; // alt name to THREE_PI
     };
+    
+    inline float ProtoMath::random(float max) {
+        return (float) rand() / ((float) RAND_MAX / max);
+    }
+    
+    // from http://stackoverflow.com/a/686373
+    
+    inline float ProtoMath::random(float min, float max) {
+        return min + (float) rand() / ((float) RAND_MAX / (max - min));
+        
+    }
+
 }
 
 #endif	// PROTO_MATH_H

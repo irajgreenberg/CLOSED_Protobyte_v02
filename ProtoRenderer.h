@@ -21,40 +21,17 @@
  \sa NO LINK
  */
 
-#ifndef Protobyte_v02_ProtoRenderer_cpp
-#define Protobyte_v02_ProtoRenderer_cpp
+#ifndef PROTO_RENDERER_H
+#define PROTO_RENDERER_H
 
-#ifdef  __APPLE__
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#elif __linux
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#define GL_GLEXT_PROTOTYPES
-#include <GL/glext.h>
-#elif _WIN32
-#include <GL/gl.h>
-#include <GL/glu.h>
-#define GL_GLEXT_PROTOTYPES
-#include <GL/glext.h>
-#elif _WIN64
-#include <GL/gl.h>
-#include <GL/glu.h>
-#define GL_GLEXT_PROTOTYPES
-#include <GL/glext.h>
-#endif
 
 #include <iostream>
-#include "ProtoGeomBase.h"
-#include "ProtoGeomComposite.h"
+#include "ProtoGeom3.h"
+//#include "ProtoGeomComposite.h"
 
 namespace ijg {
     
-    // for offset into the VBO interleaved buffer (ugly I know!)
-    #define BUFFER_OFFSET(i) ((void*)(i))
-
-    class ProtoRenderer {
+class ProtoRenderer {
     
     private:
         // field for singleton instance
@@ -68,17 +45,6 @@ namespace ijg {
         
         void init();
         
-        // Display List var
-        GLuint displayListIndex;
-        
-        // VBO stuff
-        GLuint vboID, indexVBOID;
-        
-        //shared memory pointer for dynamic VBO's
-        float* sharedMemPointer;
-        
-        // Utility for GL extension support
-        ProtoGLInfo glInfo;
 
         
     public:
@@ -86,7 +52,7 @@ namespace ijg {
         /**********************************
          *    Display Modes for testing   *
          *********************************/
-        enum DisplayModeEnum {
+        enum DisplayMode {
             IMMEDIATE, // begin at 0
             VERTEX_ARRAY,
             VERTEX_ARRAY_INTERLEAVED,
@@ -94,7 +60,7 @@ namespace ijg {
             VERTEX_BUFFER_OBJECT
         };
         
-        enum RenderModeEnum {
+        enum RenderMode {
             POINT_CLOUD,
             WIREFRAME, // begin at 0
             SURFACE
@@ -107,12 +73,16 @@ namespace ijg {
         static ProtoRenderer* getInstance();
         
         // overloaded assignment op
-        ProtoRenderer& operator=(const ProtoRenderer& renderer);
+        //ProtoRenderer& operator=(const ProtoRenderer& renderer);
         
-        void draw(const ProtoGeomBase& geomObj);
-        
+
+
+    
+        void draw(const ProtoGeom3& geomObj, DisplayMode mode, RenderMode render, float pointSize);
+    
         
     };
+    #define Renderer ProtoRenderer
 }
 
-#endif // Protobyte_v02_ProtoRenderer_cpp
+#endif // PROTO_RENDERER_H
