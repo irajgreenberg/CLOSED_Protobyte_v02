@@ -30,7 +30,7 @@ using namespace ijg;
 
 ProtoCurve3::ProtoCurve3() {}
 
-ProtoCurve3::ProtoCurve3(const std::vector<ProtoVector3>& controlPts,int interpDetail, bool isCurveClosed):
+ProtoCurve3::ProtoCurve3(const std::vector<Vec3f>& controlPts,int interpDetail, bool isCurveClosed):
 controlPts(controlPts), interpDetail(interpDetail), isCurveClosed(isCurveClosed){
     
 }
@@ -43,7 +43,7 @@ ProtoCurve3::~ProtoCurve3() {
  * Set the control points.
  * with side effects
  */
-void ProtoCurve3::setControlPts(std::vector<ProtoVector3>& controlPts) {
+void ProtoCurve3::setControlPts(std::vector<Vec3f>& controlPts) {
     this->controlPts = controlPts;
 }
 
@@ -65,7 +65,7 @@ int ProtoCurve3::getInterpDetail(){
  * Get a pointer to the control points array.
  * with side effects
  */
-std::vector<ProtoVector3>& ProtoCurve3::getControlPts() {
+std::vector<Vec3f>& ProtoCurve3::getControlPts() {
     return controlPts;
 }
 
@@ -85,7 +85,7 @@ int ProtoCurve3::getVertsLength() const  {
  * @param uniqueVerts
  *            Vector[] array
  */
-void ProtoCurve3::setVerts(std::vector<ProtoVector3> verts) {
+void ProtoCurve3::setVerts(std::vector<Vec3f> verts) {
     this->verts = verts;
     //std::cout<<"I'm in here dude!!!"<<std::endl;
 }
@@ -96,7 +96,7 @@ void ProtoCurve3::setVerts(std::vector<ProtoVector3> verts) {
  * @param uniqueVerts
  *            Vector array
  */
-std::vector<ProtoVector3>& ProtoCurve3::getVerts() {
+std::vector<Vec3f>& ProtoCurve3::getVerts() {
     return verts;
 }
 
@@ -106,7 +106,7 @@ std::vector<ProtoVector3>& ProtoCurve3::getVerts() {
  * vector of all the vertices
  **** To DO NOTE - switch all verts to vector eventually ****
  */
-std::vector<ProtoVector3>& ProtoCurve3::getVertices(){
+std::vector<Vec3f>& ProtoCurve3::getVertices(){
     return tempVecs;
     //return verts;
 

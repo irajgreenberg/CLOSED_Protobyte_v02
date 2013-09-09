@@ -38,6 +38,12 @@ namespace ijg {
     class ProtoCamera {
         
     public:
+//        enum RenderMode {
+//            POINT_CLOUD,
+//            WIREFRAME,
+//            SURFACE
+//        };
+        
         // cstrs
         ProtoCamera();
         ProtoCamera(const Vec3f& pos, const Vec3f& rot);
@@ -64,7 +70,15 @@ namespace ijg {
         void setViewPort(float x, float y, float w, float h);
         void setAspectRatio(float aspectRatio);
         void setBounds(const ProtoBoundsf& bounds);
+        
+        Vec3f getPosition() const;
+        Vec3f getRotation() const;
+        ProtoBoundsf getViewPort() const;
+        float getAspectRatio() const;
         ProtoBoundsf getBounds() const;
+        
+//        void setRenderingMode(RenderMode mode = WIREFRAME);
+//        RenderMode getRenderingMode() const;
         
     private:
         Vec3f pos, rot;
@@ -79,6 +93,8 @@ namespace ijg {
         
         // ProtoWorld manages multiple cameras through their unique_id
         unsigned char uniqueID;
+        
+//        RenderMode mode;
         
     };
     
@@ -111,9 +127,33 @@ namespace ijg {
         this->bounds = bounds;
     }
     
+    
+    inline Vec3f ProtoCamera::getPosition() const{
+        return pos;
+        
+    }
+    inline Vec3f ProtoCamera::getRotation() const{
+        return rot;
+    }
+    inline ProtoBoundsf ProtoCamera::getViewPort() const{
+        return viewPort;
+    }
+    
+    inline float ProtoCamera::getAspectRatio() const{
+        return aspectRatio;
+    }
+    
     inline ProtoBoundsf ProtoCamera::getBounds() const{
         return bounds;
     }
+    
+//    inline void ProtoCamera::setRenderingMode(RenderMode mode){
+//        this->mode = mode;
+//    }
+//    
+//    inline ProtoCamera::RenderMode ProtoCamera::getRenderingMode() const {
+//        return mode;
+//    }
     
     
 }

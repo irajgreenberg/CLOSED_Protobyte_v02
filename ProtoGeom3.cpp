@@ -86,8 +86,8 @@ ProtoGeom3::~ProtoGeom3() {
     //std::cout << "sharedMemPointer = " << sharedMemPointer << std::endl;
 
     //indices data - use GL_ELEMENT_ARRAY_BUFFER
-    glGenBuffers(1, &indexVBOID); // Generate buffer
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBOID); // Bind the element array buffer
+    glGenBuffers(1, &indexVboID); // Generate buffer
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVboID); // Bind the element array buffer
     int indsDataSize = inds.size()*3 * sizeof (GL_UNSIGNED_INT);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indsDataSize, NULL, GL_DYNAMIC_DRAW); // allocate
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indsDataSize, &indPrims[0]); // upload the data
@@ -103,6 +103,7 @@ void ProtoGeom3::calcFaces() {
     for (int i = 0; i < inds.size(); i++) {
         faces.push_back(ProtoFace3(&verts.at(inds.at(i).elem0), &verts.at(inds.at(i).elem1),
                 &verts.at(inds.at(i).elem2)));
+        //std::cout << faces.at(i)[2]->pos.z << std::endl;
     }
 }
 
@@ -345,7 +346,7 @@ void ProtoGeom3::display(displayMode mode, renderMode render, float pointSize) {
 
             // make sure data is bound to buffer
             glBindBuffer(GL_ARRAY_BUFFER, vboID);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBOID);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVboID);
 
             // enable and specify pointers to vertex arrays
             glEnableClientState(GL_VERTEX_ARRAY);

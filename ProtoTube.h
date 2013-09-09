@@ -1,102 +1,122 @@
 /*! \Class to extrude a polygon cross-section along spline path
  * Uses parallel transport to avoid twists
- * File:   Tube.h
+ * File:   ProtoTube.h
  * Author: Ira Greenberg
  * Created by Ira on 10/17/12.
  */
 
 
-#ifndef Protobyte_iig001_Tube_h
-#define Protobyte_iig001_Tube_h
+#ifndef Protobyte_iig001_ProtoTube_h
+#define Protobyte_iig001_ProtoTube_h
 
 #include <iostream>
-#include "GeomBase.h"
-#include "TransformFunction.h"
-#include "Spline3.h"
-#include "VerletSpine.h"
-//#include "EllipticalWing.h"
+#include "ProtoGeom3.h"
+#include "ProtoSpline3.h"
+#include "ProtoTransformFunction.h"
 
-namespace proto {
 
-    class Tube : public GeomBase {
+namespace ijg {
+
+    class ProtoTube : public ProtoGeom3 {
     public:
 
-        friend std::ostream& operator<<(std::ostream& out, const Tube& tube);
+        friend std::ostream& operator<<(std::ostream& out, const ProtoTube& tube);
 
+        // enables varying ProtoTube radii values
+        
+//        enum TransformFunction {
+//            LINEAR,
+//            LINEAR_INVERSE,
+//            SINUSOIDAL,
+//            SINUSOIDAL_2,
+//            SINUSOIDAL_3,
+//            SINUSOIDAL_4,
+//            SINUSOIDAL_5,
+//            SINUSOIDAL_RAND_5,
+//            SINUSOIDAL_RAND_10,
+//            SINUSOIDAL_RAND_15,
+//            SINUSOIDAL_RAND_20,
+//            SINUSOIDAL_RAND_25,
+//            SINUSOIDAL_RAND_30,
+//            SINUSOIDAL_RAND_35,
+//            SINUSOIDAL_RAND_40
+//        };
+
+        
         /*!
          * Constructor */
-        Tube();
+        ProtoTube();
 
         /*!
          * Constructor 
          */
-        Tube(const Spline3& path, float radius, int crossSectionDetail, bool isClosed = true);
-
-        /*!
-         * Constructor 
-         * with TransformFunction object
-         */
-        Tube(const Spline3& path, float radius, int crossSectionDetail, const TransformFunction& transFuncObj, bool isClosed = true);
+        ProtoTube(const ProtoSpline3& path, float radius, int crossSectionDetail, bool isClosed = true);
 
         /*!
          * Constructor 
          * with TransformFunction object
          */
-        Tube(const Spline3& path, std::vector<float>& radii, int crossSectionDetail, const TransformFunction& transFuncObj, bool isClosed = true);
+        ProtoTube(const ProtoSpline3& path, float radius, int crossSectionDetail, const ProtoTransformFunction& transFuncObj, bool isClosed = true);
+
+        /*!
+         * Constructor 
+         * with TransformFunction object
+         */
+        ProtoTube(const ProtoSpline3& path, std::vector<float>& radii, int crossSectionDetail, const ProtoTransformFunction& transFuncObj, bool isClosed = true);
 
         /*!
          * Constructor 
          * varied thickness*/
-        Tube(const Spline3& path, std::vector<float>& radii, int crossSectionDetail, bool isClosed = true);
+        ProtoTube(const ProtoSpline3& path, std::vector<float>& radii, int crossSectionDetail, bool isClosed = true);
 
         /*!
          * Constructor 
          * varied color*/
-        Tube(const std::vector<Color4f>& col4s, const Spline3& path, float radius, int crossSectionDetail, bool isClosed = true);
+        ProtoTube(const std::vector<ProtoColor4f>& col4s, const ProtoSpline3& path, float radius, int crossSectionDetail, bool isClosed = true);
 
         /*!
          * Constructor 
          * varied color and TransformFunction object*/
-        Tube(const std::vector<Color4f>& col4s, const Spline3& path, float radius, int crossSectionDetail, const TransformFunction& transFuncObj, bool isClosed = true);
+        ProtoTube(const std::vector<ProtoColor4f>& col4s, const ProtoSpline3& path, float radius, int crossSectionDetail, const ProtoTransformFunction& transFuncObj, bool isClosed = true);
 
         /*!
          * Constructor 
          * varied thickness and color */
-        Tube(const std::vector<Color4f>& col4s, const Spline3& path, std::vector<float>& radii, int crossSectionDetail, bool isClosed = true);
+        ProtoTube(const std::vector<ProtoColor4f>& col4s, const ProtoSpline3& path, std::vector<float>& radii, int crossSectionDetail, bool isClosed = true);
 
         /*!
          * Constructor 
          * All */
-        Tube(const Vector3& pos, const Vector3& rot, const Dimension3f& size, const Color4f& col4, const Spline3& path, float radius, int crossSectionDetail, bool isClosed = true);
+        ProtoTube(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3f& size, const ProtoColor4f& col4, const ProtoSpline3& path, float radius, int crossSectionDetail, bool isClosed = true);
 
         /*!
          * Constructor 
          * All with TransformFunction obj*/
-        Tube(const Vector3& pos, const Vector3& rot, const Dimension3f& size, const Color4f& col4, const Spline3& path, float radius, int crossSectionDetail, const TransformFunction& transFuncObj, bool isClosed = true);
+        ProtoTube(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3f& size, const ProtoColor4f& col4, const ProtoSpline3& path, float radius, int crossSectionDetail, const ProtoTransformFunction& transFuncObj, bool isClosed = true);
 
         /*!
          * Constructor 
          * All with varied radii*/
-        Tube(const Vector3& pos, const Vector3& rot, const Dimension3f& size, const Color4f& col4, const Spline3& path, std::vector<float>& radii, int crossSectionDetail, bool isClosed = true);
+        ProtoTube(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3f& size, const ProtoColor4f& col4, const ProtoSpline3& path, std::vector<float>& radii, int crossSectionDetail, bool isClosed = true);
 
         /*!
          * Constructor 
          * all with varied color */
-        Tube(const Vector3& pos, const Vector3& rot, const Dimension3f& size, const std::vector<Color4f>& col4s, const Spline3& path, float radius, int crossSectionDetail, bool isClosed = true);
+        ProtoTube(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3f& size, const std::vector<ProtoColor4f>& col4s, const ProtoSpline3& path, float radius, int crossSectionDetail, bool isClosed = true);
 
         /*!
          * Constructor 
          * all with varied color and TransformFunction obj */
-        Tube(const Vector3& pos, const Vector3& rot, const Dimension3f& size, const std::vector<Color4f>& col4s, const Spline3& path, float radius, int crossSectionDetail, const TransformFunction& transFuncObj, bool isClosed = true);
+        ProtoTube(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3f& size, const std::vector<ProtoColor4f>& col4s, const ProtoSpline3& path, float radius, int crossSectionDetail, const ProtoTransformFunction& transFuncObj, bool isClosed = true);
 
         /*!
          * Constructor 
          * All with varied thickness and color */
-        Tube(const Vector3& pos, const Vector3& rot, const Dimension3f& size, const std::vector<Color4f>& col4s, const Spline3& path, std::vector<float>& radii, int crossSectionDetail, bool isClosed = true);
+        ProtoTube(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3f& size, const std::vector<ProtoColor4f>& col4s, const ProtoSpline3& path, std::vector<float>& radii, int crossSectionDetail, bool isClosed = true);
 
 
 
-        ~Tube();
+        ~ProtoTube();
 
 
 
@@ -120,82 +140,63 @@ namespace proto {
         std::vector<float> getRadii() const;
         void setRadius(float radius);
         float getRadius() const;
-        void setPath(Spline3 path);
-        Spline3 getPath() const;
+        void setPath(ProtoSpline3 path);
+        ProtoSpline3 getPath() const;
         void setIsClosed(bool isClosed);
         bool isIsClosed() const;
-        void setTransFuncObj(TransformFunction transFuncObj);
-        TransformFunction getTransFuncObj() const;
+        void setTransFuncObj(ProtoTransformFunction transFuncObj);
+        ProtoTransformFunction getTransFuncObj() const;
         void setIsTransformFunction(bool isTransformFunction);
         bool getIsTransformFunction() const;
-        void setPerturbation(const Vector3& perturbation);
-        Vector3 getPerturbation() const;
+        void setPerturbation(const Vec3f& perturbation);
+        Vec3f getPerturbation() const;
         void rotateY();
-        void breath();
-        void wave();
+        //void breath();
+        //void wave();
         void verlet();
-        void live();
-        const std::vector<FrenetFrame>& getFrenetFrame() const;
+        //void live();
+        const std::vector<ProtoFrenetFrame>& getFrenetFrames() const;
 
         // for live states
-        void setIsSlithering(bool isSlithering);
-        bool getIsSlithering() const;
-        void setIsBreathing(bool isBreathing);
-        bool getIsBreathing() const;
+//        void setIsSlithering(bool isSlithering);
+//        bool getIsSlithering() const;
+//        void setIsBreathing(bool isBreathing);
+//        bool getIsBreathing() const;
 
 
-        // enables varying tube radii values
-
-        /* enum TransformFunction {
-             LINEAR,
-             LINEAR_INVERSE,
-             SINUSOIDAL,
-             SINUSOIDAL_2,
-             SINUSOIDAL_3,
-             SINUSOIDAL_4,
-             SINUSOIDAL_5,
-             SINUSOIDAL_RAND_5,
-             SINUSOIDAL_RAND_10,
-             SINUSOIDAL_RAND_15,
-             SINUSOIDAL_RAND_20,
-             SINUSOIDAL_RAND_25,
-             SINUSOIDAL_RAND_30,
-             SINUSOIDAL_RAND_35,
-             SINUSOIDAL_RAND_40
-         };*/
-
+        
 
     private:
-        Spline3 path;
+        ProtoSpline3 path;
         float radius;
         std::vector<float> radii;
         int crossSectionDetail;
         int frenetFrameLength;
         bool isClosed;
-        TransformFunction transFuncObj;
+        ProtoTransformFunction transFuncObj;
         bool isTransformFunction;
-        Vector3 perturbation;
-        std::vector<Vector3> crossSectionCentroids;
+        Vec3f perturbation;
+        std::vector<Vec3f> crossSectionCentroids;
 
         // spline stuff
-        VerletSpine vSpine;
+        //VerletSpine vSpine;
         // local frames of reference
-        std::vector<FrenetFrame> ff;
+        std::vector<ProtoFrenetFrame> ff;
 
         // for Verlet Integration - NEED to fix this eventually
         // for now using individual sticks and balls
         //VerletSys verletSys;
         //        std::vector<VerletBall> vBalls;
         //        std::vector<VerletStick> vSticks;
-        //        std::vector<Vector3> testingVerts;
+        //        std::vector<Vec3f> testingVerts;
 
         //        VerletBall vbs[4];
         //        VerletStick vss[6];
 
-        //std::vector<Vector3> testingVerts;
+        //std::vector<Vec3f> testingVerts;
 
         // live states NOTE - maybe move to derived arthropod class
-        bool isBreathing, isSlithering;
+        //bool isBreathing, isSlithering;
         
         // wings
        // std::vector<EllipticalWing> wings;
@@ -204,99 +205,99 @@ namespace proto {
 
     // inline getters | setters
 
-    inline void Tube::setFrenetFrameLength(int frenetFrameLength) {
+    inline void ProtoTube::setFrenetFrameLength(int frenetFrameLength) {
         this->frenetFrameLength = frenetFrameLength;
     }
 
-    inline int Tube::getFrenetFrameLength() const {
+    inline int ProtoTube::getFrenetFrameLength() const {
         return frenetFrameLength;
     }
 
-    inline void Tube::setCrossSectionDetail(int crossSectionDetail) {
+    inline void ProtoTube::setCrossSectionDetail(int crossSectionDetail) {
         this->crossSectionDetail = crossSectionDetail;
     }
 
-    inline int Tube::getCrossSectionDetail() const {
+    inline int ProtoTube::getCrossSectionDetail() const {
         return crossSectionDetail;
     }
 
-    inline void Tube::setRadii(std::vector<float> radii) {
+    inline void ProtoTube::setRadii(std::vector<float> radii) {
         this->radii = radii;
     }
 
-    inline std::vector<float> Tube::getRadii() const {
+    inline std::vector<float> ProtoTube::getRadii() const {
         return radii;
     }
 
-    inline void Tube::setRadius(float radius) {
+    inline void ProtoTube::setRadius(float radius) {
         this->radius = radius;
     }
 
-    inline float Tube::getRadius() const {
+    inline float ProtoTube::getRadius() const {
         return radius;
     }
 
-    inline void Tube::setPath(Spline3 path) {
+    inline void ProtoTube::setPath(ProtoSpline3 path) {
         this->path = path;
     }
 
-    inline Spline3 Tube::getPath() const {
+    inline ProtoSpline3 ProtoTube::getPath() const {
         return path;
     }
 
-    inline void Tube::setIsClosed(bool isClosed) {
+    inline void ProtoTube::setIsClosed(bool isClosed) {
         this->isClosed = isClosed;
     }
 
-    inline bool Tube::isIsClosed() const {
+    inline bool ProtoTube::isIsClosed() const {
         return isClosed;
     }
 
-    inline void Tube::setTransFuncObj(TransformFunction transFuncObj) {
+    inline void ProtoTube::setTransFuncObj(ProtoTransformFunction transFuncObj) {
         this->transFuncObj = transFuncObj;
         setIsTransformFunction(true);
     }
 
-    inline TransformFunction Tube::getTransFuncObj() const {
+    inline ProtoTransformFunction ProtoTube::getTransFuncObj() const {
         return transFuncObj;
     }
 
-    inline void Tube::setIsTransformFunction(bool isTransformFunction) {
+    inline void ProtoTube::setIsTransformFunction(bool isTransformFunction) {
         this->isTransformFunction = isTransformFunction;
     }
 
-    inline bool Tube::getIsTransformFunction() const {
+    inline bool ProtoTube::getIsTransformFunction() const {
         return isTransformFunction;
     }
 
-    inline void Tube::setPerturbation(const Vector3& perturbation) {
+    inline void ProtoTube::setPerturbation(const Vec3f& perturbation) {
         this->perturbation = perturbation;
         init();
     }
 
-    inline Vector3 Tube::getPerturbation() const {
+    inline Vec3f ProtoTube::getPerturbation() const {
         return perturbation;
     }
 
-    inline const std::vector<FrenetFrame>& Tube::getFrenetFrame() const {
+    inline const std::vector<ProtoFrenetFrame>& ProtoTube::getFrenetFrames() const {
         return ff;
     }
 
-    inline void Tube::setIsSlithering(bool isSlithering) {
-        this->isSlithering = isSlithering;
-    }
-
-    inline bool Tube::getIsSlithering() const {
-        return isSlithering;
-    }
-
-    inline void Tube::setIsBreathing(bool isBreathing) {
-        this->isBreathing = isBreathing;
-    }
-
-    inline bool Tube::getIsBreathing() const {
-        return isBreathing;
-    }
+//    inline void ProtoTube::setIsSlithering(bool isSlithering) {
+//        this->isSlithering = isSlithering;
+//    }
+//
+//    inline bool ProtoTube::getIsSlithering() const {
+//        return isSlithering;
+//    }
+//
+//    inline void ProtoTube::setIsBreathing(bool isBreathing) {
+//        this->isBreathing = isBreathing;
+//    }
+//
+//    inline bool ProtoTube::getIsBreathing() const {
+//        return isBreathing;
+//    }
 
 }
 

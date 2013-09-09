@@ -1,5 +1,6 @@
 /*!  \brief  ProtoCurve3.h: Abstract base class for all curves
- ProtoCurve3.cpphbrary v02
+ ProtoCurve3.cpp
+Protobyte Library v02
  
  Created by Ira on 7/23/13.
  Copyright (c) 2013 Ira Greenberg. All rights reserved.
@@ -36,7 +37,7 @@ namespace ijg {
         /**
          * std::vector of control points.
          */
-        std::vector<ProtoVector3> controlPts;
+        std::vector<Vec3f> controlPts;
 
         /**
          * The number of interpolated points along the curve.
@@ -46,22 +47,22 @@ namespace ijg {
         /**
          * std::vector of interpolated points along curve.
          */
-        std::vector<ProtoVector3> interpPts;
+        std::vector<Vec3f> interpPts;
 
         /**
          * std::vector of all curve vertices.
          */
-        std::vector<ProtoVector3> verts;
+        std::vector<Vec3f> verts;
 
         /**
          * std::vector of all curve vertices (Frenet frame).
          */
-        std::vector<ProtoVector3> biNorms;
+        std::vector<Vec3f> biNorms;
 
         /**
          * std::vector of all curve normals (Frenet frame).
          */
-        std::vector<ProtoVector3> norms;
+        std::vector<Vec3f> norms;
 
         /**
          * std::vector of Frenet frames.
@@ -93,7 +94,7 @@ namespace ijg {
         /**
          * std::vector temporarily stores vertices during calculations in init(); 
          */
-        std::vector<ProtoVector3> tempVecs;
+        std::vector<Vec3f> tempVecs;
 
         /**
          * Bounding box of entire curve
@@ -106,7 +107,7 @@ namespace ijg {
 
         ProtoCurve3();
 
-        ProtoCurve3(const std::vector<ProtoVector3>& controlPts, int interpDetail, bool isCurveClosed);
+        ProtoCurve3(const std::vector<Vec3f>& controlPts, int interpDetail, bool isCurveClosed);
 
 
 
@@ -143,7 +144,7 @@ namespace ijg {
         /**
          * Draw the Frenet Frame.
          */
-        virtual void displayProtoFrenetFrames(float len = 20) = 0;
+        virtual void displayFrenetFrames(float len = 20) = 0;
 
         //virtual void createProtoFrenetFrame();
 
@@ -162,12 +163,12 @@ namespace ijg {
         /**
          * Set the control points, with side effects
          */
-        void setControlPts(std::vector<ProtoVector3>& controlPts);
+        void setControlPts(std::vector<Vec3f>& controlPts);
 
         /**
          * get a pointer to the  control points array, with side effects
          */
-        std::vector<ProtoVector3>& getControlPts();
+        std::vector<Vec3f>& getControlPts();
 
         /**
          * Get the curve vertsBuff's length.
@@ -182,7 +183,7 @@ namespace ijg {
          * @param uniqueVerts
          *            Vector array
          */
-        void setVerts(std::vector<ProtoVector3> verts);
+        void setVerts(std::vector<Vec3f> verts);
 
         /**
          * Get pointer all the curve points
@@ -190,12 +191,12 @@ namespace ijg {
          * @param uniqueVerts
          *            Vector array
          */
-        std::vector<ProtoVector3>& getVerts();
+        std::vector<Vec3f>& getVerts();
 
         /**
          * Get std::vector of all vertices
          */
-        std::vector<ProtoVector3>& getVertices();
+        std::vector<Vec3f>& getVertices();
 
         /**
          * Get ProtoCurve3 object dimensions.

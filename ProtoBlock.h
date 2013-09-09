@@ -10,25 +10,25 @@
 #define	ProtoBLOCK_H
 
 #include <iostream>
-#include "ProtoGeomBase.h"
+#include "ProtoGeom3.h"
 
 namespace ijg {
 
-    class ProtoBlock : public ProtoGeomBase {
+    class ProtoBlock : public ProtoGeom3 {
     public:
-        friend std::ostream& operator<<(std::ostream& out, const Block& block);
+        friend std::ostream& operator<<(std::ostream& out, const ProtoBlock& block);
 
         /*!
          * Default Constructor */
         ProtoBlock();
         /*!
          * Constructor */
-        ProtoBlock(const Vector3& pos, const Vector3& rot, const Dimension3<float>& size,
-                const Color4<float>& col4);
+        ProtoBlock(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3<float>& size,
+                const ProtoColor4<float>& col4);
         /*!
          * Constructor */
-        ProtoBlock(const Vector3& pos, const Vector3& rot, const Dimension3<float>& size,
-                const Color4<float>& col4, float textureScale);
+        ProtoBlock(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3<float>& size,
+                const ProtoColor4<float>& col4, float textureScale);
 
         /*!
          * Declared pure virtual in GeomBase base class

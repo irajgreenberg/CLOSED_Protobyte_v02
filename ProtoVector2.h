@@ -128,7 +128,6 @@ namespace ijg {
         ProtoVector2<T>& operator*=(T s);
         ProtoVector2<T>& operator/=(const ProtoVector2<T>& v);
         ProtoVector2<T>& operator/=(T s);
-        ProtoVector2<T>& operator-();
         ProtoVector2<T>& operator++();
         ProtoVector2<T>& operator++(int);
         ProtoVector2<T>& operator--();
@@ -257,14 +256,6 @@ namespace ijg {
         x/=s;
         y/=s;
         return *this;
-    }
-    
-    template <class T>
-    inline ProtoVector2<T>& ProtoVector2<T>::operator-(){
-        x*=-1;
-        y*=-1;
-        return *this;
-        
     }
     
     template <class T>

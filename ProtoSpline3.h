@@ -39,7 +39,7 @@ namespace ijg {
 
         ProtoSpline3();
 
-        ProtoSpline3(const std::vector<ProtoVector3>& controlPts, int interpDetail, bool isCurveClosed, float smoothness);
+        ProtoSpline3(const std::vector<Vec3f>& controlPts, int interpDetail, bool isCurveClosed, float smoothness);
 
 
         /**
@@ -97,8 +97,8 @@ namespace ijg {
          * Default cross-section is an ellipse
          */
         void drawCrossSections(); // temp
-
-
+        
+        
 
     private:
 

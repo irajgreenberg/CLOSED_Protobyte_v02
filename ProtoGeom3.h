@@ -101,7 +101,7 @@ namespace ijg {
         GLuint displayListIndex;
 
         // VBO stuff
-        GLuint vboID, indexVBOID;
+        GLuint vboID, indexVboID;
         
         //shared memory pointer for dynamic VBO's
         float* sharedMemPointer;
@@ -181,6 +181,11 @@ namespace ijg {
         // stl exporter
 //        void exportSTL();
         
+        // required by ProtobteRenderer
+        GLuint getVboID() const;
+        GLuint getIndexVboID() const;
+        int getIndicesSize() const;
+        
 
 
     };
@@ -241,6 +246,18 @@ namespace ijg {
 
     inline ProtoTexture2 ProtoGeom3::getBumpMap() const {
         return bumpMap;
+    }
+    
+    inline GLuint ProtoGeom3::getVboID() const {
+        return vboID;
+    }
+    
+    inline GLuint ProtoGeom3::getIndexVboID() const {
+        return indexVboID;
+    }
+    
+    inline int ProtoGeom3::getIndicesSize() const{
+        return inds.size();
     }
      
 

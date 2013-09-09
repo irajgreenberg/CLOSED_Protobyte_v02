@@ -31,11 +31,13 @@
 
 namespace ijg {
     
-class ProtoRenderer {
-    
+    class ProtoRenderer {
+        
     private:
+        
         // field for singleton instance
         static ProtoRenderer* singletonRenderer;
+        static bool singletonFlag;
         
         // private default cstr to enforce singleton pattern
         ProtoRenderer();
@@ -45,7 +47,7 @@ class ProtoRenderer {
         
         void init();
         
-
+        
         
     public:
         
@@ -66,23 +68,19 @@ class ProtoRenderer {
             SURFACE
         };
         
-        // dstr
-        ~ProtoRenderer();
-        
-        // only returns a single instance
+        // singleton
         static ProtoRenderer* getInstance();
         
-        // overloaded assignment op
-        //ProtoRenderer& operator=(const ProtoRenderer& renderer);
+       // dstr
+        ~ProtoRenderer();
         
-
-
-    
-        void draw(const ProtoGeom3& geomObj, DisplayMode mode, RenderMode render, float pointSize);
-    
+        
+        void draw(const std::unique_ptr<ProtoGeom3>& geomObj, DisplayMode mode = VERTEX_BUFFER_OBJECT, RenderMode render = SURFACE, float pointSize = 1.0);
+        
+        void display(const std::unique_ptr<ProtoGeom3>& geomObj, DisplayMode mode = VERTEX_BUFFER_OBJECT, RenderMode render = SURFACE, float pointSize = 1.0);
         
     };
-    #define Renderer ProtoRenderer
+#define Renderer ProtoRenderer
 }
 
 #endif // PROTO_RENDERER_H

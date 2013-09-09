@@ -1,3 +1,5 @@
+// NOTE: something is screwy with my overloaded ops (Need to FIX)
+
 /*!  \brief  ProtoVector3.h: Templated 3D vector class
  ProtoVector3.h
  Protobyte Library v02
@@ -131,7 +133,6 @@ namespace ijg {
         ProtoVector3<T>& operator*=(T s);
         ProtoVector3<T>& operator/=(const ProtoVector3<T>& v);
         ProtoVector3<T>& operator/=(T s);
-        ProtoVector3<T>& operator-();
         ProtoVector3<T>& operator++();
         ProtoVector3<T>& operator++(int);
         ProtoVector3<T>& operator--();
@@ -279,15 +280,6 @@ namespace ijg {
         y/=s;
         z/=s;
         return *this;
-    }
-    
-    template <class T>
-    inline ProtoVector3<T>& ProtoVector3<T>::operator-(){
-        x*=-1;
-        y*=-1;
-        z*=-1;
-        return *this;
-        
     }
     
     template <class T>
@@ -442,7 +434,7 @@ namespace ijg {
         T cx = y * v.z - z * v.y;
         T cy = z * v.x - x * v.z;
         T cz = x * v.y - y * v.x;
-
+        
         return (*this)(cx, cy, cz);
     }
     
@@ -566,7 +558,8 @@ namespace ijg {
     // sub lhs by sclr
     template <typename T>
     inline ProtoVector3<T> operator-(const ProtoVector3<T>& lhs, T s){
-        return ProtoVector3<T>(lhs)-=s;    }
+        return ProtoVector3<T>(lhs)-=s;
+    }
     
     // sub rhs by sclr
     template <typename T>
@@ -577,7 +570,8 @@ namespace ijg {
     // mult lhs by sclr
     template <typename T>
     inline ProtoVector3<T> operator*(const ProtoVector3<T>& lhs, T s){
-        return ProtoVector3<T>(lhs)*=s;    }
+        return ProtoVector3<T>(lhs)*=s;
+    }
     
     // mult rhs by sclr
     template <typename T>
@@ -600,14 +594,14 @@ namespace ijg {
     // invert signs
     template <typename T>
     inline ProtoVector3<T> operator-(const ProtoVector3<T>& rhs){
-        return ProtoVector3<T>(rhs)*=-1;
+        return ProtoVector3<T>(rhs) *= static_cast<T>(-1);
     }
     
     // vec magnitude
     template <typename T>
     inline T mag(const ProtoVector3<T>& v){
         return sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
-    } 
+    }
     
     // angle between vecs
     template <typename T>

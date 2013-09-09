@@ -1,25 +1,25 @@
 
-/*! File:   TransformFunction.h
+/*! File:   ProtoTransformFunction.h
  * Author: Ira Greenberg
  *
  * Created on May 18, 2013, 10:42 AM
  * Copyright (c) 2013 Ira Greenberg. All rights reserved.
  */
 
-#ifndef TRANSFORMFUNCTION_H
-#define	TRANSFORMFUNCTION_H
+#ifndef PROTO_TRANSFORMFUNCTION_H
+#define	PROTO_TRANSFORMFUNCTION_H
 
-#include "Tuple2.h"
-#include "Vector3.h"
+#include "ProtoTuple2.h"
+#include "ProtoVector3.h"
 
-namespace proto {
+namespace ijg {
 
-    class TransformFunction {
+    class ProtoTransformFunction {
     private:
         unsigned char functionType;
         float minValue, maxValue;
-        Tuple2<Vector3> vectorRange;
-        Tuple2f scalerRange;
+        ProtoTuple2<Vec3f> vectorRange;
+        ProtoTuple2f scalerRange;
        // bool isRandom;
         short periodCount;
         bool isVectorRange, isScalerRange;
@@ -28,23 +28,23 @@ namespace proto {
 
         /*!
          * Default Constructor */
-        TransformFunction();
+        ProtoTransformFunction();
 
         /*!
          * Constructor */
-        TransformFunction(unsigned char functionType, /*bool isRandom = 0, */short periodCount = 1);
+        ProtoTransformFunction(unsigned char functionType, /*bool isRandom = 0, */short periodCount = 1);
 
         /*!
          * Constructor */
-        TransformFunction(unsigned char functionType, Tuple2v3 vectorRange, /*bool isRandom = 0, */short periodCount = 1);
+        ProtoTransformFunction(unsigned char functionType, ProtoTuple2v3f vectorRange, /*bool isRandom = 0, */short periodCount = 1);
 
         /*!
          * Constructor */
-        TransformFunction(unsigned char functionType, Tuple2f scalerRange, /*bool isRandom = 0, */short periodCount = 1);
+        ProtoTransformFunction(unsigned char functionType, ProtoTuple2f scalerRange, /*bool isRandom = 0, */short periodCount = 1);
 
         /*!
          * Constructor */
-        TransformFunction(unsigned char functionType, float maxValue, /*bool isRandom = 0, */short periodCount = 1);
+        ProtoTransformFunction(unsigned char functionType, float maxValue, /*bool isRandom = 0, */short periodCount = 1);
 
 
 
@@ -55,10 +55,10 @@ namespace proto {
         short getPeriodCount() const;
 //        void setIsRandom(bool isRandom);
 //        bool getIsRandom() const;
-        void setScalerRange(Tuple2f scalerRange);
-        Tuple2f getScalerRange() const;
-        void setVectorRange(Tuple2v3 vectorRange);
-        Tuple2v3 getVectorRange() const;
+        void setScalerRange(ProtoTuple2f scalerRange);
+        ProtoTuple2f getScalerRange() const;
+        void setVectorRange(ProtoTuple2v3f vectorRange);
+        ProtoTuple2v3f getVectorRange() const;
         void setMaxValue(float maxValue);
         float getMaxValue() const;
         void setMinValue(float minValue);
@@ -78,72 +78,72 @@ namespace proto {
 
     };
 
-    inline void TransformFunction::setPeriodCount(short periodCount) {
+    inline void ProtoTransformFunction::setPeriodCount(short periodCount) {
         this->periodCount = periodCount;
     }
 
-    inline short TransformFunction::getPeriodCount() const {
+    inline short ProtoTransformFunction::getPeriodCount() const {
         return periodCount;
     }
 
-//    inline void TransformFunction::setIsRandom(bool isRandom) {
+//    inline void ProtoTransformFunction::setIsRandom(bool isRandom) {
 //        this->isRandom = isRandom;
 //    }
 //
-//    inline bool TransformFunction::getIsRandom() const {
+//    inline bool ProtoTransformFunction::getIsRandom() const {
 //        return isRandom;
 //    }
 
-    inline void TransformFunction::setScalerRange(Tuple2<float> scalerRange) {
+    inline void ProtoTransformFunction::setScalerRange(ProtoTuple2f scalerRange) {
         this->scalerRange = scalerRange;
     }
 
-    inline Tuple2f TransformFunction::getScalerRange() const {
+    inline ProtoTuple2f ProtoTransformFunction::getScalerRange() const {
         return scalerRange;
     }
 
-    inline void TransformFunction::setVectorRange(Tuple2<Vector3> vectorRange) {
+    inline void ProtoTransformFunction::setVectorRange(ProtoTuple2<Vec3f> vectorRange) {
         this->vectorRange = vectorRange;
     }
 
-    inline Tuple2v3 TransformFunction::getVectorRange() const {
+    inline ProtoTuple2v3f ProtoTransformFunction::getVectorRange() const {
         return vectorRange;
     }
 
-    inline void TransformFunction::setMaxValue(float maxValue) {
+    inline void ProtoTransformFunction::setMaxValue(float maxValue) {
         this->maxValue = maxValue;
     }
 
-    inline float TransformFunction::getMaxValue() const {
+    inline float ProtoTransformFunction::getMaxValue() const {
         return maxValue;
     }
 
-    inline void TransformFunction::setMinValue(float minValue) {
+    inline void ProtoTransformFunction::setMinValue(float minValue) {
         this->minValue = minValue;
     }
 
-    inline float TransformFunction::getMinValue() const {
+    inline float ProtoTransformFunction::getMinValue() const {
         return minValue;
     }
 
-    inline void TransformFunction::setFunctionType(unsigned char functionType) {
+    inline void ProtoTransformFunction::setFunctionType(unsigned char functionType) {
         this->functionType = functionType;
     }
 
-    inline unsigned char TransformFunction::getFunctionType() const {
+    inline unsigned char ProtoTransformFunction::getFunctionType() const {
         return functionType;
     }
 
-    inline bool TransformFunction::getIsVectorRange() {
+    inline bool ProtoTransformFunction::getIsVectorRange() {
         return isVectorRange;
     }
 
-    inline bool TransformFunction::getIsScalerRange() {
+    inline bool ProtoTransformFunction::getIsScalerRange() {
         return isScalerRange;
     }
 
 
 
 }
-#endif	/* TRANSFORMFUNCTION_H */
+#endif	/* PROTO_TRANSFORMFUNCTION_H */
 

@@ -41,18 +41,18 @@ namespace ijg {
 
     class ProtoFrenetFrame {
     private:
-        ProtoVector3 p, T, N, B;
+        Vec3f p, T, N, B;
         
     public:
         friend std::ostream& operator<<(std::ostream& out, const ProtoFrenetFrame& frame);
         ProtoFrenetFrame();
-        ProtoFrenetFrame(const ProtoVector3& p, const ProtoVector3& T, const ProtoVector3& B, const ProtoVector3& N);
-        ProtoFrenetFrame(const ProtoVector3 TBN[3]);
+        ProtoFrenetFrame(const Vec3f& p, const Vec3f& T, const Vec3f& B, const Vec3f& N);
+        ProtoFrenetFrame(const Vec3f TBN[3]);
         
         void init();
-        ProtoVector3 getT() const;
-        ProtoVector3 getN() const;
-        ProtoVector3 getB() const;
+        Vec3f getT() const;
+        Vec3f getN() const;
+        Vec3f getB() const;
         
         void display(float len = 10);
         

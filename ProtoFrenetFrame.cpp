@@ -42,25 +42,25 @@ ProtoFrenetFrame::ProtoFrenetFrame() {
 
 }
 
-ProtoFrenetFrame::ProtoFrenetFrame(const ProtoVector3& p, const ProtoVector3& T, const ProtoVector3& B, const ProtoVector3& N) :
+ProtoFrenetFrame::ProtoFrenetFrame(const Vec3f& p, const Vec3f& T, const Vec3f& B, const Vec3f& N) :
 p(p), T(T), B(B), N(N) {
 }
 
-ProtoFrenetFrame::ProtoFrenetFrame(const ProtoVector3 TBN[3]) {
+ProtoFrenetFrame::ProtoFrenetFrame(const Vec3f TBN[3]) {
     T = TBN[0];
     B = TBN[1];
     N = TBN[2];
 }
 
-ProtoVector3 ProtoFrenetFrame::getT() const {
+Vec3f ProtoFrenetFrame::getT() const {
     return T;
 }
 
-ProtoVector3 ProtoFrenetFrame::getN() const {
+Vec3f ProtoFrenetFrame::getN() const {
     return N;
 }
 
-ProtoVector3 ProtoFrenetFrame::getB() const {
+Vec3f ProtoFrenetFrame::getB() const {
     return B;
 }
 

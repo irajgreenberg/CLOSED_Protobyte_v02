@@ -138,8 +138,3 @@ void ProtoCamera::setViewPort(float x, float y, float w, float h) {
 
 
 
-// update projection matrix with perspective values
-//setView(win.fovAngle, win.w / win.h, win.nearClipPlane, win.farClipPlane);
-
-//}
-

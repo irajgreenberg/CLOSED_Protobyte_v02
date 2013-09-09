@@ -1,5 +1,5 @@
 /*!  \brief  ProtoMatrix3.cpp: 3D Matrix implementation
- ProtoMatrix3.cpp
+ ProtoMatrix3f.cpp
  Protobyte Library v02
  
  Created by Ira on 7/23/13.
@@ -32,13 +32,13 @@ ProtoMatrix3::ProtoMatrix3() {
     identity();
 }
 
-ProtoMatrix3::ProtoMatrix3(float mat3[9]) {
+ProtoMatrix3f::ProtoMatrix3f(float mat3[9]) {
     for (int i = 0; i < 9; i++) {
         this->mat3[i] = mat3[i];
     }
 }
 
-void ProtoMatrix3::transpose() {
+void ProtoMatrix3f::transpose() {
     float temp[9];
     for (int i = 0; i < 3; i++) {
         for (int j = 0, k = 0; j < 9; j += 3) {
@@ -50,11 +50,11 @@ void ProtoMatrix3::transpose() {
     }
 }
 
-void ProtoMatrix3::determinent() {
+void ProtoMatrix3f::determinent() {
 
 }
 
-void ProtoMatrix3::identity() {
+void ProtoMatrix3f::identity() {
     // build identity
     for (int i = 0; i < 9; i++) {
         mat3[i] = 0;
@@ -64,7 +64,7 @@ void ProtoMatrix3::identity() {
     }
 }
 
-ProtoVector3 ProtoMatrix3::getRotate(float theta, const ProtoVector3& axis, const ProtoVector3& vec) {
+ProtoVector3 ProtoMatrix3f::getRotate(float theta, const ProtoVector3& axis, const ProtoVector3& vec) {
     //std::cout << "vec in getRotate = " << vec << std::endl;
     float c = cos(theta);
     float s = sin(theta);
