@@ -39,8 +39,13 @@ std::once_flag ProtoWorld::protoOnceFlag;
 
 float counter = 0;
 // initialize static vars
+// cameras
 unsigned char ProtoWorld::cameraCount=0;
 const unsigned char ProtoWorld::CAMERA_COUNT_MAX=4;
+
+//Lights
+unsigned char ProtoWorld::lightCount=0;
+const unsigned char ProtoWorld::LIGHT_COUNT_MAX=8;
 
 float ProtoWorld::canvasWidth = 0;
 float ProtoWorld::canvasHeight = 0;
@@ -202,6 +207,16 @@ void ProtoWorld::add(const ProtoGeom3* geomObj) {
 //    }
 //    std::cout << "cameras.size() = " << cameras.size() << std::endl;
 //}
+
+
+void ProtoWorld::add(std::unique_ptr<ProtoLight> light){
+    if(lightCount++ < LIGHT_COUNT_MAX){
+        lights.push_back(std::move(light)); // change ownership
+        std::cout << "lightCount = " <<  static_cast<int>(lightCount) << std::endl;
+    } else {
+        std::cout << "WARNING: Your ProtoWorld includes 8 lights, which is the maximum number allowed.\n";
+    }
+}
 
 
 // run world

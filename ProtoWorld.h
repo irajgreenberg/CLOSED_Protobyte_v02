@@ -29,6 +29,7 @@
 #include <vector>
 #include "ProtoBounds.h"
 #include "ProtoCamera.h"
+#include "ProtoLight.h"
 //#include "ProtoAnimator.h"
 #include "ProtoRenderer.h"
 
@@ -64,11 +65,17 @@ namespace ijg {
         //ProtoWorld& operator=(const ProtoWorld& world);
         
         
-        // Camera stuff
+        // Cameras
         static ProtoBoundsf canvasBounds; // for aspect ratio
         std::vector< std::unique_ptr<ProtoCamera> > cameras; // holds up to 4 cameras
         static unsigned char cameraCount; // 1-4
         static const unsigned char CAMERA_COUNT_MAX; // 4
+        
+        // Lights
+        std::vector< std::unique_ptr<ProtoLight> > lights; // holds up to 8 lights
+        static unsigned char lightCount; // 1-8
+        static const unsigned char LIGHT_COUNT_MAX; // 8
+        
         
         // Renderer
         ProtoRenderer* renderer;
@@ -109,6 +116,15 @@ namespace ijg {
     public:
         
         static float canvasWidth, canvasHeight;
+        
+        enum LightSetup {
+            THREE_POINT,
+            FILL,
+            KEY,
+            BACK
+        };
+        
+        
         
         enum RenderingMode {
             POINTS,
@@ -162,10 +178,15 @@ namespace ijg {
         void add(std::unique_ptr<ProtoCamera> camera);
       
         
+        //+++++ LIGHTS +++++
+         void add(std::unique_ptr<ProtoLight> light);
+        
         
         //        // cleans up containers but NOT memory
         //        void remove(ProtoGeomBase* graphicsObj);
         //        void remove(ProtoCamera* camera);
+        
+        
         
         
         // run world
@@ -194,6 +215,7 @@ namespace ijg {
         void updateCanvasSize(float, float);
         
         void setRenderingMode(RenderingMode=SURFACE);
+        
         
     };
 }
