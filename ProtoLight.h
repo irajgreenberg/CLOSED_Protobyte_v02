@@ -67,6 +67,9 @@ namespace ijg {
         void setEmissiveMaterial(const ProtoColor4f& emissiveMaterial);
         const ProtoColor4f& getEmissiveMaterial() const;
         
+        void setShininess(float shininess);
+        float getShinines() const;
+        
     private:
         Vec3f position;
         
@@ -141,6 +144,14 @@ namespace ijg {
     }
     inline const ProtoColor4f& ProtoLight::getEmissiveMaterial() const{
         return emissiveMaterial;
+    }
+    
+    inline void ProtoLight::setShininess(float shininess){
+        this->shininess = shininess;
+    }
+    
+    inline float ProtoLight::getShinines() const{
+        return shininess;
     }
 
 }

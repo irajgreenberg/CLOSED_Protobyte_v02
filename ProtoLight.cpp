@@ -26,17 +26,18 @@
 using namespace ijg;
 
 // default cstr
-ProtoLight::ProtoLight() {
+ProtoLight::ProtoLight():
+position(Vec3f(-2, 2, 2)), diffuse(ProtoColor4f(.8, .5, .1, 1.0)), ambient(ProtoColor4f(.5, .5, .5, 1.0)), specular(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), shininess(25), diffuseMaterial(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), ambientMaterial(ProtoColor4f(.25, .25, .25, 1)), specularMaterial(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), emissiveMaterial(ProtoColor4f(0, 0, 0, 1.0)){
 }
 
 // cstr
 ProtoLight::ProtoLight(const Vec3f& position, const ProtoColor4f& diffuse):
-position(position), diffuse(diffuse), ambient(ProtoColor4f(.3, .3, .3, 1.0)), specular(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), shininess(28), diffuseMaterial(ProtoColor4f(.8, .8, .8, 1.0)), ambientMaterial(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), specularMaterial(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), emissiveMaterial(ProtoColor4f(.1, .1, .1, .1))
+position(position), diffuse(diffuse), ambient(ProtoColor4f(.3, .3, .3, 1.0)), specular(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), shininess(28), diffuseMaterial(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), ambientMaterial(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), specularMaterial(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), emissiveMaterial(ProtoColor4f(.1, .1, .1, .1))
 {
     
 }
 
-ProtoLight::ProtoLight(const Vec3f& position, const ProtoColor4f& diffuse, const ProtoColor4f& ambient, const ProtoColor4f& specular, float shininess):position(position), diffuse(diffuse), ambient(ambient), specular(specular), shininess(shininess), diffuseMaterial(ProtoColor4f(.8, .8, .8, 1.0)), ambientMaterial(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), specularMaterial(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), emissiveMaterial(ProtoColor4f(.1, .1, .1, .1))
+ProtoLight::ProtoLight(const Vec3f& position, const ProtoColor4f& diffuse, const ProtoColor4f& ambient, const ProtoColor4f& specular, float shininess):position(position), diffuse(diffuse), ambient(ambient), specular(specular), shininess(shininess), diffuseMaterial(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), ambientMaterial(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), specularMaterial(ProtoColor4f(1.0, 1.0, 1.0, 1.0)), emissiveMaterial(ProtoColor4f(.1, .1, .1, .1))
 {
     
 }

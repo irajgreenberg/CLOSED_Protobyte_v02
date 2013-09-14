@@ -126,7 +126,7 @@ void ProtoWorld::init(){
     
     
     // lighting
-    setLights();
+    //setLights();
     glFrontFace(GL_CCW); // default
     glEnable(GL_CULL_FACE);
     //glCullFace(GL_BACK);
@@ -135,7 +135,12 @@ void ProtoWorld::init(){
     //glShadeModel(GL_SMOOTH); // smooth by default
     //glShadeModel(GL_FLAT);
     glEnable(GL_COLOR_MATERIAL); // incorporates per vertex color with lights
-    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE ) ;
+    //glColorMaterial(GL_FRONT_AND_BACK, GL_EMISSION);
+//    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT);
+//    glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+    //glColorMaterial(GL_FRONT, GL_SPECULAR);
+    
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
@@ -217,6 +222,162 @@ void ProtoWorld::add(std::unique_ptr<ProtoLight> light){
         std::cout << "WARNING: Your ProtoWorld includes 8 lights, which is the maximum number allowed.\n";
     }
 }
+
+void ProtoWorld::add(ProtoLight* light){
+    if(lightCount < LIGHT_COUNT_MAX){
+        lights2.push_back(light); // change ownership
+        std::cout << "lightCount = " <<  static_cast<int>(lightCount) << std::endl;
+        // Light01
+        
+//        GLfloat light01_ambient[] = {0.3, 0.1, 0.1, 1.0};
+//        GLfloat light01_diffuse[] = {.85, .85, .85, 1.0};
+//        GLfloat light01_specular[] = {1.0, 1.0, 1.0, 1.0};
+//        GLfloat light01_position[] = {-20, 10, 5.0, 0.0};
+//        
+//        //materials
+//        GLfloat light01_mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+//        GLfloat light01_mat_shininess[] = {15}; // max 128
+        
+        
+        // set Lights
+        float position[4] = {
+            lights2.at(lightCount)->getPosition().x,
+            lights2.at(lightCount)->getPosition().y,
+            lights2.at(lightCount)->getPosition().z,
+            1
+        };
+        
+        float diffuse[4] = {
+            lights2.at(lightCount)->getDiffuse().getR(),
+            lights2.at(lightCount)->getDiffuse().getG(),
+            lights2.at(lightCount)->getDiffuse().getB(),
+            lights2.at(lightCount)->getDiffuse().getA()
+        };
+        
+        float ambient[4] = {
+            lights2.at(lightCount)->getAmbient().getR(),
+            lights2.at(lightCount)->getAmbient().getG(),
+            lights2.at(lightCount)->getAmbient().getB(),
+            lights2.at(lightCount)->getAmbient().getA()
+        };
+        
+        float specular[4] = {
+            lights2.at(lightCount)->getSpecular().getR(),
+            lights2.at(lightCount)->getSpecular().getG(),
+            lights2.at(lightCount)->getSpecular().getB(),
+            lights2.at(lightCount)->getSpecular().getA()
+        };
+
+        
+                
+        // materials
+        float materialDiffuse[4] = {
+            lights2.at(lightCount)->getDiffuseMaterial().getR(),
+            lights2.at(lightCount)->getDiffuseMaterial().getG(),
+            lights2.at(lightCount)->getDiffuseMaterial().getB(),
+            lights2.at(lightCount)->getDiffuseMaterial().getA()
+        };
+        
+        float materialSpecularity[4] = {
+            lights2.at(lightCount)->getSpecularMaterial().getR(),
+            lights2.at(lightCount)->getSpecularMaterial().getG(),
+            lights2.at(lightCount)->getSpecularMaterial().getB(),
+            lights2.at(lightCount)->getSpecularMaterial().getA()
+        };
+        
+        float materialAmbient[4] = {
+            lights2.at(lightCount)->getAmbientMaterial().getR(),
+            lights2.at(lightCount)->getAmbientMaterial().getG(),
+            lights2.at(lightCount)->getAmbientMaterial().getB(),
+            lights2.at(lightCount)->getAmbientMaterial().getA()
+        };
+        
+        float materialEmissive[4] = {
+            lights2.at(lightCount)->getEmissiveMaterial().getR(),
+            lights2.at(lightCount)->getEmissiveMaterial().getG(),
+            lights2.at(lightCount)->getEmissiveMaterial().getB(),
+            lights2.at(lightCount)->getEmissiveMaterial().getA()
+        };
+
+        
+        GLfloat shininess[] = {lights2.at(lightCount)->getShinines()}; // max 128
+        
+        //glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDiffuse);
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecularity);
+        //glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmbient);
+        //glMaterialfv(GL_FRONT, GL_EMISSION, materialEmissive);
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+        
+       
+        
+        glEnable(GL_LIGHTING);
+        switch (lightCount) {
+            case 0:
+                glEnable(GL_LIGHT0);
+                glLightfv(GL_LIGHT0, GL_POSITION, position);
+                glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+                glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+                glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+                
+                std::cout << "in LIGHT0" << std::endl;
+                break;
+            case 1:
+                glEnable(GL_LIGHT1);
+                glLightfv(GL_LIGHT1, GL_POSITION, position);
+                glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
+                glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
+                glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
+                
+                std::cout << "in LIGHT1" << std::endl;
+                
+                break;
+            case 2:
+                glEnable(GL_LIGHT2);
+                break;
+            case 3:
+                glEnable(GL_LIGHT3);
+                break;
+            case 4:
+                glEnable(GL_LIGHT4);
+                break;
+            case 5:
+                glEnable(GL_LIGHT5);
+                break;
+            case 6:
+                glEnable(GL_LIGHT6);
+                break;
+            case 7:
+                glEnable(GL_LIGHT7);
+                break;
+        }
+        
+        lightCount++;
+        
+    } else {
+        std::cout << "WARNING: Your ProtoWorld includes 8 lights, which is the maximum number allowed.\n";
+    }
+}
+
+// Lighting handled through world
+void ProtoWorld::setDiffuse(Light lightID, const ProtoColor4f& color, const ProtoColor4f& material){
+   // glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDiffuse);
+   // glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+    
+}
+void ProtoWorld::setSpecular(Light lightID, const ProtoColor4f& color, const ProtoColor4f& material, float shininess){
+    
+}
+void ProtoWorld::setShininess(float shininess){
+    
+}
+void ProtoWorld::setAmbient(Light lightID, const ProtoColor4f& color, const ProtoColor4f& material){
+    
+}
+void ProtoWorld::setEmission(Light lightID, const ProtoColor4f& color, const ProtoColor4f& material){
+    
+}
+
+
 
 
 // run world

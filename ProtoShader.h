@@ -1,49 +1,42 @@
-//
-//  Shader.h
-//  Protobyte Library V01
-//
-//  Created by Ira Greenberg on 8/2/11.
-//  Copyright 2011 SMU. All rights reserved.
-//
-// Library Usage:
-// This work is licensed under the Creative Commons 
-// Attribution-NonCommercial-ShareAlike 3.0 Unported License. 
-// To view a copy of this license, visit 
-// http://creativecommons.org/licenses/by-nc-sa/3.0/ 
-// or send a letter to Creative Commons, 
-// 444 Castro Street, Suite 900, 
-// Mountain View, California, 94041, USA.
-//
+/*!  \brief  ProtoShader.h: class for managing shaders
+ ProtoShader.h
+ Protobyte Library v02
+ 
+ Created by Ira on 7/23/13.
+ Copyright (c) 2013 Ira Greenberg. All rights reserved.
+ 
+ Library Usage:
+ This work is licensed under the Creative Commons
+ Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+ To view a copy of this license, visit
+ http://creativecommons.org/licenses/by-nc-sa/3.0/
+ or send a letter to Creative Commons,
+ 444 Castro Street, Suite 900,
+ Mountain View, California, 94041, USA.
+ 
+ This notice must be retained any source distribution.
+ 
+ \ingroup common
+ This class is templated to allow for varied single collection types
+ This class is part of the group common (update)
+ \sa NO LINK
+ */
 
-#ifndef Protobyte_Library_V01_Shader_h
-#define Protobyte_Library_V01_Shader_h
-
-#ifdef  __linux 
-#include <GL/glew.h>
-#include <GL/gl.h>
-#define GL_GLEXT_PROTOTYPES
-#include <GL/glext.h>
-#elif defined(_WIN32) || defined(_WIN64)
-#include <GL/glew.h>
-#include <GL/gl.h>
-#define GL_GLEXT_PROTOTYPES
-#include <GL/glext.h>
-#elif __APPLE__
-#include <OpenGL/gl.h>
-#endif
+#ifndef PROTO_SHADER_H
+#define PROTO_SHADER_H
 
 
 #include <stdlib.h>
 #include <string>
-#include "Utility.h"
+#include "ProtoUtility.h"
 
-namespace proto {
+namespace ijg {
 
-    class Shader {
+    class ProtoShader {
     public:
-        Shader();
-        Shader(const char *vsFile, const char *fsFile);
-        ~Shader();
+        ProtoShader();
+        ProtoShader(const char *vsFile, const char *fsFile);
+        ~ProtoShader();
 
         void init(const char *vsFile, const char *fsFile);
 
@@ -62,4 +55,4 @@ namespace proto {
 }
 
 
-#endif
+#endif //PROTO_SHADER_H

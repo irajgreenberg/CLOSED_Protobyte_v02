@@ -51,6 +51,7 @@ namespace ijg {
         T getG() const;
         T getB() const;
         T getA() const;
+        
 
     };
 

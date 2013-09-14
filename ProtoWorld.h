@@ -1,6 +1,7 @@
 /*!  \brief  ProtoWorld.h: Top Level Master controller class -
- Implmented as a pointer singleton
- ProtoWorld.h
+ Implemented as a pointer singleton. Manages all aspects of Protobyte
+ library. Implements rendering strictly using VBO/VAO's and Shaders.
+
  Protobyte Library v02
  
  Created by Ira on 7/25/13.
@@ -31,6 +32,7 @@
 #include "ProtoCamera.h"
 #include "ProtoLight.h"
 //#include "ProtoAnimator.h"
+#include "ProtoShader.h"
 #include "ProtoRenderer.h"
 
 // from http://www.nuonsoft.com/blog/2012/10/21/implementing-a-thread-safe-singleton-with-c11/
@@ -61,7 +63,7 @@ namespace ijg {
         // private copy cstr
         ProtoWorld(const ProtoWorld& world);
         
-        // private operator= "still thinking baout this..."
+        // private operator= "still thinking about this..."
         //ProtoWorld& operator=(const ProtoWorld& world);
         
         
@@ -73,6 +75,7 @@ namespace ijg {
         
         // Lights
         std::vector< std::unique_ptr<ProtoLight> > lights; // holds up to 8 lights
+        std::vector<ProtoLight* > lights2; // holds up to 8 lights
         static unsigned char lightCount; // 1-8
         static const unsigned char LIGHT_COUNT_MAX; // 8
         
@@ -85,7 +88,11 @@ namespace ijg {
         std::vector< std::shared_ptr<ProtoGeom3> > sharedGeoms; // composite geom forms
         std::vector< std::unique_ptr<ProtoGeom3> > geoms; // indiviudal geom forms
         
+        // Shaders
+        ProtoShader shader;
         
+        
+        // world fields
         Vec3f worldRotSpeed;
         
         //iterator
@@ -108,8 +115,8 @@ namespace ijg {
         
        
         // need to implement this function
-        
         int activeCamera;
+        
         
 
         
@@ -124,6 +131,25 @@ namespace ijg {
             BACK
         };
         
+        enum Light {
+            LIGHT_0,
+            LIGHT_1,
+            LIGHT_2,
+            LIGHT_3,
+            LIGHT_4,
+            LIGHT_5,
+            LIGHT_6,
+            LIGHT_7
+        };
+        
+        // convenience default shaders
+        enum Shader {
+            GIRAUD,
+            PHONG,
+            CELL_SHADE,
+            RAY_TRACE,
+            RADIOSITY
+        };
         
         
         enum RenderingMode {
@@ -181,6 +207,8 @@ namespace ijg {
         //+++++ LIGHTS +++++
          void add(std::unique_ptr<ProtoLight> light);
         
+        void add(ProtoLight* light);
+        
         
         //        // cleans up containers but NOT memory
         //        void remove(ProtoGeomBase* graphicsObj);
@@ -215,6 +243,16 @@ namespace ijg {
         void updateCanvasSize(float, float);
         
         void setRenderingMode(RenderingMode=SURFACE);
+        
+        void setShadingModel();
+        
+        // Lighting handled through world
+        void setDiffuse(Light lightID, const ProtoColor4f& color=ProtoColor4f(1.0, 1.0, 1.0, 1.0), const ProtoColor4f& material=ProtoColor4f(1.0, 1.0, 1.0, 1.0));
+        void setSpecular(Light lightID, const ProtoColor4f& color=ProtoColor4f(1.0, 1.0, 1.0, 1.0), const ProtoColor4f& material=ProtoColor4f(1.0, 1.0, 1.0, 1.0), float shininess = 46);
+        void setShininess(float shininess = 46);
+        void setAmbient(Light lightID, const ProtoColor4f& color=ProtoColor4f(.4, .4, .4, 1.0), const ProtoColor4f& material=ProtoColor4f(1.0, 1.0, 1.0, 1.0));
+        void setEmission(Light lightID, const ProtoColor4f& color=ProtoColor4f(0.0, 0.0, 0.0, 1.0), const ProtoColor4f& material=ProtoColor4f(0.0, 0.0, 0.0, 1.0));
+        
         
         
     };

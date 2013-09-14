@@ -1,31 +1,41 @@
-//
-//  Shader.cpp
-//  Protobyte Library V01
-//
-//  Created by Ira Greenberg on 8/2/11.
-//  Copyright 2011 SMU. All rights reserved.
-//
+/*!  \brief  ProtoShader.cpp: class for managing shaders
+ ProtoShader.cpp
+ Protobyte Library v02
+ 
+ Created by Ira on 7/23/13.
+ Copyright (c) 2013 Ira Greenberg. All rights reserved.
+ 
+ Library Usage:
+ This work is licensed under the Creative Commons
+ Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+ To view a copy of this license, visit
+ http://creativecommons.org/licenses/by-nc-sa/3.0/
+ or send a letter to Creative Commons,
+ 444 Castro Street, Suite 900,
+ Mountain View, California, 94041, USA.
+ 
+ This notice must be retained any source distribution.
+ 
+ \ingroup common
+ This class is templated to allow for varied single collection types
+ This class is part of the group common (update)
+ \sa NO LINK
+ */
 
-#include "Shader.h"
+#include "ProtoShader.h"
 #include <string.h>
 #include <iostream>
 
-using namespace proto;
+using namespace ijg;
 
-Shader::Shader() {
+ProtoShader::ProtoShader() {
 }
 
-Shader::Shader(const char *vsFile, const char *fsFile) {
+ProtoShader::ProtoShader(const char *vsFile, const char *fsFile) {
     init(vsFile, fsFile);
 }
 
-void Shader::init(const char *vsFile, const char *fsFile) {
-    // bad code that should be changed (eventually!)
-#ifdef  __linux__ 
-    GLenum err = glewInit();
-#elif defined _WIN32
-    GLenum err = glewInit();
-#endif
+void ProtoShader::init(const char *vsFile, const char *fsFile) {
     
      // set uniform variables for shaders
     GLint loc1, loc2, loc3, loc4;
@@ -42,8 +52,8 @@ void Shader::init(const char *vsFile, const char *fsFile) {
     shader_vp = glCreateShader(GL_VERTEX_SHADER);
     shader_fp = glCreateShader(GL_FRAGMENT_SHADER);
 
-    std::string vText = Utility::getStringFromURL(vsFile);
-    std::string fText = Utility::getStringFromURL(fsFile);
+    std::string vText = ProtoUtility::load(vsFile);
+    std::string fText = ProtoUtility::load(fsFile);
 
     const char* vsText = vText.c_str();
     const char* fsText = fText.c_str();
@@ -88,7 +98,7 @@ void Shader::init(const char *vsFile, const char *fsFile) {
 //    std::cout << "loc4 = " << loc4 << std::endl;
 }
 
-Shader::~Shader() {
+ProtoShader::~ProtoShader() {
     glDetachShader(shader_id, shader_fp);
     glDetachShader(shader_id, shader_vp);
 
@@ -97,14 +107,14 @@ Shader::~Shader() {
     glDeleteProgram(shader_id);
 }
 
-unsigned int Shader::id() {
+unsigned int ProtoShader::id() {
     return shader_id;
 }
 
-void Shader::bind() {
+void ProtoShader::bind() {
     glUseProgram(shader_id);
 }
 
-void Shader::unbind() {
+void ProtoShader::unbind() {
     glUseProgram(0);
 }
