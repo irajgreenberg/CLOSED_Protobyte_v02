@@ -24,27 +24,6 @@
 #ifndef PROTO_SHAPE3_H
 #define	PROTO_SHAPE3_H
 
-//#ifdef  __APPLE__
-//#include <OpenGL/gl.h>
-//#include <OpenGL/glu.h>
-//#elif __linux
-//#include <GL/glew.h>
-//#include <GL/gl.h>
-//#include <GL/glu.h>
-//#define GL_GLEXT_PROTOTYPES
-//#include <GL/glext.h>
-//#elif _WIN32
-//#include <GL/gl.h>
-//#include <GL/glu.h>
-//#define GL_GLEXT_PROTOTYPES
-//#include <GL/glext.h>
-//#elif _WIN64
-//#include <GL/gl.h>
-//#include <GL/glu.h>
-//#define GL_GLEXT_PROTOTYPES
-//#include <GL/glext.h>
-//#endif
-
 #include <iostream>
 //#include <algorithm>  
 #include <vector>

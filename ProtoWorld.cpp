@@ -163,6 +163,11 @@ void ProtoWorld::init(){
     
     // CREATE DEFAULT ANIMATOR
     //    animator = ProtoAnimator::getInstance();
+    
+    //create default shader
+    const char* vert = "resources/defaultShader.vert";
+    const char* frag = "resources/defaultShader.frag";
+   // shader.init(vert, frag);
 }
 
 
@@ -622,6 +627,8 @@ void ProtoWorld::stop(){
 }
 
 void ProtoWorld::draw() {
+    // utlize shader
+    //shader.bind();
     for(int i=0; i<geoms.size(); ++i){
         renderer->draw(geoms.at(i));
         //geoms.at(i)->display(ProtoGeom3::VERTEX_BUFFER_OBJECT, ProtoGeom3::SURFACE);
@@ -632,6 +639,7 @@ void ProtoWorld::draw() {
     for(int i=0; i<sharedGeoms.size(); ++i){
         //sharedGeoms.at(i)->display(ProtoGeom3::VERTEX_BUFFER_OBJECT, ProtoGeom3::SURFACE);
     }
+   // shader.unbind();
 }
 
 void ProtoWorld::rotate(const Vec3f& worldRot) {

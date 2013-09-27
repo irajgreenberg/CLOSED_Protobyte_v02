@@ -60,9 +60,9 @@ void ProtoToroid::calcVerts() {
                         ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()), ProtoTuple2f(x2*.5, z2*.5)));
              //std::cout << "Vec3f(x2, y, z2) = " << Vec3f(x2, y, z2) << std::endl;
 
-            theta += float(M_PI * 2 / ringDetail);
+            theta += float(ProtoMath::PI * 2 / ringDetail);
         }
-        phi += float(M_PI * 2 / ringCount);
+        phi += float(ProtoMath::PI * 2 / ringCount);
     }
     
 }

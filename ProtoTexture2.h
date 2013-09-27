@@ -27,17 +27,11 @@
 
 
 
-#ifdef  __APPLE__
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#elif __linux
-#include <GL/gl.h>
-#include <GL/glu.h>
-#elif defined(_WIN32) || defined(_WIN64)
-#include <GL/gl.h>
-#include <GL/glu.h>
+#ifdef _WIN32
+#include <GL/glew.h>
 #endif
 
+#include<SFML/OpenGL.hpp>
 #include <iostream>
 #include <string>
 #include <vector>

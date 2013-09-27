@@ -26,6 +26,7 @@
 #ifndef PROTO_VECTOR3_H
 #define PROTO_VECTOR3_H
 
+#include <SFML/OpenGL.hpp>
 #include <string.h>
 #include <iostream>
 #include <vector>

@@ -28,6 +28,7 @@
 #define	PROTO_UTILITY_H
 
 #include <SFML/OpenGL.hpp>
+#include <string>
 #include <iostream>
 #include <fstream>
 

@@ -409,7 +409,7 @@ void ProtoTube::calcVerts() {
 
 
             float z = ProtoMath::random(-perturbation.z, perturbation.z);
-            theta += M_PI * 2 / crossSectionDetail;
+            theta += ProtoMath::PI * 2 / crossSectionDetail;
 
             // transform to Frenet frame of reference
             float px = vecs.at(i + 1).x + x * ff.at(i).getN().x + y * ff.at(i).getB().x;

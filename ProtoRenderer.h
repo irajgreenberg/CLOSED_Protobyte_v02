@@ -25,8 +25,14 @@
 #define PROTO_RENDERER_H
 
 
+#if defined(_WIN32) || defined(__linux__)
+#include <GL/glew.h>
+#endif
+
+#include <SFML/OpenGL.hpp>
 #include <iostream>
 #include "ProtoGeom3.h"
+#include <memory>
 //#include "ProtoGeomComposite.h"
 
 namespace ijg {

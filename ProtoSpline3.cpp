@@ -25,6 +25,7 @@
 //#include "ProtoQuaternion.h"
 #include "ProtoMatrix3.h"
 
+
 #include <iostream>
 
 using namespace ijg;
@@ -233,7 +234,7 @@ void ProtoSpline3::drawCrossSections() {
             float py = verts.at(i + 1).y + x * frenetFrames.at(i).getN().y + y * frenetFrames.at(i).getB().y;
             float pz = verts.at(i + 1).z + x * frenetFrames.at(i).getN().z + y * frenetFrames.at(i).getB().z;
             glVertex3f(px, py, pz);
-            th += M_PI * 2.0 / 6.0;
+            th += ProtoMath::PI * 2.0 / 6.0;
         }
         glEnd();
     }
@@ -252,7 +253,7 @@ void ProtoSpline3::drawCrossSections() {
             float pz = verts.at(i + 1).z + x * frenetFrames.at(i).getN().z + y * frenetFrames.at(i).getB().z;
             glColor3f(0, 1 - 1 / (j + 1), 1 / (j + 1));
             glVertex3f(px, py, pz);
-            th += M_PI * 2 / 6;
+            th += ProtoMath::PI * 2 / 6;
         }
         glEnd();
     }

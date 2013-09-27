@@ -1,7 +1,7 @@
 /*!  \brief  ProtoWorld.h: Top Level Master controller class -
  Implemented as a pointer singleton. Manages all aspects of Protobyte
  library. Implements rendering strictly using VBO/VAO's and Shaders.
-
+ Default Phong shader enabled (tbd)
  Protobyte Library v02
  
  Created by Ira on 7/25/13.
@@ -25,6 +25,10 @@
 
 #ifndef Protobyte_v02_ProtoWorld_cpp
 #define Protobyte_v02_ProtoWorld_cpp
+
+#if defined(_WIN32) || defined(__linux__)
+#include <GL/glew.h>
+#endif
 
 #include <iostream>
 #include <vector>
@@ -244,7 +248,16 @@ namespace ijg {
         
         void setRenderingMode(RenderingMode=SURFACE);
         
-        void setShadingModel();
+        
+        /***********************
+         *       shaders       *
+         **********************/
+        void setVertexShader(const char *vertexShader);
+        void setVertexShader(const std::string vertexShader);
+        void setFragmentShader(const char *fragmentShader);
+        void setFragmentShader(const std::string fragmentShader);
+        void setShaders(const char *vertexShader, const char *fragmentShader);
+        void setShaders(const std::string vertexShader, const std::string fragmentShader);
         
         // Lighting handled through world
         void setDiffuse(Light lightID, const ProtoColor4f& color=ProtoColor4f(1.0, 1.0, 1.0, 1.0), const ProtoColor4f& material=ProtoColor4f(1.0, 1.0, 1.0, 1.0));

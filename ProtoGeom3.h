@@ -25,28 +25,11 @@
 #define PROTO_GEOM3_H
 
 
-//#ifdef  __APPLE__
-//#include <OpenGL/gl.h>
-//#include <OpenGL/glu.h>
-//#elif __linux
-//#include <GL/glew.h>
-//#include <GL/gl.h>
-//#include <GL/glu.h>
-//#define GL_GLEXT_PROTOTYPES
-//#include <GL/glext.h>
-//#elif _WIN32
-//#include <GL/gl.h>
-//#include <GL/glu.h>
-//#define GL_GLEXT_PROTOTYPES
-//#include <GL/glext.h>
-//#elif _WIN64
-//#include <GL/gl.h>
-//#include <GL/glu.h>
-//#define GL_GLEXT_PROTOTYPES
-//#include <GL/glext.h>
-//#endif
+#if defined(_WIN32) || defined(__linux__)
+#include <GL/glew.h>
+#endif
 
-
+#include <SFML/OpenGL.hpp>
 #include <iostream>
 #include <vector>
 #include "ProtoVector3.h"

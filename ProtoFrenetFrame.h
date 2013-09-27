@@ -25,13 +25,13 @@
 #ifndef PROTO_FRENET_FRAME_H
 #define PROTO_FRENET_FRAME_H
 
-#ifdef  __APPLE__
-  #include <OpenGL/gl.h>
-#elif __linux
-  #include <GL/gl.h>
-#elif defined(_WIN32) || defined(_WIN64)
-  #include <GL/gl.h>
-#endif
+//#ifdef  __APPLE__
+//  #include <OpenGL/gl.h>
+//#elif __linux
+//  #include <GL/gl.h>
+//#elif defined(_WIN32) || defined(_WIN64)
+//  #include <GL/gl.h>
+//#endif
 
 #include "ProtoVector3.h"
 #include <iostream>

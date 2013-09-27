@@ -25,6 +25,7 @@ Protobyte Library v02
 #ifndef ProtoCurve3_h
 #define ProtoCurve3_h
 
+#include <SFML/OpenGL.hpp>
 #include "ProtoDimension3.h"
 #include <vector>
 #include "ProtoFrenetFrame.h"

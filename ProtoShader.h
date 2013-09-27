@@ -25,10 +25,14 @@
 #ifndef PROTO_SHADER_H
 #define PROTO_SHADER_H
 
+#if defined(_WIN32) || defined(__linux__)
+#include <GL/glew.h>
+#endif
 
 #include <stdlib.h>
 #include <string>
 #include "ProtoUtility.h"
+
 
 namespace ijg {
 

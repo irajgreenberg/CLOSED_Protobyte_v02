@@ -24,6 +24,10 @@
 #ifndef Protobyte_v02_ProtoCamera_cpp
 #define Protobyte_v02_ProtoCamera_cpp
 
+#ifdef _WIN32
+#include <GL/glew.h>
+#endif
+
 #include <iostream>
 #include <SFML/OpenGL.hpp>
 #include <stdio.h>
