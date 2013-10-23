@@ -50,6 +50,7 @@ const unsigned char ProtoWorld::LIGHT_COUNT_MAX=8;
 float ProtoWorld::canvasWidth = 0;
 float ProtoWorld::canvasHeight = 0;
 ProtoBoundsf ProtoWorld::canvasBounds = ProtoBoundsf(0,0,0,0);
+// added comment for git test
 
 
 //private cstr called internally
