@@ -229,7 +229,7 @@ void ProtoSpline3::drawCrossSections() {
         for (int j = 0; j < 6; j++) {
             float x = cos(th)*10;
             float y = sin(th)*10;
-            float z = 0;
+            //float z = 0;
             float px = verts.at(i + 1).x + x * frenetFrames.at(i).getN().x + y * frenetFrames.at(i).getB().x;
             float py = verts.at(i + 1).y + x * frenetFrames.at(i).getN().y + y * frenetFrames.at(i).getB().y;
             float pz = verts.at(i + 1).z + x * frenetFrames.at(i).getN().z + y * frenetFrames.at(i).getB().z;
@@ -247,7 +247,7 @@ void ProtoSpline3::drawCrossSections() {
         for (int j = 0; j < 6; j++) {
             float x = cos(th)*10;
             float y = sin(th)*10;
-            float z = 0;
+            //float z = 0;
             float px = verts.at(i + 1).x + x * frenetFrames.at(i).getN().x + y * frenetFrames.at(i).getB().x;
             float py = verts.at(i + 1).y + x * frenetFrames.at(i).getN().y + y * frenetFrames.at(i).getB().y;
             float pz = verts.at(i + 1).z + x * frenetFrames.at(i).getN().z + y * frenetFrames.at(i).getB().z;

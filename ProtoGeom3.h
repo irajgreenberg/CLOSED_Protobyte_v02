@@ -240,7 +240,7 @@ namespace ijg {
     }
     
     inline int ProtoGeom3::getIndicesSize() const{
-        return inds.size();
+        return static_cast<int>(inds.size());
     }
      
 

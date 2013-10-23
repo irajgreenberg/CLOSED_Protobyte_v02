@@ -39,9 +39,9 @@ ProtoGeom3(pos, rot, size, col4), ringCount(ringCount), ringDetail(ringDetail), 
 void ProtoToroid::calcVerts() {
    // std::cout << "tex2 = " << tex2 << std::endl;
     // vertices
-    float x, y, z, u, v;
+    float x, y, z/*, u, v*/;
     float phi = 0; // ring rotations
-    for (int i = 0, k=0; i < ringCount; i++) {
+    for (int i = 0/*, k=0*/; i < ringCount; i++) {
         float theta = 0;
         // START CALCULATE VERTICES
         for (int j = 0; j < ringDetail; j++) {
@@ -78,7 +78,7 @@ void ProtoToroid::calcInds() {
             int i3 = (i + 1) * ringDetail + j + 1;
             int i4 = j;
             int i5 = i*ringDetail;
-            int i6 = ringDetail + j + 1; // not used
+            //int i6 = ringDetail + j + 1; // not used
             int i7 = (i + 1) * ringDetail;
             int i8 = j + 1;
 

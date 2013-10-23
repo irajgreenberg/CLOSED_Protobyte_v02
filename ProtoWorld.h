@@ -53,13 +53,45 @@
 
 namespace ijg {
     
+    /*******************************************************************
+    *** global convenience functions enabling procedural convenience ***
+    ********************************************************************/
+    
+    void add(std::unique_ptr<ProtoGeom3> geomObj); // single geometric obj
+    
+    void add(ProtoGeom3* geomObj); // single geometric obj
+    
+    // ADD ProtoGeomComposite pointers
+    //void add(ProtoGeomComposite* compositeObj); // composite geometric obj
+    
+    // ADD shared pointer
+    void add(std::shared_ptr<ProtoGeom3> geomObj);
+    
+    // ADD raw pointer
+    void add(const ProtoGeom3* geomObj);
+    
+    //+++++ CAMERA +++++
+    // ADD camera obs
+    void add(std::unique_ptr<ProtoCamera> camera);
+    
+    //+++++ LIGHTS +++++
+    void add(std::unique_ptr<ProtoLight> light);
+    
+    void add(ProtoLight* light);
+    
+    /*********************************
+     *** END convenience functions ***
+     *********************************/
+
+    
+    
     class ProtoWorld {
         
     private:
         
         // field for singleton instance
-        static std::unique_ptr<ProtoWorld> singletonWorld;
-        static std::once_flag protoOnceFlag; // for thread safety
+        static ProtoWorld* singletonWorld;
+        //static std::once_flag protoOnceFlag; // for thread safety
         
         // private default cstr to enforce singleton pattern
         ProtoWorld();
@@ -178,9 +210,14 @@ namespace ijg {
         
         friend std::ostream& operator<<(std::ostream& out, const ProtoWorld& protoWorld);
         
-        // singleton pattern
+        // singleton pattern (&)
         //static ProtoWorld& getInstance();
-        static ProtoWorld& getInstance(float canvasWidth = 100.0, float canvasHeight = 100.0);
+        //static ProtoWorld& getInstance(float canvasWidth = 100.0, float canvasHeight = 100.0);
+        
+        // singleton pattern (*)
+        //static ProtoWorld* getInstance();
+        static ProtoWorld* getInstance(float canvasWidth, float canvasHeight);
+        static ProtoWorld* getInstance();
         
         
         /*************************************************
@@ -191,6 +228,7 @@ namespace ijg {
         //+++++ GEOMETRY +++++
         // ADD ProtoGeom3 pointers
         void add(std::unique_ptr<ProtoGeom3> geomObj); // single geometric obj
+        void add(const ProtoGeom3& geomObj); // single geometric obj
         
         
         // ADD ProtoGeomComposite pointers

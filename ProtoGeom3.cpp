@@ -77,7 +77,7 @@ void ProtoGeom3::init() {
 
 	glGenBuffers(1, &vboID); // Create the buffer ID
 	glBindBuffer(GL_ARRAY_BUFFER, vboID); // Bind the buffer (vertex array data)
-	int vertsDataSize = sizeof (float) *interleavedPrims.size();
+	int vertsDataSize = sizeof (float) * static_cast<int>(interleavedPrims.size());
 	glBufferData(GL_ARRAY_BUFFER, vertsDataSize, NULL, GL_STREAM_DRAW); // allocate space
 	glBufferSubData(GL_ARRAY_BUFFER, 0, vertsDataSize, &interleavedPrims[0]); // upload the data
 	//glBufferData(GL_ARRAY_BUFFER, vertsDataSize, &interleavedPrims[0], GL_STATIC_DRAW); // allocate and upload
@@ -87,7 +87,7 @@ void ProtoGeom3::init() {
 	//indices data - use GL_ELEMENT_ARRAY_BUFFER
 	glGenBuffers(1, &indexVboID); // Generate buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVboID); // Bind the element array buffer
-	int indsDataSize = inds.size()*3 * sizeof (GL_UNSIGNED_INT);
+	int indsDataSize = static_cast<int>(inds.size()) * 3 * sizeof (GL_UNSIGNED_INT);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indsDataSize, NULL, GL_DYNAMIC_DRAW); // allocate
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indsDataSize, &indPrims[0]); // upload the data
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indsDataSize, &indPrims[0], GL_STATIC_DRAW); // allocate and upload
@@ -235,9 +235,9 @@ void ProtoGeom3::display(displayMode mode, renderMode render, float pointSize) {
 		break;
 	}
 	// hackity-hack - fix eventually
-	static float rx = .02;
-	static float ry = .03;
-	static float rz = .04;
+	//static float rx = .02;
+	//static float ry = .03;
+	//static float rz = .04;
 	glPushMatrix();
 	//glLoadIdentity();
 
@@ -288,9 +288,9 @@ void ProtoGeom3::display(displayMode mode, renderMode render, float pointSize) {
 		glTexCoordPointer(2, GL_FLOAT, 0, &texturePrims[0]);
 
 		if (render == POINT_CLOUD) {
-			glDrawElements(GL_POINTS, inds.size()*3, GL_UNSIGNED_INT, &indPrims[0]);
+			glDrawElements(GL_POINTS, static_cast<int>(inds.size())*3, GL_UNSIGNED_INT, &indPrims[0]);
 		} else {
-			glDrawElements(GL_TRIANGLES, inds.size()*3, GL_UNSIGNED_INT, &indPrims[0]);
+			glDrawElements(GL_TRIANGLES, static_cast<int>(inds.size())*3, GL_UNSIGNED_INT, &indPrims[0]);
 
 
 		}
@@ -323,9 +323,9 @@ void ProtoGeom3::display(displayMode mode, renderMode render, float pointSize) {
 		glTexCoordPointer(2, GL_FLOAT, 12 * sizeof (GLfloat), &interleavedPrims[0] + 10);
 
 		if (render == POINT_CLOUD) {
-			glDrawElements(GL_POINTS, inds.size()*3, GL_UNSIGNED_INT, &indPrims[0]);
+			glDrawElements(GL_POINTS, static_cast<int>(inds.size())*3, GL_UNSIGNED_INT, &indPrims[0]);
 		} else {
-			glDrawElements(GL_TRIANGLES, inds.size()*3, GL_UNSIGNED_INT, &indPrims[0]);
+			glDrawElements(GL_TRIANGLES, static_cast<int>(inds.size())*3, GL_UNSIGNED_INT, &indPrims[0]);
 		}
 
 		// disable stuff
@@ -361,9 +361,9 @@ void ProtoGeom3::display(displayMode mode, renderMode render, float pointSize) {
 		glTexCoordPointer(2, GL_FLOAT, 12 * sizeof (GLfloat), BUFFER_OFFSET(40)); // step over 10 bytes
 
 		if (render == POINT_CLOUD) {
-			glDrawElements(GL_POINTS, inds.size()*3, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+			glDrawElements(GL_POINTS, static_cast<int>(inds.size())*3, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
 		} else {
-			glDrawElements(GL_TRIANGLES, inds.size()*3, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+			glDrawElements(GL_TRIANGLES, static_cast<int>(inds.size())*3, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
 		}
 
 		glDisableClientState(GL_NORMAL_ARRAY);

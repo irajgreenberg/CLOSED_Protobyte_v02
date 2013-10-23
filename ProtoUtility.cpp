@@ -45,6 +45,8 @@ std::string ProtoUtility::load(const char* data) {
     } else {
         std::cout << "Unable to open file";
     }
+    // never reached - added to squelch ide warning
+    return 0;
 }
 
 // get string from file (string URL input)

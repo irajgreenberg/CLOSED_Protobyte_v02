@@ -34,8 +34,8 @@ namespace ijg {
 
 using namespace ijg;
 
-std::unique_ptr<ProtoWorld> ProtoWorld::singletonWorld = nullptr;
-std::once_flag ProtoWorld::protoOnceFlag;
+ProtoWorld* ProtoWorld::singletonWorld = nullptr;
+//std::once_flag ProtoWorld::protoOnceFlag;
 
 float counter = 0;
 // initialize static vars
@@ -73,46 +73,24 @@ ProtoWorld::ProtoWorld(){
 //}
 
 
-ProtoWorld& ProtoWorld::getInstance(float canvasWidth, float canvasHeight) {
-    
-    //    std::cout<<" canvasWidth = " <<  canvasWidth << std::endl;
-    //    std::cout<<" canvasHeight = " <<  canvasHeight << std::endl;
-    
-    ProtoWorld::canvasWidth = canvasWidth;
-    ProtoWorld::canvasHeight = canvasHeight;
-    
-    // allocation hasn't happened yet, so do it
-    if(singletonWorld == nullptr)
-    {
-        std::cout<<"Singleton ProtoWorld obj created"<<std::endl;
-        
-        std::call_once(protoOnceFlag,
-                       [] {singletonWorld.reset(new ProtoWorld);
-                       });
-        return *singletonWorld.get();
-        
-    }
-    // pointer to object already exists just return it
-    else
-    {
-        std::cout<<"Pointer to existing Singleton ProtoWorld obj returned"<<std::endl;
-        return *singletonWorld.get();
-    }
-}
-
-
-//ProtoWorld& ProtoWorld::getInstance() {
-//
+//ProtoWorld& ProtoWorld::getInstance(float canvasWidth, float canvasHeight) {
+//    
+//    //    std::cout<<" canvasWidth = " <<  canvasWidth << std::endl;
+//    //    std::cout<<" canvasHeight = " <<  canvasHeight << std::endl;
+//    
+//    ProtoWorld::canvasWidth = canvasWidth;
+//    ProtoWorld::canvasHeight = canvasHeight;
+//    
 //    // allocation hasn't happened yet, so do it
 //    if(singletonWorld == nullptr)
 //    {
 //        std::cout<<"Singleton ProtoWorld obj created"<<std::endl;
-//
+//        
 //        std::call_once(protoOnceFlag,
 //                       [] {singletonWorld.reset(new ProtoWorld);
 //                       });
 //        return *singletonWorld.get();
-//
+//        
 //    }
 //    // pointer to object already exists just return it
 //    else
@@ -121,6 +99,79 @@ ProtoWorld& ProtoWorld::getInstance(float canvasWidth, float canvasHeight) {
 //        return *singletonWorld.get();
 //    }
 //}
+//
+//ProtoWorld& ProtoWorld::getInstance(float canvasWidth, float canvasHeight) {
+//    
+//    //    std::cout<<" canvasWidth = " <<  canvasWidth << std::endl;
+//    //    std::cout<<" canvasHeight = " <<  canvasHeight << std::endl;
+//    
+//    ProtoWorld::canvasWidth = canvasWidth;
+//    ProtoWorld::canvasHeight = canvasHeight;
+//    
+//    // allocation hasn't happened yet, so do it
+//    if(singletonWorld == nullptr)
+//    {
+//        std::cout<<"Singleton ProtoWorld obj created"<<std::endl;
+//        
+//        std::call_once(protoOnceFlag,
+//                       [] {singletonWorld.reset(new ProtoWorld);
+//                       });
+//        return *singletonWorld.get();
+//        
+//    }
+//    // pointer to object already exists just return it
+//    else
+//    {
+//        std::cout<<"Pointer to existing Singleton ProtoWorld obj returned"<<std::endl;
+//        return *singletonWorld.get();
+//    }
+//}
+
+
+
+ProtoWorld* ProtoWorld::getInstance() {
+    
+    std::cout << "singletonWorld = " << singletonWorld << std::endl;
+    
+    // allocation hasn't happened yet, so do it
+    if(singletonWorld == nullptr)
+    {
+        std::cout<<"Singleton ProtoWorld obj created"<<std::endl;
+        
+        singletonWorld = new ProtoWorld;
+        return singletonWorld;
+        
+    }
+    // pointer to object already exists just return it
+    else
+    {
+        std::cout<<"Pointer to existing Singleton ProtoWorld obj returned"<<std::endl;
+        return singletonWorld;
+    }
+}
+
+
+ProtoWorld* ProtoWorld::getInstance(float width, float height) {
+     std::cout << "singletonWorld = " << singletonWorld << std::endl;
+
+    // allocation hasn't happened yet, so do it
+    if(singletonWorld == nullptr)
+    {
+        canvasWidth = width;
+        canvasHeight = height;
+        std::cout<<"Singleton ProtoWorld obj created"<<std::endl;
+
+        singletonWorld = new ProtoWorld();
+        return singletonWorld;
+
+    }
+    // pointer to object already exists just return it
+    else
+    {
+        std::cout<<"Pointer to existing Singleton ProtoWorld obj returned"<<std::endl;
+        return singletonWorld;
+    }
+}
 
 void ProtoWorld::init(){
     
@@ -137,8 +188,8 @@ void ProtoWorld::init(){
     glEnable(GL_COLOR_MATERIAL); // incorporates per vertex color with lights
     glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE ) ;
     //glColorMaterial(GL_FRONT_AND_BACK, GL_EMISSION);
-//    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT);
-//    glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+    //    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT);
+    //    glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
     //glColorMaterial(GL_FRONT, GL_SPECULAR);
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -165,9 +216,9 @@ void ProtoWorld::init(){
     //    animator = ProtoAnimator::getInstance();
     
     //create default shader
-    const char* vert = "resources/defaultShader.vert";
-    const char* frag = "resources/defaultShader.frag";
-   // shader.init(vert, frag);
+    //const char* vert = "resources/defaultShader.vert";
+    //const char* frag = "resources/defaultShader.frag";
+    // shader.init(vert, frag);
 }
 
 
@@ -234,14 +285,14 @@ void ProtoWorld::add(ProtoLight* light){
         std::cout << "lightCount = " <<  static_cast<int>(lightCount) << std::endl;
         // Light01
         
-//        GLfloat light01_ambient[] = {0.3, 0.1, 0.1, 1.0};
-//        GLfloat light01_diffuse[] = {.85, .85, .85, 1.0};
-//        GLfloat light01_specular[] = {1.0, 1.0, 1.0, 1.0};
-//        GLfloat light01_position[] = {-20, 10, 5.0, 0.0};
-//        
-//        //materials
-//        GLfloat light01_mat_specular[] = {1.0, 1.0, 1.0, 1.0};
-//        GLfloat light01_mat_shininess[] = {15}; // max 128
+        //        GLfloat light01_ambient[] = {0.3, 0.1, 0.1, 1.0};
+        //        GLfloat light01_diffuse[] = {.85, .85, .85, 1.0};
+        //        GLfloat light01_specular[] = {1.0, 1.0, 1.0, 1.0};
+        //        GLfloat light01_position[] = {-20, 10, 5.0, 0.0};
+        //
+        //        //materials
+        //        GLfloat light01_mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+        //        GLfloat light01_mat_shininess[] = {15}; // max 128
         
         
         // set Lights
@@ -272,9 +323,9 @@ void ProtoWorld::add(ProtoLight* light){
             lights2.at(lightCount)->getSpecular().getB(),
             lights2.at(lightCount)->getSpecular().getA()
         };
-
         
-                
+        
+        
         // materials
         float materialDiffuse[4] = {
             lights2.at(lightCount)->getDiffuseMaterial().getR(),
@@ -303,7 +354,7 @@ void ProtoWorld::add(ProtoLight* light){
             lights2.at(lightCount)->getEmissiveMaterial().getB(),
             lights2.at(lightCount)->getEmissiveMaterial().getA()
         };
-
+        
         
         GLfloat shininess[] = {lights2.at(lightCount)->getShinines()}; // max 128
         
@@ -313,7 +364,7 @@ void ProtoWorld::add(ProtoLight* light){
         //glMaterialfv(GL_FRONT, GL_EMISSION, materialEmissive);
         glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
         
-       
+        
         
         glEnable(GL_LIGHTING);
         switch (lightCount) {
@@ -365,8 +416,8 @@ void ProtoWorld::add(ProtoLight* light){
 
 // Lighting handled through world
 void ProtoWorld::setDiffuse(Light lightID, const ProtoColor4f& color, const ProtoColor4f& material){
-   // glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDiffuse);
-   // glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+    // glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDiffuse);
+    // glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
     
 }
 void ProtoWorld::setSpecular(Light lightID, const ProtoColor4f& color, const ProtoColor4f& material, float shininess){
@@ -388,6 +439,7 @@ void ProtoWorld::setEmission(Light lightID, const ProtoColor4f& color, const Pro
 // run world
 void ProtoWorld::run() {
     
+   
     // if animated
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -627,6 +679,7 @@ void ProtoWorld::stop(){
 }
 
 void ProtoWorld::draw() {
+     //std::cout << "in world draw" << std::endl;
     // utlize shader
     //shader.bind();
     for(int i=0; i<geoms.size(); ++i){
@@ -639,7 +692,7 @@ void ProtoWorld::draw() {
     for(int i=0; i<sharedGeoms.size(); ++i){
         //sharedGeoms.at(i)->display(ProtoGeom3::VERTEX_BUFFER_OBJECT, ProtoGeom3::SURFACE);
     }
-   // shader.unbind();
+    // shader.unbind();
 }
 
 void ProtoWorld::rotate(const Vec3f& worldRot) {
@@ -720,6 +773,43 @@ void ProtoWorld::updateCanvasSize(float canvasWidth, float canvasHeight){
         }
     }
 }
+
+
+
+/****************************************************
+ *** global convenience functions Implementations ***
+ ***************************************************/
+
+namespace ijg {
+    // single geometric obj
+    void add(ProtoGeom3* geomObj){
+        ProtoWorld* w = ProtoWorld::getInstance();
+        w->add(geomObj);
+    }
+    
+    // ADD ProtoGeomComposite pointers
+    //void add(ProtoGeomComposite* compositeObj); // composite geometric obj
+    
+    // ADD shared pointer
+    void add(std::shared_ptr<ProtoGeom3> geomObj);
+    
+    // ADD raw pointer
+    void add(const ProtoGeom3* geomObj);
+    
+    //+++++ CAMERA +++++
+    // ADD camera obs
+    void add(std::unique_ptr<ProtoCamera> camera);
+    
+    //+++++ LIGHTS +++++
+    void add(std::unique_ptr<ProtoLight> light);
+    
+    void add(ProtoLight* light);
+}
+
+/************************************
+ *** END function implementations ***
+ ***********************************/
+
 
 
 

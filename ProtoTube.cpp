@@ -310,7 +310,7 @@ void ProtoTube::calcVerts() {
     // NOTE: ff and vecs are not the same size
     ff = path.getFrenetFrames();
     std::vector<Vec3f> vecs = path.getVerts();
-    frenetFrameLength = ff.size();
+    frenetFrameLength = static_cast<int>(ff.size());
     //std::cout << ff.size() << std::endl;
 
     // prepare verts vector
@@ -322,7 +322,7 @@ void ProtoTube::calcVerts() {
     // std::cout << "frenetFrameLength = " << frenetFrameLength << std::endl;
 
 
-    float step = 0;
+    //float step = 0;
     Vec3f step_xyz, randomStep_xyz;
     float randomStep_x = 0.0;
     float randomStep_y = 0.0;
@@ -549,7 +549,7 @@ void ProtoTube::calcInds() {
 
                     // top cap
                     if (i == 0 && isClosed) {
-                        inds.push_back(ProtoTuple3<int>(i2, i0, verts.size() - 2));
+                        inds.push_back(ProtoTuple3<int>(i2, i0, static_cast<int>(verts.size()) - 2));
                     }
 
                     // tube body
@@ -561,7 +561,7 @@ void ProtoTube::calcInds() {
 
                     // top cap
                     if (i == 0 && isClosed) {
-                        inds.push_back(ProtoTuple3<int>(i5, i0, verts.size() - 2));
+                        inds.push_back(ProtoTuple3<int>(i5, i0, static_cast<int>(verts.size()) - 2));
                     }
 
                     // tube body
@@ -571,9 +571,9 @@ void ProtoTube::calcInds() {
             } else if (i == frenetFrameLength - 1 && isClosed) {
                 // close bottom cap
                 if (j < crossSectionDetail - 1) {
-                    inds.push_back(ProtoTuple3<int>(i0, i2, verts.size() - 1));
+                    inds.push_back(ProtoTuple3<int>(i0, i2, static_cast<int>(verts.size()) - 1));
                 } else {
-                    inds.push_back(ProtoTuple3<int>(i0, i5, verts.size() - 1));
+                    inds.push_back(ProtoTuple3<int>(i0, i5, static_cast<int>(verts.size()) - 1));
                 }
             }
         }

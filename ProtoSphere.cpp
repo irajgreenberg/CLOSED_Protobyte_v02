@@ -57,8 +57,8 @@ void ProtoSphere::calcVerts2() {
     float tempX = 0, tempZ = 0;
     float theta = -M_PI / 2.0, phi = 0.0;
     int counter = 0;
-    int radiusX = size.w / 2.0;
-    int radiusY = size.w / 2.0;
+    //int radiusX = size.w / 2.0;
+    //int radiusY = size.w / 2.0;
     
     // always 1 more segment than points along spline
     for (int i = 0; i < spineNodes; i++) {
@@ -124,7 +124,7 @@ void ProtoSphere::calcVerts2() {
 //  FIX NEED MORE FACES
 
 void ProtoSphere::calcInds2() {
-    int ctr = 0;
+    //int ctr = 0;
     ProtoTuple3i t0;
     
     // body faces
@@ -160,12 +160,12 @@ void ProtoSphere::calcInds2() {
                 //std::cout << "middle 2 = " << t0 << std::endl;
                 // BOTTOM
             } else if (i == spineNodes - 1 && j < spines - 1) {
-                t0 = ProtoTuple3i(verts.size() - 1, (i - 2) * spines + j + 2, (i - 2) * spines + j + 1);
+                t0 = ProtoTuple3i(static_cast<int>(verts.size()) - 1, (i - 2) * spines + j + 2, (i - 2) * spines + j + 1);
                 inds.push_back(t0);
                 //std::cout << "bottom = " << t0 << std::endl;
                 //BOTTOM CLOSE
             } else if (i == spineNodes - 1 && j == spines - 1) {
-                t0 = ProtoTuple3i(verts.size() - 1, (i - 2) * spines + 1, (i - 2) * spines + j + 1);
+                t0 = ProtoTuple3i(static_cast<int>(verts.size()) - 1, (i - 2) * spines + 1, (i - 2) * spines + j + 1);
                 inds.push_back(t0);
                 //std::cout << "bottom close = " << t0 << std::endl;
             }

@@ -51,7 +51,7 @@ void ProtoCurve3::setControlPts(std::vector<Vec3f>& controlPts) {
  * Gets control points array length.
  */
 int ProtoCurve3::getControlPtsLength() {
-    return controlPts.size();
+    return static_cast<int>(controlPts.size());
 }
 
 /**
@@ -76,7 +76,7 @@ std::vector<Vec3f>& ProtoCurve3::getControlPts() {
  * @return int
  */
 int ProtoCurve3::getVertsLength() const  {
-    return verts.size();
+    return static_cast<int>(verts.size());
 }
 
 /**
