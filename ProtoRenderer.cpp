@@ -72,6 +72,7 @@ void ProtoRenderer::draw(const std::unique_ptr<ProtoGeom3>& geomObj, DisplayMode
 
 	glPushMatrix();
 	glTranslatef(geomObj->getPosition().x, geomObj->getPosition().y, geomObj->getPosition().z);
+    //std::cout << "geomObj->getSize() = " << geomObj->getSize() << std::endl;
 	glRotatef(geomObj->getRotation().x, 1, 0, 0); // x-axis
 	glRotatef(geomObj->getRotation().y, 0, 1, 0); // y-axis
 	glRotatef(geomObj->getRotation().z, 0, 0, 1); // z-axis

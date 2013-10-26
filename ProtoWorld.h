@@ -89,15 +89,11 @@ namespace ijg {
         
     private:
         
-        // field for singleton instance
-        static ProtoWorld* singletonWorld;
-        //static std::once_flag protoOnceFlag; // for thread safety
         
-        // private default cstr to enforce singleton pattern
-        ProtoWorld();
+        float canvasWidth, canvasHeight;
         
         // private copy cstr
-        ProtoWorld(const ProtoWorld& world);
+        //ProtoWorld(const ProtoWorld& world);
         
         // private operator= "still thinking about this..."
         //ProtoWorld& operator=(const ProtoWorld& world);
@@ -158,7 +154,15 @@ namespace ijg {
         
     public:
         
-        static float canvasWidth, canvasHeight;
+        // field for singleton instance
+        std::unique_ptr<ProtoWorld> world;
+        //static std::once_flag protoOnceFlag; // for thread safety
+        
+        // cstr's
+        ProtoWorld();
+        
+        ProtoWorld(float canvasWidth, float canvasHeight);
+
         
         enum LightSetup {
             THREE_POINT,
@@ -216,8 +220,8 @@ namespace ijg {
         
         // singleton pattern (*)
         //static ProtoWorld* getInstance();
-        static ProtoWorld* getInstance(float canvasWidth, float canvasHeight);
-        static ProtoWorld* getInstance();
+//        static ProtoWorld* getInstance(float canvasWidth, float canvasHeight);
+//        static ProtoWorld* getInstance();
         
         
         /*************************************************
@@ -228,7 +232,7 @@ namespace ijg {
         //+++++ GEOMETRY +++++
         // ADD ProtoGeom3 pointers
         void add(std::unique_ptr<ProtoGeom3> geomObj); // single geometric obj
-        void add(const ProtoGeom3& geomObj); // single geometric obj
+        //void add(const ProtoGeom3& geomObj); // single geometric obj
         
         
         // ADD ProtoGeomComposite pointers
@@ -303,7 +307,9 @@ namespace ijg {
         void setShininess(float shininess = 46);
         void setAmbient(Light lightID, const ProtoColor4f& color=ProtoColor4f(.4, .4, .4, 1.0), const ProtoColor4f& material=ProtoColor4f(1.0, 1.0, 1.0, 1.0));
         void setEmission(Light lightID, const ProtoColor4f& color=ProtoColor4f(0.0, 0.0, 0.0, 1.0), const ProtoColor4f& material=ProtoColor4f(0.0, 0.0, 0.0, 1.0));
-        
+
+        // get number of objs loaded in std::vector geoms
+        int getGeomCount();
         
         
     };
