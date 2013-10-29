@@ -241,10 +241,10 @@ void ProtoGeom3::display(displayMode mode, renderMode render, float pointSize) {
 	glPushMatrix();
 	//glLoadIdentity();
 
-	glTranslatef(pos.x, pos.y, pos.z);
-	glRotatef(rot.x, 1, 0, 0); // x-axis
-	glRotatef(rot.y, 0, 1, 0); // y-axis
-	glRotatef(rot.z, 0, 0, 1); // z-axis
+//	glTranslatef(pos.x, pos.y, pos.z);
+//	glRotatef(rot.x, 1, 0, 0); // x-axis
+//	glRotatef(rot.y, 0, 1, 0); // y-axis
+//	glRotatef(rot.z, 0, 0, 1); // z-axis
 	glScalef(size.w, size.h, size.d);
 
 

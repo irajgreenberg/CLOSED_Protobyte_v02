@@ -159,6 +159,7 @@ namespace ijg {
         T angleZAxis() const;
         T angleBetween(const ProtoVector3<T>& v) const;
         T dot(const ProtoVector3<T>& v) const;
+        T dist(const ProtoVector3<T>& v) const;
         ProtoVector3<T>& cross(const ProtoVector3<T>& v);
         ProtoVector3<T>& rotateX(T theta);
         ProtoVector3<T>& rotateY(T theta);
@@ -437,6 +438,14 @@ namespace ijg {
         T cz = x * v.y - y * v.x;
         
         return (*this)(cx, cy, cz);
+    }
+    
+    template <class T>
+    inline T ProtoVector3<T>::dist(const ProtoVector3<T>& v) const{
+        float _x = v.x-x;
+        float _y = v.y-y;
+        float _z = v.z-z;
+        return sqrt(_x*_x + _y*_y + _z*_z);
     }
     
     template <class T>

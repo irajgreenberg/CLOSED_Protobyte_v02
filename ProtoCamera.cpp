@@ -112,12 +112,13 @@ void ProtoCamera::project(){
     
     glFrustum(-fw, fw, -fh, fh, nearClipPlane, farClipPlane);
     
-    //glMatrixMode(GL_MODELVIEW);
-    //glLoadIdentity();
-    glTranslatef(-pos.x, -pos.y, -pos.z);
-    glRotatef(-rot.x, 1, 0, 0);
-    glRotatef(-rot.y, 0, 1, 0);
-    glRotatef(-rot.z, 0, 0, 1);
+    
+//glMatrixMode(GL_MODELVIEW);
+//glLoadIdentity();
+//    glTranslatef(-pos.x, -pos.y, -pos.z);
+//    glRotatef(-rot.x, 1, 0, 0);
+//    glRotatef(-rot.y, 0, 1, 0);
+//    glRotatef(-rot.z, 0, 0, 1);
     //gluPerspective(fovAngle, aspectRatio, nearClipPlane, farClipPlane);
     
 }

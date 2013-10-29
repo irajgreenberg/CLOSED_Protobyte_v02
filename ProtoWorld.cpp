@@ -574,9 +574,9 @@ void ProtoWorld::run() {
     // uncomment glLoadIdentity to allow rotated but not animated state
     // glLoadIdentity();
     // world rot speed
-    glRotatef(worldRotSpeed.x, 1, 0, 0);
-    glRotatef(worldRotSpeed.y, 0, 1, 0);
-    glRotatef(worldRotSpeed.z, 0, 0, 1);
+//    glRotatef(worldRotSpeed.x, 1, 0, 0);
+//    glRotatef(worldRotSpeed.y, 0, 1, 0);
+//    glRotatef(worldRotSpeed.z, 0, 0, 1);
     
     switch(worldView){
             
@@ -864,7 +864,7 @@ void ProtoWorld::setLights() {
     
     //materials
     GLfloat light01_mat_specular[] = {1.0, 1.0, 1.0, 1.0};
-    GLfloat light01_mat_shininess[] = {15}; // max 128
+    GLfloat light01_mat_shininess[] = {30}; // max 128
     
     
     // light 01

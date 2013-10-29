@@ -1,45 +1,60 @@
-/*! \
- * File:   VerletBall.h
- * Author: Ira Greenberg
- *
- * Created on June 5, 2013, 12:39 PM
- * Copyright (c) 2013 Ira Greenberg. All rights reserved.
+/*!  \brief  ProtoVerletBall.h: Verlet Ball implementation
+ Protobyte Library v02
+ 
+ Created by Ira on 6/5/13.
+ Copyright (c) 2013 Ira Greenberg. All rights reserved.
+ 
+ Library Usage:
+ This work is licensed under the Creative Commons
+ Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+ To view a copy of this license, visit
+ http://creativecommons.org/licenses/by-nc-sa/3.0/
+ or send a letter to Creative Commons,
+ 444 Castro Street, Suite 900,
+ Mountain View, California, 94041, USA.
+ 
+ This notice must be retained any source distribution.
+ 
+ \ingroup common
+ This class is part of the group common (update)
+ \sa NO LINK
  */
 
-#ifndef VERLETBALL_H
-#define	VERLETBALL_H
 
-#include "Vector3.h"
-#include "Math.h"
+#ifndef PROTO_VERLETBALL_H
+#define	PROTO_VERLETBALL_H
 
-namespace proto {
+#include "ProtoVector3.h"
+#include "ProtoMath.h"
+
+namespace ijg {
 
     // forward declaration
-    class VerletBall;
+    class ProtoVerletBall;
 
     // overloaded non-member ops
-    Vector3 operator+(const VerletBall& lhs, const VerletBall& rhs);
-    Vector3 operator-(const VerletBall& lhs, const VerletBall& rhs);
+    Vec3f operator+(const ProtoVerletBall& lhs, const ProtoVerletBall& rhs);
+    Vec3f operator-(const ProtoVerletBall& lhs, const ProtoVerletBall& rhs);
 
-    class VerletBall {
+    class ProtoVerletBall {
         //private:
     public:
-        Vector3 pos, posOld;
+        Vec3f pos, posOld;
 
-        VerletBall();
-        VerletBall(const Vector3& pos);
+        ProtoVerletBall();
+        ProtoVerletBall(const Vec3f& pos);
 
-//        float dist(const VerletBall& b);
+//        float dist(const ProtoVerletBall& b);
 
         void verlet();
 
         //getters / setters
-        Vector3 getPos() const;
-        void setPos(const Vector3& pos);
+        Vec3f getPos() const;
+        void setPos(const Vec3f& pos);
 
         // overloaded member ops
-        VerletBall& operator+=(const VerletBall& vb);
-        VerletBall& operator-=(const VerletBall& vb);
+        ProtoVerletBall& operator+=(const ProtoVerletBall& vb);
+        ProtoVerletBall& operator-=(const ProtoVerletBall& vb);
 
 
     };
@@ -47,34 +62,34 @@ namespace proto {
 
     //getters / setters
 
-    inline Vector3 VerletBall::getPos() const {
+    inline Vec3f ProtoVerletBall::getPos() const {
         return pos;
     }
 
-    inline void VerletBall::setPos(const Vector3& pos) {
+    inline void ProtoVerletBall::setPos(const Vec3f& pos) {
         this->pos = pos;
     }
 
-    inline VerletBall& VerletBall::operator+=(const VerletBall& vb) {
+    inline ProtoVerletBall& ProtoVerletBall::operator+=(const ProtoVerletBall& vb) {
         pos += vb.pos;
         return *this;
     }
 
-    inline VerletBall& VerletBall::operator-=(const VerletBall& vb) {
+    inline ProtoVerletBall& ProtoVerletBall::operator-=(const ProtoVerletBall& vb) {
         pos -= vb.pos;
         return *this;
     }
 
     // non member ops
 
-    inline Vector3 operator+(const VerletBall& lhs, const VerletBall& rhs) {
+    inline Vec3f operator+(const ProtoVerletBall& lhs, const ProtoVerletBall& rhs) {
         return lhs.getPos() + rhs.getPos();
     }
 
-    inline Vector3 operator-(const VerletBall& lhs, const VerletBall& rhs) {
+    inline Vec3f operator-(const ProtoVerletBall& lhs, const ProtoVerletBall& rhs) {
         return lhs.getPos() - rhs.getPos();
     }
 }
 
-#endif	/* VERLETBALL_H */
+#endif	/* PROTO_VERLETBALL_H */
 
