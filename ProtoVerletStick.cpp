@@ -58,7 +58,7 @@ void ProtoVerletStick::constrainLen() {
     
     
     // iteratively stablize system
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 15; i++) {
         Vec3f delta = b2->pos - b1->pos;
         
         float deltaLength = delta.mag();
