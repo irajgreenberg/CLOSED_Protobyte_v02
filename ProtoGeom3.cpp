@@ -88,7 +88,7 @@ void ProtoGeom3::init() {
 	glGenBuffers(1, &indexVboID); // Generate buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVboID); // Bind the element array buffer
 	int indsDataSize = static_cast<int>(inds.size()) * 3 * sizeof (GL_UNSIGNED_INT);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indsDataSize, NULL, GL_DYNAMIC_DRAW); // allocate
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indsDataSize, NULL, GL_STATIC_DRAW); // allocate
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indsDataSize, &indPrims[0]); // upload the data
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indsDataSize, &indPrims[0], GL_STATIC_DRAW); // allocate and upload
 
@@ -106,6 +106,9 @@ void ProtoGeom3::calcFaces() {
 	}
 }
 
+
+
+
 void ProtoGeom3::calcVertexNorms() {
 
 	for (int i = 0; i < verts.size(); i++) {
@@ -120,6 +123,8 @@ void ProtoGeom3::calcVertexNorms() {
 		verts.at(i).setNormal(v);
 	}
 }
+
+
 
 void ProtoGeom3::sortFaces() {
 	bool swapped = true;
@@ -183,6 +188,8 @@ void ProtoGeom3::calcPrimitives() {
 
 		interleavedPrims.at(n++) = verts.at(i).getUV().elem0;
 		interleavedPrims.at(n++) = verts.at(i).getUV().elem1;
+        
+      
 	}
 	// test
 	//for(int i=0; i<interleavedPrims.size(); ++i){
@@ -219,6 +226,7 @@ void ProtoGeom3::display(displayMode mode, renderMode render, float pointSize) {
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_LIGHTING);
 		glPointSize(pointSize);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 		break;
 
 	case WIREFRAME:
@@ -229,9 +237,10 @@ void ProtoGeom3::display(displayMode mode, renderMode render, float pointSize) {
 		break;
 
 	case SURFACE:
-		glEnable(GL_CULL_FACE);
+        glDisable(GL_CULL_FACE);
 		glEnable(GL_LIGHTING);
-		glPolygonMode(GL_FRONT, GL_FILL);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		//glPolygonMode(GL_FRONT, GL_FILL);
 		break;
 	}
 	// hackity-hack - fix eventually
@@ -245,7 +254,7 @@ void ProtoGeom3::display(displayMode mode, renderMode render, float pointSize) {
 //	glRotatef(rot.x, 1, 0, 0); // x-axis
 //	glRotatef(rot.y, 0, 1, 0); // y-axis
 //	glRotatef(rot.z, 0, 0, 1); // z-axis
-	glScalef(size.w, size.h, size.d);
+	//glScalef(size.w, size.h, size.d);
 
 
 

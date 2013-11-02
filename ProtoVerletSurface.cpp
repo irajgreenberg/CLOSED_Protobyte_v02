@@ -39,23 +39,49 @@ ProtoGeom3(pos, rot, size, col4), rowCount(rowCount), columnCount(columnCount), 
     init(); // calls calcVertices/calcIndices/calcFaces/etc
 }
 
+ProtoVerletSurface::ProtoVerletSurface(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3<float>& size, const ProtoColor4<float>& col4, int rowCount, int columnCount, float tension, std::string imageMap):
+ProtoGeom3(pos, rot, size, col4), rowCount(rowCount), columnCount(columnCount), tension(tension), imageMap(imageMap)
+{
+    // hard code texture for testing
+    texture = ProtoTexture2(imageMap, 300, 350, 0);
+    GLuint texID = texture.getTextureID();
+    
+    glEnable(GL_TEXTURE_2D);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glBindTexture(GL_TEXTURE_2D, texID);
+    
+    
+    centroidIndex = 0;
+    pulseTheta = 0;
+    init(); // calls calcVertices/calcIndices/calcFaces/etc
+}
+
 // calculate verlet geoemetry
 void ProtoVerletSurface::calcVerts(){
     
+    // set mesh color
+    
+    meshColor = col4;
     // verlet sheet
     //ind = (rows-2)/2*(cols) + cols/2;
     std::cout << " size = " << size << std::endl;
-    float cellW = 1.0/columnCount;
-    float cellH = 1.0/rowCount;
+    float cellW = size.w/columnCount;
+    float cellH = size.h/rowCount;
     for(int i=0; i<rowCount; ++i){
         for(int j=0; j<columnCount; ++j){
-            float x = -.5 + cellW*j;
-            float y = .5 - cellH*i;
-            balls.push_back(std::shared_ptr<ProtoVerletBall>(new ProtoVerletBall(Vec3f(x, y, 0))));
-            verts.push_back( ProtoVertex3(Vec3f(x, y, 0),
-                                          ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()), ProtoTuple2f(x*.5, y*.5)));
+            float x = -size.w/2 + cellW*j;
+            float y = size.h/2 - cellH*i;
+            float z = 0;//ProtoMath::random(-.02, .02);
+            balls.push_back(std::shared_ptr<ProtoVerletBall>(new ProtoVerletBall(Vec3f(x, y, z))));
+            verts.push_back(ProtoVertex3(Vec3f(x, y, z),
+                                          ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()), ProtoTuple2f(cellW/size.w*j, cellH/size.h*i)));
+            
         }
     }
+    
+    centroidIndex = (static_cast<int>(balls.size())-1)/2;
+    std::cout << "balls.size() = " << balls.size()<< std::endl;
+    std::cout << "centroidIndex = " << centroidIndex << std::endl;
     
     for(int i=0, k=0, l=0, m=0, n=0; i<rowCount-1; ++i){
         for(int j=0; j<columnCount-1; ++j){
@@ -72,6 +98,7 @@ void ProtoVerletSurface::calcVerts(){
                 sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(1, 0))));
                 // diag
                 sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(0, 1))));
+                //sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
                 // TR
             } else  if (i==0 && j==columnCount-2){
                 sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(.5, .5))));
@@ -87,7 +114,8 @@ void ProtoVerletSurface::calcVerts(){
                 sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(0, 1))));
                 sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(.5, .5))));
                 // diag
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, 0))));
+                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(1, 0))));
+                 //sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
                 //BL
             } else  if (i==rowCount-2 && j==0){
                 sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(1, 0))));
@@ -132,45 +160,111 @@ void ProtoVerletSurface::nudge(int index){
 }
 
 // animate VBO data based on Verlet Integration
-// TO DO: move this to FPU with Vertex Shader
+// TO DO: (MAYBE) move this to GPU with Vertex Shader
 
 
 // interleavedPrims stride = 12;
 void ProtoVerletSurface::flow() {
     
-    // Activate Verlet/constraints
-    for (int i = 0; i < sticks.size(); ++i) {
-        sticks.at(i)->constrainLen();
-    }
-    
+    // packed vertex data
+    // stride is 12 : (x, y, z, nx, ny, nz, r, g, b, a, u, v)
+    int stride = 12;
+    int colOffset = 6;
     // Animate VBO data
     glBindBuffer(GL_ARRAY_BUFFER, vboID);
     for (int i = 0; i < inds.size(); ++i) {
         
         // verts
-        interleavedPrims.at(inds.at(i).elem0 * 12) = balls.at(inds.at(i).elem0)->pos.x;
-        interleavedPrims.at(inds.at(i).elem0 * 12 + 1) = balls.at(inds.at(i).elem0)->pos.y;
-        interleavedPrims.at(inds.at(i).elem0 * 12 + 2) = balls.at(inds.at(i).elem0)->pos.z;
+        interleavedPrims.at(inds.at(i).elem0 * stride) = balls.at(inds.at(i).elem0)->pos.x;
+        interleavedPrims.at(inds.at(i).elem0 * stride + 1) = balls.at(inds.at(i).elem0)->pos.y;
+        interleavedPrims.at(inds.at(i).elem0 * stride + 2) = balls.at(inds.at(i).elem0)->pos.z;
         
-        interleavedPrims.at(inds.at(i).elem1 * 12) = balls.at(inds.at(i).elem1)->pos.x;
-        interleavedPrims.at(inds.at(i).elem1 * 12 + 1) = balls.at(inds.at(i).elem1)->pos.y;
-        interleavedPrims.at(inds.at(i).elem1 * 12 + 2) = balls.at(inds.at(i).elem1)->pos.z;
+        interleavedPrims.at(inds.at(i).elem1 * stride) = balls.at(inds.at(i).elem1)->pos.x;
+        interleavedPrims.at(inds.at(i).elem1 * stride + 1) = balls.at(inds.at(i).elem1)->pos.y;
+        interleavedPrims.at(inds.at(i).elem1 * stride + 2) = balls.at(inds.at(i).elem1)->pos.z;
         
-        interleavedPrims.at(inds.at(i).elem2 * 12) = balls.at(inds.at(i).elem2)->pos.x;
-        interleavedPrims.at(inds.at(i).elem2 * 12 + 1) = balls.at(inds.at(i).elem2)->pos.y;
-        interleavedPrims.at(inds.at(i).elem2 * 12 + 2) = balls.at(inds.at(i).elem2)->pos.z;
+        interleavedPrims.at(inds.at(i).elem2 * stride) = balls.at(inds.at(i).elem2)->pos.x;
+        interleavedPrims.at(inds.at(i).elem2 * stride + 1) = balls.at(inds.at(i).elem2)->pos.y;
+        interleavedPrims.at(inds.at(i).elem2 * stride + 2) = balls.at(inds.at(i).elem2)->pos.z;
         
+        //mesh cols
+//        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset) = meshColor.getR();
+//        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 1) = meshColor.getG();
+//        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 2) = meshColor.getB();
+//        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 3) = meshColor.getA();
+//        
+//        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset) = meshColor.getR();
+//        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 1) = meshColor.getG();
+//        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 2) = meshColor.getB();
+//        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 3) = meshColor.getA();
+//        
+//        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset) = meshColor.getR();
+//        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 1) = meshColor.getG();
+//        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 2) = meshColor.getB();
+//        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 3) = meshColor.getA();
+
+        
+        // TO DO: (MAYBE) Fix Vertex Normals
         //vnorms
-        //        nz = cos(t) * interleavedPrims.at(i + 5) - sin(t) * interleavedPrims.at(i + 3);
-        //        nx = sin(t) * interleavedPrims.at(i + 5) + cos(t) * interleavedPrims.at(i + 3);
-        //        interleavedPrims.at(i + 5) = nz;
-        //        interleavedPrims.at(i + 3) = nx;
+
         
     }
-    int vertsDataSize = sizeof (float) *interleavedPrims.size();
+    int vertsDataSize = sizeof (float) * static_cast<int>(interleavedPrims.size());
     glBufferSubData(GL_ARRAY_BUFFER, 0, vertsDataSize, &interleavedPrims[0]); // upload the data
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
-    balls.at(centroidIndex)->pos += Vec3f(cos(-pulseTheta)*ProtoMath::random(.001, .004), sin(pulseTheta)*ProtoMath::random(.001, .004), sin(pulseTheta)*ProtoMath::random(.003, .01));
-    pulseTheta += ProtoMath::random(3, 12)*ProtoMath::PI/180.0;
+    // Activate Verlet/constraints
+    for (int i = 0; i < balls.size(); ++i) {
+        balls.at(i)->verlet();
+    }
+
+    
+    for (int i = 0; i < sticks.size(); ++i) {
+        sticks.at(i)->constrainLen();
+    }
+    
+    // pulse surface
+    balls.at(centroidIndex)->pos += Vec3f(-sin(pulseTheta)*.025, cos(pulseTheta)*.02, sin(pulseTheta)*.3);
+    pulseTheta += 2*ProtoMath::PI/180.0;
+    
+}
+
+void ProtoVerletSurface::setMeshColor(const Col4f& meshColor){
+    this->meshColor = meshColor;
+    
+    // packed vertex data
+    // stride is 12 : (x, y, z, nx, ny, nz, r, g, b, a, u, v)
+    int stride = 12;
+    int colOffset = 6;
+    // Animate VBO data
+    glBindBuffer(GL_ARRAY_BUFFER, vboID);
+    for (int i = 0; i < inds.size(); ++i) {
+        
+        
+        //mesh cols
+        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset) = meshColor.getR();
+        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 1) = meshColor.getG();
+        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 2) = meshColor.getB();
+        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 3) = meshColor.getA();
+        
+        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset) = meshColor.getR();
+        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 1) = meshColor.getG();
+        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 2) = meshColor.getB();
+        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 3) = meshColor.getA();
+        
+        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset) = meshColor.getR();
+        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 1) = meshColor.getG();
+        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 2) = meshColor.getB();
+        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 3) = meshColor.getA();
+        
+        
+        // TO DO: (MAYBE) Fix Vertex Normals
+        //vnorms
+        
+        
+    }
+    int vertsDataSize = sizeof (float) * static_cast<int>(interleavedPrims.size());
+    glBufferSubData(GL_ARRAY_BUFFER, 0, vertsDataSize, &interleavedPrims[0]); // upload the data
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 }

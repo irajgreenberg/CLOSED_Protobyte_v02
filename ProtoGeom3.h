@@ -69,6 +69,7 @@ namespace ijg {
 
         // composite guts
         std::vector<ProtoVertex3> verts;
+        //std::vector<ProtoVertex3*> verts;
         std::vector<ProtoFace3> faces;
         std::vector< ProtoTuple3<int> > inds;
 

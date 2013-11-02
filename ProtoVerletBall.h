@@ -40,13 +40,16 @@ namespace ijg {
         //private:
     public:
         Vec3f pos, posOld;
+        Vec3f* pos_ptr;
 
         ProtoVerletBall();
         ProtoVerletBall(const Vec3f& pos);
+        ProtoVerletBall(Vec3f* pos_ptr);
 
 //        float dist(const ProtoVerletBall& b);
 
         void verlet();
+        void verlet2();
 
         //getters / setters
         Vec3f getPos() const;

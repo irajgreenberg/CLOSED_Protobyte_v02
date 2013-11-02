@@ -26,6 +26,7 @@
 
 #include "ProtoGeom3.h"
 #include "ProtoVerletStick.h"
+#include "ProtoTexture2.h"
 
 namespace ijg {
     
@@ -39,6 +40,8 @@ namespace ijg {
         // cstrs
         ProtoVerletSurface();
         ProtoVerletSurface(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3<float>& size, const ProtoColor4<float>& col4, int rowCount, int columnCount, float tension);
+        
+        ProtoVerletSurface(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3<float>& size, const ProtoColor4<float>& col4, int rowCount, int columnCount, float tension, std::string imageMap);
         
         void nudge(int index);
     
@@ -55,6 +58,7 @@ namespace ijg {
         
         // TEST
         void flow();
+        void setMeshColor(const Col4f& meshCol);
         
     private:
         
@@ -64,6 +68,8 @@ namespace ijg {
         
         int centroidIndex;
         float pulseTheta;
+        
+        std::string imageMap;
         
         /* vector of balls (1d will store 2d data)
          shared_ptrs because balls are
@@ -75,6 +81,9 @@ namespace ijg {
         
         void calcVerts(); // overrides virtual method in base class
         void calcInds(); // overrides virtual method in base class
+        
+        ProtoTexture2 texture;
+        Col4f meshColor;
         
     };
     

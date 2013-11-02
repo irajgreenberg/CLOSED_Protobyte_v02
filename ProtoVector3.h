@@ -442,9 +442,9 @@ namespace ijg {
     
     template <class T>
     inline T ProtoVector3<T>::dist(const ProtoVector3<T>& v) const{
-        float _x = v.x-x;
-        float _y = v.y-y;
-        float _z = v.z-z;
+        float _x = x-v.x;
+        float _y = y-v.y;
+        float _z = z-v.z;
         return sqrt(_x*_x + _y*_y + _z*_z);
     }
     

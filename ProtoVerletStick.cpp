@@ -53,14 +53,16 @@ ProtoVerletStick::ProtoVerletStick(std::shared_ptr<ProtoVerletBall> _b1, std::sh
 void ProtoVerletStick::constrainLen() {
     
     // get balls moving
-    b1->verlet();
-    b2->verlet();
+//
     
     
     // iteratively stablize system
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 1; i++) {
         Vec3f delta = b2->pos - b1->pos;
-        
+//        std::cout << "b1->pos = " << b1->pos << std::endl;
+//        std::cout << "b2->pos = " << b2->pos << std::endl;
+//        std::cout << "delta = " << delta << std::endl;
+//        std::cout << "deltaLength = " << delta.mag() << std::endl;
         float deltaLength = delta.mag();
         
         float difference = ((deltaLength - len) / deltaLength);

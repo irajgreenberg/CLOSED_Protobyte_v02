@@ -52,8 +52,8 @@ void ProtoVerletBall::verlet() {
 }
 
 void ProtoVerletBall::verlet2() {
-    Vec3f posTemp = *pos_ptr;
-    *pos_ptr += (*pos_ptr - posOld);
+    Vec3f posTemp = Vec3f(pos->x, pos->y, pos->z);
+    *pos += ((*pos - posOld);
     //std::cout << "in VerletBall verlet(), pos = " << pos << std::endl;
     posOld = posTemp;
 }
