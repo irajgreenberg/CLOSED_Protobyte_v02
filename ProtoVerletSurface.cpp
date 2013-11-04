@@ -31,19 +31,30 @@ ProtoVerletSurface::ProtoVerletSurface(){
     
 }
 
-ProtoVerletSurface::ProtoVerletSurface(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3<float>& size, const ProtoColor4<float>& col4, int rowCount, int columnCount, float tension):
-ProtoGeom3(pos, rot, size, col4), rowCount(rowCount), columnCount(columnCount), tension(tension)
+ProtoVerletSurface::ProtoVerletSurface(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3<float>& size, const ProtoColor4<float>& col4, int rowCount, int columnCount, float tension, AnchorModeEnum anchorMode):
+ProtoGeom3(pos, rot, size, col4), rowCount(rowCount), columnCount(columnCount), tension(tension), anchorMode(anchorMode)
 {
-    centroidIndex = (rowCount-2)/2*(columnCount) + columnCount/2;
+    // ensure even cols and rows
+    rowCount = (rowCount%2!=0) ? rowCount+1 : rowCount;
+    columnCount = (columnCount%2!=0) ? columnCount+1 : columnCount;
+    
+    centroidIndex = (rowCount/2-1)*(columnCount-1) + (columnCount-1)/2;
     pulseTheta = 0;
     init(); // calls calcVertices/calcIndices/calcFaces/etc
 }
 
-ProtoVerletSurface::ProtoVerletSurface(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3<float>& size, const ProtoColor4<float>& col4, int rowCount, int columnCount, float tension, std::string imageMap):
-ProtoGeom3(pos, rot, size, col4), rowCount(rowCount), columnCount(columnCount), tension(tension), imageMap(imageMap)
+ProtoVerletSurface::ProtoVerletSurface(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3<float>& size, const ProtoColor4<float>& col4, int rowCount, int columnCount, float tension, std::string imageMap, AnchorModeEnum anchorMode):
+ProtoGeom3(pos, rot, size, col4), rowCount(rowCount), columnCount(columnCount), tension(tension), imageMap(imageMap), anchorMode(anchorMode)
 {
+    
+    // ensure even cols and rows
+    rowCount = (rowCount%2!=0) ? rowCount+1 : rowCount;
+    columnCount = (columnCount%2!=0) ? columnCount+1 : columnCount;
+    std::cout << "rowCount = " << rowCount << std::endl;
+    std::cout << "columnCount = " << columnCount << std::endl;
+    
     // hard code texture for testing
-    texture = ProtoTexture2(imageMap, 300, 350, 0);
+    texture = ProtoTexture2(imageMap, 300, 300, 0);
     GLuint texID = texture.getTextureID();
     
     glEnable(GL_TEXTURE_2D);
@@ -51,7 +62,7 @@ ProtoGeom3(pos, rot, size, col4), rowCount(rowCount), columnCount(columnCount), 
     glBindTexture(GL_TEXTURE_2D, texID);
     
     
-    centroidIndex = 0;
+    centroidIndex = (rowCount/2-1)*(columnCount-1) + (columnCount-1)/2;
     pulseTheta = 0;
     init(); // calls calcVertices/calcIndices/calcFaces/etc
 }
@@ -65,8 +76,8 @@ void ProtoVerletSurface::calcVerts(){
     // verlet sheet
     //ind = (rows-2)/2*(cols) + cols/2;
     std::cout << " size = " << size << std::endl;
-    float cellW = size.w/columnCount;
-    float cellH = size.h/rowCount;
+    float cellW = size.w/(columnCount-1);
+    float cellH = size.h/(rowCount-1);
     for(int i=0; i<rowCount; ++i){
         for(int j=0; j<columnCount; ++j){
             float x = -size.w/2 + cellW*j;
@@ -74,12 +85,12 @@ void ProtoVerletSurface::calcVerts(){
             float z = 0;//ProtoMath::random(-.02, .02);
             balls.push_back(std::shared_ptr<ProtoVerletBall>(new ProtoVerletBall(Vec3f(x, y, z))));
             verts.push_back(ProtoVertex3(Vec3f(x, y, z),
-                                          ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()), ProtoTuple2f(cellW/size.w*j, cellH/size.h*i)));
+                                         ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()), ProtoTuple2f(cellW/size.w*j, cellH/size.h*i)));
             
         }
     }
     
-    centroidIndex = (static_cast<int>(balls.size())-1)/2;
+    //centroidIndex = (static_cast<int>(balls.size())-1)/2+columnCount/2;
     std::cout << "balls.size() = " << balls.size()<< std::endl;
     std::cout << "centroidIndex = " << centroidIndex << std::endl;
     
@@ -89,49 +100,99 @@ void ProtoVerletSurface::calcVerts(){
             l = (i+1)*columnCount+j;
             m = (i+1)*columnCount+j+1;
             n = i*columnCount+j+1;
-            // corners
-            // TL
-            if (i==0 && j==0){
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(0, 1))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(.5, .5))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(.5, .5))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(1, 0))));
-                // diag
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(0, 1))));
-                //sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
-                // TR
-            } else  if (i==0 && j==columnCount-2){
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(.5, .5))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(.5, .5))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(1, 0))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(0, 1))));
-                // diag
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
-                // BR
-            }  else  if (i==rowCount-2 && j==columnCount-2){
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(.5, .5))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(1, 0))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(0, 1))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(.5, .5))));
-                // diag
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(1, 0))));
-                 //sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
-                //BL
-            } else  if (i==rowCount-2 && j==0){
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(1, 0))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(0, 1))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(.5, .5))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(.5, .5))));
-                // diag
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
-            } else {
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(.5, .5))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(.5, .5))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(.5, .5))));
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(.5, .5))));
-                // diag
-                sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
-                
+            switch(anchorMode){
+                    
+                    // ALL CORNERS
+                case ALL_CORNERS:
+                    // TL
+                    if (i==0 && j==0){
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(0, 1))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(1, 0))));
+                        // diag
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(0, 1))));
+                        //sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
+                        // TR
+                    } else  if (i==0 && j==columnCount-2){
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(1, 0))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(0, 1))));
+                        // diag
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
+                        // BR
+                    }  else  if (i==rowCount-2 && j==columnCount-2){
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(1, 0))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(0, 1))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(.5, .5))));
+                        // diag
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(1, 0))));
+                        //sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
+                        //BL
+                    } else  if (i==rowCount-2 && j==0){
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(1, 0))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(0, 1))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(.5, .5))));
+                        // diag
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
+                    } else {
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(.5, .5))));
+                        // diag
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
+                    }
+                    break;
+                    
+                    // ALL EDGES
+                case ALL_EDGES:
+                    // Top
+                    if (i==0){
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(0, 1))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(1, 0))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(0, 0))));
+                        // diag
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(0, 1))));
+                        //sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
+                        // Right
+                    } else  if (i > 0 && j==columnCount-2){
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(1, 0))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(0, 0))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(0, 1))));
+                        // diag
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(1, 0))));
+                        // LEFT
+                    }  else  if (j==0){
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(0, 0))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(0, 1))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(1, 0))));
+                        // diag
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(0, 1))));
+                        //sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
+                        //BOTTOM
+                    } else  if (i==rowCount-2 && j>0 && j<columnCount-2){
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(1, 0))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(0, 0))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(0, 1))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(.5, .5))));
+                        // diag
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(1, 0))));
+                    } else {
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(l), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(l), balls.at(m), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(m), balls.at(n), tension, Tup2f(.5, .5))));
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(n), balls.at(k), tension, Tup2f(.5, .5))));
+                        // diag
+                        sticks.push_back(std::unique_ptr<ProtoVerletStick>(new ProtoVerletStick(balls.at(k), balls.at(m), tension, Tup2f(.5, .5))));
+                    }
+                    break;
             }
             
         }
@@ -188,25 +249,25 @@ void ProtoVerletSurface::flow() {
         interleavedPrims.at(inds.at(i).elem2 * stride + 2) = balls.at(inds.at(i).elem2)->pos.z;
         
         //mesh cols
-//        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset) = meshColor.getR();
-//        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 1) = meshColor.getG();
-//        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 2) = meshColor.getB();
-//        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 3) = meshColor.getA();
-//        
-//        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset) = meshColor.getR();
-//        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 1) = meshColor.getG();
-//        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 2) = meshColor.getB();
-//        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 3) = meshColor.getA();
-//        
-//        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset) = meshColor.getR();
-//        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 1) = meshColor.getG();
-//        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 2) = meshColor.getB();
-//        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 3) = meshColor.getA();
-
+        //        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset) = meshColor.getR();
+        //        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 1) = meshColor.getG();
+        //        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 2) = meshColor.getB();
+        //        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 3) = meshColor.getA();
+        //
+        //        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset) = meshColor.getR();
+        //        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 1) = meshColor.getG();
+        //        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 2) = meshColor.getB();
+        //        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 3) = meshColor.getA();
+        //
+        //        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset) = meshColor.getR();
+        //        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 1) = meshColor.getG();
+        //        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 2) = meshColor.getB();
+        //        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 3) = meshColor.getA();
+        
         
         // TO DO: (MAYBE) Fix Vertex Normals
         //vnorms
-
+        
         
     }
     int vertsDataSize = sizeof (float) * static_cast<int>(interleavedPrims.size());
@@ -217,15 +278,21 @@ void ProtoVerletSurface::flow() {
     for (int i = 0; i < balls.size(); ++i) {
         balls.at(i)->verlet();
     }
-
+    
     
     for (int i = 0; i < sticks.size(); ++i) {
         sticks.at(i)->constrainLen();
     }
     
     // pulse surface
-    balls.at(centroidIndex)->pos += Vec3f(-sin(pulseTheta)*.025, cos(pulseTheta)*.02, sin(pulseTheta)*.3);
-    pulseTheta += 2*ProtoMath::PI/180.0;
+    //balls.at(centroidIndex)->pos += Vec3f(-sin(pulseTheta)*.025, cos(pulseTheta)*.02, sin(pulseTheta)*12.3);
+    int colMax = (columnCount-1)/2;
+    int rowMax = (rowCount-1)/2;
+    int randIndex = static_cast<int>(centroidIndex + columnCount * static_cast<int>(ProtoMath::random(-colMax,colMax))+ static_cast<int>(ProtoMath::random(-rowMax,rowMax)));
+    balls.at(randIndex)->pos.z += ProtoMath::random(-6, 6);
+   // balls.at(centroidIndex)->pos.z += ProtoMath::random(-6, 6);
+    
+    pulseTheta += 10*ProtoMath::PI/180.0;
     
 }
 
@@ -266,5 +333,5 @@ void ProtoVerletSurface::setMeshColor(const Col4f& meshColor){
     int vertsDataSize = sizeof (float) * static_cast<int>(interleavedPrims.size());
     glBufferSubData(GL_ARRAY_BUFFER, 0, vertsDataSize, &interleavedPrims[0]); // upload the data
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+    
 }

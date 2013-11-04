@@ -37,11 +37,27 @@ namespace ijg {
         
     public:
         
+        enum AnchorModeEnum {
+            ALL_CORNERS,
+            ALL_EDGES,
+            TOP_CORNER_LEFT,
+            TOP_CORNER_RIGHT,
+            BOTTOM_CORNER_LEFT,
+            BOTTOM_CORNER_RIGHT,
+            TOP_EDGE,
+            BOTTOM_EDGE,
+            LEFT_EDGE,
+            RIGHT_RIGHT,
+            NO_ANCHORS
+        };
+        
+        
+        
         // cstrs
         ProtoVerletSurface();
-        ProtoVerletSurface(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3<float>& size, const ProtoColor4<float>& col4, int rowCount, int columnCount, float tension);
+        ProtoVerletSurface(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3<float>& size, const ProtoColor4<float>& col4, int rowCount, int columnCount, float tension, AnchorModeEnum anchorMode=ALL_CORNERS);
         
-        ProtoVerletSurface(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3<float>& size, const ProtoColor4<float>& col4, int rowCount, int columnCount, float tension, std::string imageMap);
+        ProtoVerletSurface(const Vec3f& pos, const Vec3f& rot, const ProtoDimension3<float>& size, const ProtoColor4<float>& col4, int rowCount, int columnCount, float tension, std::string imageMap, AnchorModeEnum anchorMode=ALL_CORNERS);
         
         void nudge(int index);
     
@@ -84,6 +100,8 @@ namespace ijg {
         
         ProtoTexture2 texture;
         Col4f meshColor;
+        
+        AnchorModeEnum anchorMode;
         
     };
     

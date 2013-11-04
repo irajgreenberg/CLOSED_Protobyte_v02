@@ -65,6 +65,7 @@ textureURL(textureURL), w(w), h(h), isWrap(isWrap) {
 
         // read texture data
         fread(data, w * h * 3, 1, file);
+        // std::cout << "texture size = " << ftell(file) << std::endl;
         fclose(file);
 
         // allocate a texture name
