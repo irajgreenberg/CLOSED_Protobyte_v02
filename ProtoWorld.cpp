@@ -860,14 +860,14 @@ void ProtoWorld::setLights() {
      *           LIGHTING             *
      *********************************/
     // Light01
-    GLfloat light01_ambient[] = {0.3, 0.1, 0.1, 1.0};
-    GLfloat light01_diffuse[] = {.85, .85, .85, 1.0};
-    GLfloat light01_specular[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat light01_ambient[] = {0.2, 0.2, 0.2, 1.0};
+    GLfloat light01_diffuse[] = {.65, .65, .65, 1.0};
+    GLfloat light01_specular[] = {.8, .8, .8, 1.0};
     GLfloat light01_position[] = {-20, 10, 5.0, 0.0};
     
     //materials
-    GLfloat light01_mat_specular[] = {1.0, 1.0, 1.0, 1.0};
-    GLfloat light01_mat_shininess[] = {30}; // max 128
+    GLfloat light01_mat_specular[] = {.85, .8, .92, 1.0};
+    GLfloat light01_mat_shininess[] = {10}; // max 128
     
     
     // light 01

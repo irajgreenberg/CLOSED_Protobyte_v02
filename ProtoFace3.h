@@ -65,14 +65,29 @@ namespace ijg {
 
         const Vec3f& getNorm() const;
         const Vec3f& getCentroid() const;
+        
 
 
         //const ProtoVertex3& operator[](int index);
         const ProtoVertex3* operator[](int index);
         
         ProtoVertex3 *v0_p, *v1_p, *v2_p;
+        
+        ProtoVertex3* getVert0_ptr();
+        ProtoVertex3* getVert1_ptr();
+        ProtoVertex3* getVert2_ptr();
 
     };
+    
+    inline ProtoVertex3* ProtoFace3::getVert0_ptr(){
+        return v0_p;
+    }
+    inline ProtoVertex3* ProtoFace3::getVert1_ptr(){
+        return v1_p;
+    }
+    inline ProtoVertex3* ProtoFace3::getVert2_ptr(){
+        return v2_p;
+    }
 }
 
 #endif /* defined(PROTO_FACE3_H) */

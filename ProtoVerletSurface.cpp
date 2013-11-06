@@ -82,7 +82,7 @@ void ProtoVerletSurface::calcVerts(){
         for(int j=0; j<columnCount; ++j){
             float x = -size.w/2 + cellW*j;
             float y = size.h/2 - cellH*i;
-            float z = 0;//ProtoMath::random(-.02, .02);
+            float z = ProtoMath::random(-.02, .02);
             balls.push_back(std::shared_ptr<ProtoVerletBall>(new ProtoVerletBall(Vec3f(x, y, z))));
             verts.push_back(ProtoVertex3(Vec3f(x, y, z),
                                          ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()), ProtoTuple2f(cellW/size.w*j, cellH/size.h*i)));
@@ -278,7 +278,6 @@ void ProtoVerletSurface::flow() {
     for (int i = 0; i < balls.size(); ++i) {
         balls.at(i)->verlet();
     }
-    
     
     for (int i = 0; i < sticks.size(); ++i) {
         sticks.at(i)->constrainLen();

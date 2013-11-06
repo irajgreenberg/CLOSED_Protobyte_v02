@@ -48,14 +48,22 @@ namespace ijg {
         void setNormal(const Vec3f& norm);
         void setColor(const ProtoColor4<float>& col4);
         void setUV(const ProtoTuple2<float>& uv);
+        
+        void addToNormal(const Vec3f& v);
 
     private:
         ProtoColor4<float> col4;
         Vec3f norm;
         ProtoTuple2<float> uv;
+        
 
         void init();
     };
+    
+    // inline general funcs
+    inline void ProtoVertex3::addToNormal(const Vec3f& v){
+        norm += v;
+    }
     
     // inline getters/setters
 

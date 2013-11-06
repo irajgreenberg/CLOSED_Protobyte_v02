@@ -43,6 +43,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "ProtoShape3.h"
+#include "ProtoGeomSet.h"
 
 
 namespace ijg {
@@ -92,6 +93,8 @@ namespace ijg {
 
         // Utility for extension support
        // ProtoGLInfo glInfo;
+        
+        std::vector<ProtoGeomSet> geomSets;
         
 
 

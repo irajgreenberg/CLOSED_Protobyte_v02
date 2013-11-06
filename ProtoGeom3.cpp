@@ -110,15 +110,24 @@ void ProtoGeom3::calcFaces() {
 
 
 void ProtoGeom3::calcVertexNorms() {
-
-	for (int i = 0; i < verts.size(); i++) {
+    
+    // calculate initial vertex normals and fill geomsets with vertex face association
+    // to enable easier runtime vertex normal calcs
+    
+    
+    for (int i = 0; i < verts.size(); i++) {
 		Vec3f v;
+        std::vector<ProtoFace3*> fs;
 		for (int j = 0; j < faces.size(); j++) {
 			if (&verts.at(i) == faces.at(j)[0] || &verts.at(i) == faces.at(j)[1] ||
 				&verts.at(i) == faces.at(j)[2]) {
-					v += faces.at(j).getNorm();
+                //std::cout << "i = " << i << ", " << "face " << j << std::endl;
+                v += faces.at(j).getNorm();
+                fs.push_back(&faces.at(j));
 			}
 		}
+        geomSets.push_back(ProtoGeomSet(&verts.at(i), fs));
+        //std::cout << "vertex has this many linked faces: " << geomSets.at(i).getLinkedFaces().size() << std::endl;
 		v.normalize();
 		verts.at(i).setNormal(v);
 	}
