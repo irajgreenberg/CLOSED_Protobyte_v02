@@ -44,8 +44,9 @@ ProtoVerletStick::ProtoVerletStick() {
 
 ProtoVerletStick::ProtoVerletStick(std::shared_ptr<ProtoVerletBall> _b1, std::shared_ptr<ProtoVerletBall> _b2, float tension, Tup2f elasticity): b1(_b1), b2(_b2), tension(tension), elasticity(elasticity)
 {
-    vecOrig = b2->pos - b1->pos;
-    len = b1->pos.dist(b2->pos);
+    //std::cout << "b2->getPos_ptr() =   " <<  *b2->getPos_ptr()  << std::endl;
+vecOrig = *b2->getPos_ptr() - *b1->getPos_ptr();
+    len = b2->getPos_ptr()->dist(*b1->getPos_ptr());
 }
 
 
@@ -58,7 +59,7 @@ void ProtoVerletStick::constrainLen() {
     
     // iteratively stablize system
     for (int i = 0; i < 1; i++) {
-        Vec3f delta = b2->pos - b1->pos;
+        Vec3f delta = *b2->getPos_ptr() - *b1->getPos_ptr();
 //        std::cout << "b1->pos = " << b1->pos << std::endl;
 //        std::cout << "b2->pos = " << b2->pos << std::endl;
 //        std::cout << "delta = " << delta << std::endl;
@@ -68,8 +69,8 @@ void ProtoVerletStick::constrainLen() {
         float difference = ((deltaLength - len) / deltaLength);
         //std::cout << "difference = " << difference << std::endl;
         
-        b1->pos += delta * elasticity.elem0 * tension * difference;
-        b2->pos -= delta * elasticity.elem1 * tension * difference;
+        *b1->getPos_ptr() += delta * elasticity.elem0 * tension * difference;
+        *b2->getPos_ptr() -= delta * elasticity.elem1 * tension * difference;
     }
     
 }
@@ -77,7 +78,7 @@ void ProtoVerletStick::constrainLen() {
 void ProtoVerletStick::display(){
     glColor3f(1, .5, 0);
     glBegin(GL_LINE_STRIP);
-    glVertex3f(b1->pos.x, b1->pos.y, b1->pos.z);
-    glVertex3f(b2->pos.x, b2->pos.y, b2->pos.z);
+    glVertex3f(b1->getPos_ptr()->x, b1->getPos_ptr()->y, b1->getPos_ptr()->z);
+    glVertex3f(b2->getPos_ptr()->x, b2->getPos_ptr()->y, b2->getPos_ptr()->z);
     glEnd();
 }

@@ -50,6 +50,7 @@ namespace ijg {
         void setUV(const ProtoTuple2<float>& uv);
         
         void addToNormal(const Vec3f& v);
+        Vec3f* getPos_ptr();
 
     private:
         ProtoColor4<float> col4;
@@ -60,7 +61,14 @@ namespace ijg {
         void init();
     };
     
+    
+    
     // inline general funcs
+    
+    inline  Vec3f* ProtoVertex3::getPos_ptr(){
+        return &pos;
+    }
+    
     inline void ProtoVertex3::addToNormal(const Vec3f& v){
         norm += v;
     }

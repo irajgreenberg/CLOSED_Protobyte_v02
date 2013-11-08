@@ -55,7 +55,7 @@ namespace ijg {
     // constructors
 
     template <class T>
-    inline ProtoColor3<T>::Color3() :
+    inline ProtoColor3<T>::ProtoColor3() :
     r(0), g(0), b(0) {
     }
 
@@ -99,7 +99,7 @@ namespace ijg {
     // overload
 
     template <class T>
-    friend std::ostream& operator<<(std::ostream& output, const ProtoColor3<T>& col3) {
+    std::ostream& operator<<(std::ostream& output, const ProtoColor3<T>& col3) {
         output << "col3.r: " << col3.r << ", col3.g: " <<
                 col3.g << ", col3.b: " << col3.b;
         return output;

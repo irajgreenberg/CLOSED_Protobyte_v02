@@ -5,33 +5,33 @@
  * Created on April 14, 2013, 9:30 PM
  */
 
-#ifndef IMAGE_H
-#define	IMAGE_H
+#ifndef PROTOIMAGE_H
+#define	PROTOIMAGE_H
 
 #include <string>
 #include <vector>
-#include "Color3.h"
-#include "Color4.h"
+#include "ProtoColor3.h"
+#include "ProtoColor4.h"
 
 
-namespace proto {
+namespace ijg {
 
-    class Image {
+    class ProtoImage {
     public:
-        Image();
-        Image(int w, int h);
+        ProtoImage();
+        ProtoImage(int w, int h);
 
         void load(const std::string& url);
         
 
 
     private:
-        std::vector< Color3b > pixels3;
-        std::vector< Color4b > pixels4;
+        std::vector< Col3b > pixels3;
+        std::vector< Col4b > pixels4;
 
     };
 
 }
 
-#endif	/* IMAGE_H */
+#endif	/* PROTOIMAGE_H */
 

@@ -566,7 +566,7 @@ void ProtoWorld::run() {
     
     //std::cout << "in ProtoWorld.run()" << std::endl;
     // if animated
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     //std::cout << "geoms = " << &geoms << std::endl;
     
@@ -867,7 +867,7 @@ void ProtoWorld::setLights() {
     
     //materials
     GLfloat light01_mat_specular[] = {.85, .8, .92, 1.0};
-    GLfloat light01_mat_shininess[] = {10}; // max 128
+    GLfloat light01_mat_shininess[] = {18}; // max 128
     
     
     // light 01
@@ -908,6 +908,7 @@ void ProtoWorld::updateCanvasSize(float canvasWidth, float canvasHeight){
 int ProtoWorld::getGeomCount() {
     return static_cast<int>(geoms.size());
 }
+
 
 
 

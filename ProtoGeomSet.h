@@ -37,6 +37,7 @@ namespace ijg {
         
         ProtoVertex3* getSharedVert() const;
         std::vector<ProtoFace3*> getLinkedFaces() const;
+        Vec3f getVertexNormal() const;
         
     private:
         ProtoVertex3* sharedVert;
@@ -54,6 +55,16 @@ namespace ijg {
     }
     inline std::vector<ProtoFace3*> ProtoGeomSet::getLinkedFaces() const{
         return linkedFaces;
+    }
+    
+    inline Vec3f ProtoGeomSet::getVertexNormal() const{
+        Vec3f temp;
+        for(int i=0; i<linkedFaces.size(); ++i){
+            linkedFaces.at(i)->calcNorm();
+            temp += linkedFaces.at(i)->getNorm();
+        }
+        temp.normalize();
+        return temp;
     }
 
 }

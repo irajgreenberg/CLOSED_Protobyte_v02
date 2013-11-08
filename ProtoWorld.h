@@ -32,6 +32,7 @@
 
 #include <iostream>
 #include <vector>
+#include "ProtoColor3.h"
 #include "ProtoBounds.h"
 #include "ProtoCamera.h"
 #include "ProtoLight.h"
@@ -126,6 +127,8 @@ namespace ijg {
         
         // world fields
         Vec3f worldRotSpeed;
+        
+        Col3f bgColor;
         
         //iterator
         //std::vector<ProtoCamera&>::iterator cameraObjsIter;
@@ -273,6 +276,8 @@ namespace ijg {
         
         void rotate(const Vec3f& worldRot);
         
+        void setBackgroundColor(const Col3f& bgColor = Col3f(1, 1, 1));
+        
         
         // state changes
         //void setRenderState(ProtoRenderer::RenderModeEnum renderMode = ProtoRenderer::SURFACE, float pointSize = 3.5f);
@@ -313,6 +318,15 @@ namespace ijg {
         
         
     };
+    
+    //inline
+    
+    
+    inline void ProtoWorld::setBackgroundColor(const Col3f& bgColor){
+       this->bgColor = bgColor;
+        glClearColor(bgColor.getR(), bgColor.getG(), bgColor.getB(), 1.0);
+        
+    }
 }
 
 #endif // Protobyte_v02_ProtoWorld_cpp

@@ -53,6 +53,7 @@ namespace ijg {
 
         //getters / setters
         Vec3f getPos() const;
+        Vec3f* getPos_ptr() const;
         void setPos(const Vec3f& pos);
 
         // overloaded member ops
@@ -67,6 +68,10 @@ namespace ijg {
 
     inline Vec3f ProtoVerletBall::getPos() const {
         return pos;
+    }
+    
+    inline Vec3f* ProtoVerletBall::getPos_ptr() const {
+        return pos_ptr;
     }
 
     inline void ProtoVerletBall::setPos(const Vec3f& pos) {

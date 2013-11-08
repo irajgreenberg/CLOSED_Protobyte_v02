@@ -52,8 +52,7 @@ namespace ijg {
 
         void init();
 
-        void calcNorm();
-        void calcCentroid();
+        
 
 
     public:
@@ -76,6 +75,9 @@ namespace ijg {
         ProtoVertex3* getVert0_ptr();
         ProtoVertex3* getVert1_ptr();
         ProtoVertex3* getVert2_ptr();
+        
+        void calcNorm();
+        void calcCentroid();
 
     };
     

@@ -50,8 +50,8 @@ ProtoGeom3(pos, rot, size, col4), rowCount(rowCount), columnCount(columnCount), 
     // ensure even cols and rows
     rowCount = (rowCount%2!=0) ? rowCount+1 : rowCount;
     columnCount = (columnCount%2!=0) ? columnCount+1 : columnCount;
-    std::cout << "rowCount = " << rowCount << std::endl;
-    std::cout << "columnCount = " << columnCount << std::endl;
+    //std::cout << "rowCount = " << rowCount << std::endl;
+    //std::cout << "columnCount = " << columnCount << std::endl;
     
     // hard code texture for testing
     texture = ProtoTexture2(imageMap, 300, 300, 0);
@@ -75,7 +75,7 @@ void ProtoVerletSurface::calcVerts(){
     meshColor = col4;
     // verlet sheet
     //ind = (rows-2)/2*(cols) + cols/2;
-    std::cout << " size = " << size << std::endl;
+   // std::cout << " size = " << size << std::endl;
     float cellW = size.w/(columnCount-1);
     float cellH = size.h/(rowCount-1);
     for(int i=0; i<rowCount; ++i){
@@ -83,16 +83,20 @@ void ProtoVerletSurface::calcVerts(){
             float x = -size.w/2 + cellW*j;
             float y = size.h/2 - cellH*i;
             float z = ProtoMath::random(-.02, .02);
-            balls.push_back(std::shared_ptr<ProtoVerletBall>(new ProtoVerletBall(Vec3f(x, y, z))));
+           
             verts.push_back(ProtoVertex3(Vec3f(x, y, z),
                                          ProtoColor4f(col4.getR(), col4.getG(), col4.getB(), col4.getA()), ProtoTuple2f(cellW/size.w*j, cellH/size.h*i)));
-            
         }
     }
     
+    // fill dem balls with ptr's
+    for(int i=0; i<verts.size(); ++i){
+        balls.push_back(std::shared_ptr<ProtoVerletBall>(new ProtoVerletBall(verts.at(i).getPos_ptr())));
+    }
+    
     //centroidIndex = (static_cast<int>(balls.size())-1)/2+columnCount/2;
-    std::cout << "balls.size() = " << balls.size()<< std::endl;
-    std::cout << "centroidIndex = " << centroidIndex << std::endl;
+   // std::cout << "balls.size() = " << balls.size()<< std::endl;
+   // std::cout << "centroidIndex = " << centroidIndex << std::endl;
     
     for(int i=0, k=0, l=0, m=0, n=0; i<rowCount-1; ++i){
         for(int j=0; j<columnCount-1; ++j){
@@ -227,7 +231,7 @@ void ProtoVerletSurface::nudge(int index){
 // interleavedPrims stride = 12;
 void ProtoVerletSurface::flow() {
     
-    // packed vertex data
+       // packed vertex data
     // stride is 12 : (x, y, z, nx, ny, nz, r, g, b, a, u, v)
     int stride = 12;
     int colOffset = 6;
@@ -236,47 +240,40 @@ void ProtoVerletSurface::flow() {
     for (int i = 0; i < inds.size(); ++i) {
         
         // verts
-        interleavedPrims.at(inds.at(i).elem0 * stride) = balls.at(inds.at(i).elem0)->pos.x;
-        interleavedPrims.at(inds.at(i).elem0 * stride + 1) = balls.at(inds.at(i).elem0)->pos.y;
-        interleavedPrims.at(inds.at(i).elem0 * stride + 2) = balls.at(inds.at(i).elem0)->pos.z;
+        interleavedPrims.at(inds.at(i).elem0 * stride) = verts.at(inds.at(i).elem0).pos.x;
+        interleavedPrims.at(inds.at(i).elem0 * stride + 1) = verts.at(inds.at(i).elem0).pos.y;
+        interleavedPrims.at(inds.at(i).elem0 * stride + 2) = verts.at(inds.at(i).elem0).pos.z;
         
-        interleavedPrims.at(inds.at(i).elem1 * stride) = balls.at(inds.at(i).elem1)->pos.x;
-        interleavedPrims.at(inds.at(i).elem1 * stride + 1) = balls.at(inds.at(i).elem1)->pos.y;
-        interleavedPrims.at(inds.at(i).elem1 * stride + 2) = balls.at(inds.at(i).elem1)->pos.z;
+        interleavedPrims.at(inds.at(i).elem1 * stride) = verts.at(inds.at(i).elem1).pos.x;
+        interleavedPrims.at(inds.at(i).elem1 * stride + 1) = verts.at(inds.at(i).elem1).pos.y;
+        interleavedPrims.at(inds.at(i).elem1 * stride + 2) = verts.at(inds.at(i).elem1).pos.z;
         
-        interleavedPrims.at(inds.at(i).elem2 * stride) = balls.at(inds.at(i).elem2)->pos.x;
-        interleavedPrims.at(inds.at(i).elem2 * stride + 1) = balls.at(inds.at(i).elem2)->pos.y;
-        interleavedPrims.at(inds.at(i).elem2 * stride + 2) = balls.at(inds.at(i).elem2)->pos.z;
-        
-        //mesh cols
-        //        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset) = meshColor.getR();
-        //        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 1) = meshColor.getG();
-        //        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 2) = meshColor.getB();
-        //        interleavedPrims.at(inds.at(i).elem0 * stride + colOffset + 3) = meshColor.getA();
-        //
-        //        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset) = meshColor.getR();
-        //        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 1) = meshColor.getG();
-        //        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 2) = meshColor.getB();
-        //        interleavedPrims.at(inds.at(i).elem1 * stride + colOffset + 3) = meshColor.getA();
-        //
-        //        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset) = meshColor.getR();
-        //        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 1) = meshColor.getG();
-        //        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 2) = meshColor.getB();
-        //        interleavedPrims.at(inds.at(i).elem2 * stride + colOffset + 3) = meshColor.getA();
+        interleavedPrims.at(inds.at(i).elem2 * stride) = verts.at(inds.at(i).elem2).pos.x;
+        interleavedPrims.at(inds.at(i).elem2 * stride + 1) = verts.at(inds.at(i).elem2).pos.y;
+        interleavedPrims.at(inds.at(i).elem2 * stride + 2) = verts.at(inds.at(i).elem2).pos.z;
         
         
-        // TO DO: (MAYBE) Fix Vertex Normals
-        //vnorms
+        // vert norms
+        interleavedPrims.at(inds.at(i).elem0 * stride + 3) = verts.at(inds.at(i).elem0).getNormal().x;
+        interleavedPrims.at(inds.at(i).elem0 * stride + 4) = verts.at(inds.at(i).elem0).getNormal().y;
+        interleavedPrims.at(inds.at(i).elem0 * stride + 5) = verts.at(inds.at(i).elem0).getNormal().z;
         
+        interleavedPrims.at(inds.at(i).elem1 * stride + 3) = verts.at(inds.at(i).elem1).getNormal().x;
+        interleavedPrims.at(inds.at(i).elem1 * stride + 4) = verts.at(inds.at(i).elem1).getNormal().y;
+        interleavedPrims.at(inds.at(i).elem1 * stride + 5) = verts.at(inds.at(i).elem1).getNormal().z;
         
+        interleavedPrims.at(inds.at(i).elem2 * stride + 3) = verts.at(inds.at(i).elem2).getNormal().x;
+        interleavedPrims.at(inds.at(i).elem2 * stride + 4) = verts.at(inds.at(i).elem2).getNormal().y;
+        interleavedPrims.at(inds.at(i).elem2 * stride + 5) = verts.at(inds.at(i).elem2).getNormal().z;
     }
+    
     int vertsDataSize = sizeof (float) * static_cast<int>(interleavedPrims.size());
     glBufferSubData(GL_ARRAY_BUFFER, 0, vertsDataSize, &interleavedPrims[0]); // upload the data
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
     // Activate Verlet/constraints
     for (int i = 0; i < balls.size(); ++i) {
-        balls.at(i)->verlet();
+        balls.at(i)->verlet2();
     }
     
     for (int i = 0; i < sticks.size(); ++i) {
@@ -288,10 +285,31 @@ void ProtoVerletSurface::flow() {
     int colMax = (columnCount-1)/2;
     int rowMax = (rowCount-1)/2;
     int randIndex = static_cast<int>(centroidIndex + columnCount * static_cast<int>(ProtoMath::random(-colMax,colMax))+ static_cast<int>(ProtoMath::random(-rowMax,rowMax)));
-    balls.at(randIndex)->pos.z += ProtoMath::random(-6, 6);
-   // balls.at(centroidIndex)->pos.z += ProtoMath::random(-6, 6);
+    //balls.at(randIndex)->getPos_ptr()->z += ProtoMath::random(-6, 6);
+    *(balls.at(randIndex)->getPos_ptr()) += Vec3f(sin(pulseTheta)*2.8, cos(-pulseTheta)*2.4, abs(sin(pulseTheta)*1.5));
+   
     
-    pulseTheta += 10*ProtoMath::PI/180.0;
+    // update vertex normals
+//    Vec3f vn;
+//    for(int i=0; i<verts.size(); ++i){
+//        ProtoVertex3* v = geomSets.at(i).getSharedVert();
+//        for(int j=0; j<geomSets.at(i).getLinkedFaces().size(); ++j){
+//            vn+=geomSets.at(i).getLinkedFaces().at(j)->getNorm();
+//        }
+//        vn.normalize();
+//        verts.at(i).setNormal(vn);
+//     }
+    
+    // update vertex normals
+    for(int i=0; i<verts.size(); ++i){
+        verts.at(i).setNormal(geomSets.at(i).getVertexNormal());
+    }
+
+
+    
+    
+    
+    pulseTheta += .2*ProtoMath::PI/180.0;
     
 }
 
